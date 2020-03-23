@@ -6,8 +6,8 @@ Setting up development:
 sudo apt-get install python-dev libpq-dev default-libmysqlclient-dev
 pip install pipenv --user
 pipenv install --dev
-heroku config:get -s DATABASE\_URL >> .env
-heroku config:get -s MONGODB\_URI >> .env
+heroku config:get -s DATABASE_URL >> .env
+heroku config:get -s MONGODB_URI >> .env
 ```
 
 ## FAQ
