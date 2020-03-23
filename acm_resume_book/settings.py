@@ -78,10 +78,7 @@ WSGI_APPLICATION = 'acm_resume_book.wsgi.application'
 mongo_uri = urlparse.urlparse(os.environ['MONGODB_URI'])
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
+    'default': {},
     'ourgraphdb': {
         'ENGINE': 'djongo',
         'NAME': 'heroku_l4jz1453',
