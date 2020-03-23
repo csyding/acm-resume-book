@@ -46,12 +46,11 @@ I can provide _some_ guidence though.
 
 
 ### How do I run the server locally?
-Because we have a python environment, we have to run it using pipenv. There's two to do this
+Because all of our python libraries are installed in pipenv,  we have to also run it using pipenv. There's two to do this
 
 #### 1.
 `pipenv run heroku local`
-Because everything's been installed on our pipenv, we have to run `heroku local` through it so that we'll have Django and everything installed.
-`pipenv run` runs a single command in the python environment
+This runs a single command (`heroku local` in this case) with the python environment.
 
 #### 2.
 ```
