@@ -6,7 +6,7 @@ Setting up development:
 sudo apt-get install python-dev libpq-dev default-libmysqlclient-dev
 pip install pipenv --user
 pipenv install --dev
-heroku config:get -s CLEARDB\_DATABASE\_URL >> .env
+heroku config:get -s DATABASE\_URL >> .env
 heroku config:get -s MONGODB\_URI >> .env
 ```
 
@@ -39,11 +39,12 @@ I followed the guide here, which gives some helpful pointers:
 https://docs.djangoproject.com/en/3.0/intro/tutorial01/
 
 I can provide _some_ guidence though. 
-- The directory uses underscores instead of dashes becaues something something python/django doesnt like them
 - `manage.py` provides some admin tools for the Django server
-- `settings.py` is where all our Databases are set up
-- `urls.py` decides which url's on our website go to which files
-
+- The directory `main\_site` manages the url redirection and overall setup of the project and has these files:
+    - `settings.py` is where all our Databases are set up
+    - `urls.py` decides which url's on our website go to which files
+- The directory `resume-book` models the data, and provides views/websites for them.
+    - `models.py` should be a reflection of our databases, you can see an example there. More examples can be found [here](https://docs.djangoproject.com/en/3.0/intro/tutorial02/)
 
 ### How do I run the server locally?
 Because all of our python libraries are installed in pipenv,  we have to also run it using pipenv. There's two to do this
