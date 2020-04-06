@@ -21,8 +21,8 @@ class Resume(models.Model):
         return "Resume: " + str(self.netID)
 
 class Internship(models.Model):
-    netID = models.ForeignKey(to='Student')
-    companyName = models.ForeignKey(to='Company')
+    netID = models.ForeignKey(to='Student', on_delete=models.CASCADE)
+    companyName = models.ForeignKey(to='Company', on_delete=models.CASCADE)
     numberRating = models.IntegerField(null=True)
     projectDescription = models.CharField(max_length=500)
     companyReview = models.CharField(max_length=500)
