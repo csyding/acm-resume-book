@@ -7,6 +7,7 @@ from django.template import loader
 from .models import StudentGroup;
 from .models import Company;
 from .models import Resume;
+from .models import Internship;
 
 # Create your views here.
 def index(request):
