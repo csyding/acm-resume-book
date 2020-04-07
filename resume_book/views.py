@@ -64,8 +64,8 @@ def addCompany(request):
         # If exists, update it!
         existingCompany = Company.objects.get(pk=groupName)
         existingCompany.description = companyDescription
-         existingCompany.rating = companyRating
-          existingCompany.sponsorDate = companySponsorDate
+        existingCompany.rating = companyRating
+        existingCompany.sponsorDate = companySponsorDate
         existingCompany.save()
 
     except Company.DoesNotExist:
