@@ -17,13 +17,4 @@ class Migration(migrations.Migration):
                 ('description', models.CharField(max_length=1000)),
             ],
         ),
-        migrations.CreateModel(
-            name='Company',
-            fields=[
-                ('name', models.CharField(max_length=20, primary_key=True, serialize=False)),
-                ('description', models.CharField(max_length=1000)),
-                ('rating', models.IntegerField(null=True)),
-                ('sponsorDate', models.DateTimeField(auto_now=True)),
-            ],
-        ),
     ]

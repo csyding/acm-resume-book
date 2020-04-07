@@ -51,7 +51,10 @@ def companies(request):
     context = {
             'all_companies': all_companies,
             'name_length': Company._meta.get_field('companyName').max_length,
-            'desc_length': Company._meta.get_field('description').max_length
+            'desc_length': Company._meta.get_field('description').max_length,
+            'rating': Company._meta.get_field('rating'),
+            'sponsorDate': Company._meta.get_field('sponsorDate'),
+
             }
     return render(request, 'resume_book/companies.html', context)
 

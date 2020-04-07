@@ -10,8 +10,8 @@ class Student(models.Model):
         return "Student: " + str(self.netID)
     
 class Resume(models.Model):
-    netID = models.ForeignKey(to='Student', on_delete=models.CASCADE)
-    resumeID = models.ForeignKey(to='Student', on_delete=models.CASCADE)
+    netID = models.ForeignKey(to='Student', on_delete=models.CASCADE, related_name='resumeNetID')
+    resumeID = models.ForeignKey(to='Student', on_delete=models.CASCADE, related_name='resumeResumeID')
     gradYear = models.IntegerField(null=True)
     courseWork = models.CharField(max_length=500)
     projects = models.CharField(max_length=500)
