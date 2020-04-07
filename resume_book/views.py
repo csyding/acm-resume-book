@@ -50,20 +50,20 @@ def companies(request):
 
     context = {
             'all_companies': all_companies,
-            'name_length': Company._meta.get_field('name').max_length,
+            'name_length': Company._meta.get_field('companyName').max_length,
             'desc_length': Company._meta.get_field('description').max_length
             }
     return render(request, 'resume_book/companies.html', context)
 
 def addCompany(request):
-    companyName = request.POST['name']
+    companyName = request.POST['companyName']
     companyDescription = request.POST['description']
     companyRating = request.POST['rating']
     companySponsorDate = request.POST['sponsorDate']
 
     try:
         # If exists, update it!
-        existingCompany = Company.objects.get(pk=groupName)
+        existingCompany = Company.objects.get(pk=companyName)
         existingCompany.description = companyDescription
         existingCompany.rating = companyRating
         existingCompany.sponsorDate = companySponsorDate
