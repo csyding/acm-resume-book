@@ -54,7 +54,7 @@ def companies(request):
             'name_length': Company._meta.get_field('companyName').max_length,
             'desc_length': Company._meta.get_field('description').max_length,
             'rating': Company._meta.get_field('rating'),
-            'sponsorDate': Company._meta.get_field('sponsorDate'),
+            'sponsorDate': Company._meta.get_field('sponsorDate').max_length,
 
             }
     return render(request, 'resume_book/companies.html', context)
@@ -94,7 +94,7 @@ def resumes(request):
             'all_resumes': all_resumes,
             'netID': Resume._meta.get_field('netID').max_length,
             'resumeID': Resume._meta.get_field('resumeID'),
-            'gradYear': Company._meta.get_field('gradYear'),
+            'gradYear': Resume._meta.get_field('gradYear'),
             'courseWork_length': Resume._meta.get_field('courseWork').max_length,
             'projects_length': Resume._meta.get_field('projects').max_length,
             'experiences_length': Resume._meta.get_field('experiences').max_length,
@@ -132,3 +132,57 @@ def removeResume(request, resume_name):
 
     return HttpResponseRedirect(reverse('resume_book:resumes'))
 
+
+def internship(request):
+    all_internships = Internship.objects.all()[:5]
+
+    context = {
+            'all_internships': all_internships,
+            'netID': Internship._meta.get_field('netID').max_length,
+            'companyName_length': Internship._meta.get_field('companyName').max_length,
+            'numberRating_length': Internship._meta.get_field('numberRating'),
+            'projectDescription_length': Internship._meta.get_field('projectDescription').max_length,
+            'companyReview_length': Internship._meta.get_field('companyReview').max_length,
+            'startDate': Internship._meta.get_field('startDate').max_length,
+            'endDate': Internship._meta.get_field('endDate').max_length,
+            }
+    return render(request, 'resume_book/internships.html', context)
+
+def addInternship(request):
+    internshipNetID = request.POST['netID']
+    internshipCompanyName = request.POST['companyName']
+    internshipNumberRating = request.POST['numberRating']
+    internshipProjectDescription = request.POST['projectDescription']
+    internshipCompanyReview = request.POST['companyReview']
+    internshipExperiences = request.POST['experiences']
+    internshipStartDate = request.POST['startDate']
+    internshipEndDate = request.POST['endDate']
+
+    try:
+        # If exists, update it!
+        existingInternship = Internship.objects.get(pk=internshipID)
+        existingInternship.netID = internshipNetID
+        existingInternship.companyName = internshipCompanyName
+        existingInternship.numberRating = internshipNumberRating
+        existingInternship.projectDescription = internshipProjectDescription
+        existingInternship.companyReview = internshipCompanyReview
+        existingInternship.experiences = internshipExperiences
+        existingInternship.startDate = internshipStartDate
+        existingInternship.endDate = internshipEndDate
+        existingInternship.save()
+
+    except Internship.DoesNotExist:
+        # If doesn't exists, create one!
+        newInternship = Internship(netID=internshipNetID, companyName=internshipCompanyName, 
+                        numberRating=internshipNumberRating, projectDescription= internshipProjectDescription, 
+                        companyReview=internshipCompanyReview, experiences=internshipExperiences,
+                        startDate=internshipStartDate, endDate=internshipEndDate)
+        newInternship.save()
+
+    return HttpResponseRedirect(reverse('resume_book:internships'))
+
+def removeInternship(request, internship_name):
+    internship = get_object_or_404(Internship, pk=internship_name)
+    internship.delete()
+
+    return HttpResponseRedirect(reverse('resume_book:internships'))
