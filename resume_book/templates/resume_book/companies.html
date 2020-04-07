@@ -1,0 +1,36 @@
+{% if all_companies %}
+<table>
+    {% for company in all_companies %}
+    <tr>
+        <form action="{% url 'resume_book:removeCompany' company.name %}">
+            <td>
+                <h3 type="displayName">{{ company.name }}</h3>
+                <p type="displayDescription">{{ company.description }}</p>
+            </td>
+            <td>
+                <input type="submit" value="Delete">
+            </td>
+        </form>
+    <tr/>
+    {% endfor %}
+</table>
+{% else %}
+<p>No companies are available.</p>
+{% endif %}
+
+<h2>Create/update a company</h2>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'resume_book:addCompany' %}" method="post">
+    {% csrf_token %}
+    <label for="name">Company name:</label>
+    <br>
+    <input type="text" name="name" id="name" maxlength={{name_length}}>
+    <br>
+    <label for="description">Description:</label>
+    <br>
+    <input type="text" name="description" id="description" maxlength={{desc_length}}>
+    <br>
+    <input type="submit" value="Submit">
+</form>

@@ -10,4 +10,7 @@ urlpatterns = [
     path('studentgroups/', views.studentGroups, name='studentGroups'),
     path('studentgroups/addgroup', views.addGroup, name='addGroup'),
     path('studentgroups/removegroup/<str:group_name>', views.removeGroup, name='removeGroup'),
+    path('companies/', views.companies, name='companies'),
+    path('companies/addcompany', views.addCompany, name='addCompany'),
+    path('companies/removecompany/<str:company_name>', views.removeCompany, name='removeCompany'),
 ]
