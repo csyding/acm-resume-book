@@ -6,6 +6,7 @@ from django.template import loader
 
 from .models import StudentGroup;
 from .models import Company;
+from .models import Resume;
 
 # Create your views here.
 def index(request):
@@ -84,4 +85,50 @@ def removeCompany(request, company_name):
     company.delete()
 
     return HttpResponseRedirect(reverse('resume_book:companies'))
+
+
+def resumes(request):
+    all_resumes = Resume.objects.all()[:5]
+
+    context = {
+            'all_resumes': all_resumes,
+            'netID': Resume._meta.get_field('netID').max_length,
+            'resumeID': Resume._meta.get_field('resumeID'),
+            'gradYear': Company._meta.get_field('gradYear'),
+            'courseWork_length': Resume._meta.get_field('courseWork').max_length,
+            'projects_length': Resume._meta.get_field('projects').max_length,
+            'experiences_length': Resume._meta.get_field('experiences').max_length,
+            }
+    return render(request, 'resume_book/resumes.html', context)
+
+def addResume(request):
+    resumeNetID = request.POST['netID']
+    resumeResumeID = request.POST['resumeID']
+    resumeGradYear = request.POST['gradYear']
+    resumeCourseWork = request.POST['courseWork']
+    resumeProjects = request.POST['projects']
+    resumeExperiences = request.POST['experiences']
+
+    try:
+        # If exists, update it!
+        existingResume = Resume.objects.get(pk=resumeID)
+        existingResume.netID = resumeNetID
+        existingResume.gradYear = resumeGradYear
+        existingResume.courseWork = resumeCourseWork
+        existingResume.projects = resumeProjects
+        existingResume.experiences = resumeExperiences
+        existingResume.save()
+
+    except Resume.DoesNotExist:
+        # If doesn't exists, create one!
+        newResume = Resume(netID=resumeNetID, gradYear=rresumeGradYear, courseWork=resumeCourseWork, projects = resumeProjects, experiences = resumeExperiences)
+        newResume.save()
+
+    return HttpResponseRedirect(reverse('resume_book:resumes'))
+
+def removeResume(request, resume_name):
+    resume = get_object_or_404(Resume, pk=resume_name)
+    resume.delete()
+
+    return HttpResponseRedirect(reverse('resume_book:resumes'))
 
