@@ -94,7 +94,7 @@ def internships(request):
 
     context = {
             'all_internships': all_internships,
-            'netID': Internship._meta.get_field('netID').max_length,
+            'netID_length': Internship._meta.get_field('netID').max_length,
             'companyName_length': Internship._meta.get_field('companyName').max_length,
             'numberRating_length': Internship._meta.get_field('numberRating'),
             'projectDescription_length': Internship._meta.get_field('projectDescription').max_length,
@@ -194,11 +194,11 @@ def students(request):
 def addStudent(request):
     studentName = request.POST['name']
     studentNetID = request.POST['netID']
-    studentInterests = request.POST['interests']
+    studentInterests = request.POST.get('interests', False)
     studentGradYear = request.POST['gradYear']
-    studentCourseWork = request.POST['courseWork']
-    studentProjects = request.POST['projects']
-    studentExperiences = request.POST['experiences']
+    studentCourseWork = request.POST.get('courseWork', 'fjsdkljs')
+    studentProjects = request.POST.get('projects', False)
+    studentExperiences = request.POST.get('experiences', False)
 
     try:
         # If exists, update it!

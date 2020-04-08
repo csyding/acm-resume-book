@@ -5,7 +5,13 @@
         <form action="{% url 'resume_book:removeStudent' student.name %}">
             <td>
                 <h3 type="displayName">{{ student.name }}</h3>
-                <p type="displayDescription">{{ student.netID }}</p>
+                <p type="displayNetID">{{ student.netID }}</p>
+                <p type="displayInterests">{{ student.interests }}</p>
+                <p type="displayGradYear">{{ student.gradYear }}</p>
+                <p type="displayCourseWork">{{ student.courseWork }}</p>
+                <p type="displayProjects">{{ student.projects }}</p>
+                <p type="displayExperiences">{{ student.experiences }}</p>
+
             </td>
             <td>
                 <input type="submit" value="Delete">
@@ -28,9 +34,29 @@
     <br>
     <input type="text" name="name" id="name" maxlength={{name_length}}>
     <br>
-    <label for="description">Description:</label>
+    <label for="netID">NetID:</label>
     <br>
-    <input type="text" name="description" id="description" maxlength={{desc_length}}>
+    <input type="text" name="netID" id="netID" maxlength={{netID_length}}>
+    <br>
+    <label for="interests">Interests:</label>
+    <br>
+    <input type="text" name="interests" id="interests" maxlength={{interests_length}}>
+    <br>
+    <label for="gradYear">Graduation Year:</label>
+    <br>
+    <input type="text" name="gradYear" id="gradYear" maxlength={{gradYear_length}}>
+    <br>
+    <label for="coursework">Coursework:</label>
+    <br>
+    <input type="text" name="coursework" id="coursework" maxlength={{coursework_length}}>
+    <br>
+    <label for="projects">Projects:</label>
+    <br>
+    <input type="text" name="projects" id="projects" maxlength={{projects_length}}>
+    <br>
+    <label for="experiences">Experiences:</label>
+    <br>
+    <input type="text" name="experiences" id="experiences" maxlength={{experiences_length}}>
     <br>
     <input type="submit" value="Submit">
 </form>
