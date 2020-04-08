@@ -15,6 +15,7 @@ class Resume(models.Model):
     gradYear = models.IntegerField(null=True)
     courseWork = models.CharField(max_length=500)
     projects = models.CharField(max_length=500)
+    dateAdded = models.DateTimeField(auto_now=True)
     experiences = models.CharField(max_length=500)
 
     def __str__(self):
