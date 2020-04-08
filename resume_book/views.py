@@ -6,7 +6,6 @@ from django.template import loader
 
 from .models import StudentGroup;
 from .models import Company;
-from .models import Resume;
 from .models import Internship;
 from .models import Recruiter;
 from .models import Student;
@@ -88,57 +87,6 @@ def removeCompany(request, company_name):
     company.delete()
 
     return HttpResponseRedirect(reverse('resume_book:companies'))
-
-
-def resumes(request):
-    all_resumes = Resume.objects.all()[:5]
-
-    context = {
-            'all_resumes': all_resumes,
-            'netID': Resume._meta.get_field('netID').max_length,
-            'resumeID': Resume._meta.get_field('resumeID'),
-            'gradYear': Resume._meta.get_field('gradYear'),
-            'courseWork_length': Resume._meta.get_field('courseWork').max_length,
-            'projects_length': Resume._meta.get_field('projects').max_length,
-            'experiences_length': Resume._meta.get_field('experiences').max_length,
-            }
-    return render(request, 'resume_book/resumes.html', context)
-
-def addResume(request):
-    resumeNetID = request.POST['netID']
-    resumeResumeID = request.POST['resumeID']
-    resumeGradYear = request.POST['gradYear']
-    resumeCourseWork = request.POST['courseWork']
-    resumeProjects = request.POST['projects']
-    resumeDateAdded = request.POST['dateAdded']
-    resumeExperiences = request.POST['experiences']
-
-    try:
-        # If exists, update it!
-        existingResume = Resume.objects.get(pk=resumeID)
-        existingResume.netID = resumeNetID
-        existingResume.gradYear = resumeGradYear
-        existingResume.courseWork = resumeCourseWork
-        existingResume.projects = resumeProjects
-        existingResume.dateAdded = resumeDateAdded
-        existingResume.experiences = resumeExperiences
-        existingResume.save()
-
-    except Resume.DoesNotExist:
-        # If doesn't exists, create one!
-        newResume = Resume(netID=resumeNetID, 
-                    gradYear=rresumeGradYear, courseWork=resumeCourseWork, 
-                    projects = resumeProjects, dateAdded = resumeDateAdded, 
-                    experiences = resumeExperiences)
-        newResume.save()
-
-    return HttpResponseRedirect(reverse('resume_book:resumes'))
-
-def removeResume(request, resume_ID):
-    resume = get_object_or_404(Resume, pk=resume_ID)
-    resume.delete()
-
-    return HttpResponseRedirect(reverse('resume_book:resumes'))
 
 
 def internships(request):
@@ -233,33 +181,48 @@ def students(request):
 
     context = {
             'all_students': all_students,
+            'name_length': Student._meta.get_field('name').max_length,
             'netID_length': Student._meta.get_field('netID').max_length,
-            'resumeID_length': Student._meta.get_field('resumeID').max_length,
-            'interests_length': Student._meta.get_field('interests').max_length
+            'interests_length': Student._meta.get_field('interests').max_length,
+            'gradYear': Student._meta.get_field('gradYear'),
+            'courseWork_length': Student._meta.get_field('courseWork').max_length,
+            'projects_length': Student._meta.get_field('projects').max_length,
+            'experiences': Student._meta.get_field('experiences').max_length
             }
     return render(request, 'resume_book/students.html', context)
 
 def addStudent(request):
+    studentName = request.POST['name']
     studentNetID = request.POST['netID']
-    studentResumeID = request.POST['companyName']
     studentInterests = request.POST['interests']
+    studentGradYear = request.POST['gradYear']
+    studentCourseWork = request.POST['courseWork']
+    studentProjects = request.POST['projects']
+    studentExperiences = request.POST['experiences']
 
     try:
         # If exists, update it!
         existingStudent = Student.objects.get(pk=studentNetID)
-        existingStudent.resumeID = studentResumeID
+        existingStudent.name = studentName
+        existingStudent.netID = studentNetID
         existingStudent.interests = studentInterests
+        existingStudent.gradYear = studentGradYear 
+        existingStudent.courseWork = studentCourseWork
+        existingStudent.projects = studentProjects 
         existingStudent.save()
 
     except Student.DoesNotExist:
         # If doesn't exists, create one!
-        newStudent = Student(netID=studentNetID, resumeID=studentResumeID, interests=studentInterests)
+        newStudent = Student(netID=studentNetID, name=studentName, 
+                    interests=studentInterests, gradYear=studentGradYear,
+                    courseWork=studentCourseWork, projects=studentProjects
+                    )
         newStudent.save()
 
     return HttpResponseRedirect(reverse('resume_book:Student'))
 
-def removeStudent(request, student_netID):
-    student = get_object_or_404(Student, pk=student_netID)
+def removeStudent(request, student_name):
+    student = get_object_or_404(Student, pk=student_name)
     student.delete()
 
     return HttpResponseRedirect(reverse('resume_book:Student'))

@@ -1,11 +1,11 @@
 {% if all_students %}
 <table>
-    {% for group in all_students %}
+    {% for student in all_students %}
     <tr>
         <form action="{% url 'resume_book:removeStudent' student.name %}">
             <td>
                 <h3 type="displayName">{{ student.name }}</h3>
-                <p type="displayDescription">{{ student.description }}</p>
+                <p type="displayDescription">{{ student.netID }}</p>
             </td>
             <td>
                 <input type="submit" value="Delete">
@@ -14,7 +14,7 @@
         <tr/> {% endfor %}
 </table>
 {% else %}
-<p>No results are available.</p>
+<p>No students are available.</p>
 {% endif %}
 
 <h2>Create/update a student</h2>

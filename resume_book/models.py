@@ -2,24 +2,16 @@ from django.db import models
 
 # Create your models here.
 class Student(models.Model):
+    name = models.CharField(max_length=50, default='name')
     netID = models.CharField(max_length=8, primary_key=True)
-    resumeID = models.IntegerField(null=True)
     interests = models.CharField(max_length=100)
+    gradYear = models.IntegerField(null=True)
+    courseWork = models.CharField(max_length=500, default='courseWork')
+    projects = models.CharField(max_length=500, default='projects')
+    experiences = models.CharField(max_length=500, default='experiences')
 
     def __str__(self):
         return "Student: " + str(self.netID)
-    
-class Resume(models.Model):
-    netID = models.ForeignKey(to='Student', on_delete=models.CASCADE, related_name='resumeNetID')
-    resumeID = models.ForeignKey(to='Student', on_delete=models.CASCADE, related_name='resumeResumeID')
-    gradYear = models.IntegerField(null=True)
-    courseWork = models.CharField(max_length=500)
-    projects = models.CharField(max_length=500)
-    dateAdded = models.DateTimeField(auto_now=True)
-    experiences = models.CharField(max_length=500)
-
-    def __str__(self):
-        return "Resume: " + str(self.netID)
 
 class Internship(models.Model):
     netID = models.ForeignKey(to='Student', on_delete=models.CASCADE)
