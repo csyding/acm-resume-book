@@ -203,7 +203,7 @@ def recruiters(request):
             'recruiter_name_length': Recruiter._meta.get_field('recruiterName').max_length,
             'company_name_length': Recruiter._meta.get_field('companyName').max_length
             }
-    return render(request, 'resume_book/Recruiter.html', context)
+    return render(request, 'resume_book/recruiters.html', context)
 
 def addRecruiter(request):
     recruiterName = request.POST['name']
@@ -237,7 +237,7 @@ def students(request):
             'resumeID_length': Student._meta.get_field('resumeID').max_length,
             'interests_length': Student._meta.get_field('interests').max_length
             }
-    return render(request, 'resume_book/Student.html', context)
+    return render(request, 'resume_book/students.html', context)
 
 def addStudent(request):
     studentNetID = request.POST['netID']
