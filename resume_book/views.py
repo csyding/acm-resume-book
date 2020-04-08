@@ -141,7 +141,7 @@ def removeResume(request, resume_ID):
     return HttpResponseRedirect(reverse('resume_book:resumes'))
 
 
-def internship(request):
+def internships(request):
     all_internships = Internship.objects.all()[:5]
 
     context = {
@@ -195,7 +195,7 @@ def removeInternship(request, internship_netID):
 
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
-def recruiter(request):
+def recruiters(request):
     all_recruiters = Recruiter.objects.all()[:5]
 
     context = {
@@ -228,7 +228,7 @@ def removeRecruiter(request, recruiter_name):
 
     return HttpResponseRedirect(reverse('resume_book:Recruiter'))
 
-def student(request):
+def students(request):
     all_students = Student.objects.all()[:5]
 
     context = {
