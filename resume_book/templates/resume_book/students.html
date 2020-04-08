@@ -1,11 +1,11 @@
-{% if all_companies %}
+{% if all_students %}
 <table>
-    {% for company in all_companies %}
+    {% for group in all_students %}
     <tr>
-        <form action="{% url 'resume_book:removeCompany' company.name %}">
+        <form action="{% url 'resume_book:removeStudent' student.name %}">
             <td>
-                <h3 type="displayName">{{ company.name }}</h3>
-                <p type="displayDescription">{{ company.description }}</p>
+                <h3 type="displayName">{{ student.name }}</h3>
+                <p type="displayDescription">{{ student.description }}</p>
             </td>
             <td>
                 <input type="submit" value="Delete">
@@ -14,17 +14,17 @@
         <tr/> {% endfor %}
 </table>
 {% else %}
-<p>No companies are available.</p>
+<p>No results are available.</p>
 {% endif %}
 
-<h2>Create/update a company</h2>
+<h2>Create/update a student</h2>
 
 {% if error_message %}
 <p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="{% url 'resume_book:addCompany' %}" method="post">
+<form action="{% url 'resume_book:addStudent' %}" method="post">
     {% csrf_token %}
-    <label for="name">Company name:</label>
+    <label for="name">Student name:</label>
     <br>
     <input type="text" name="name" id="name" maxlength={{name_length}}>
     <br>
