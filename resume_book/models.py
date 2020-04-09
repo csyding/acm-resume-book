@@ -2,13 +2,13 @@ from django.db import models
 
 # Create your models here.
 class Student(models.Model):
-    name = models.CharField(max_length=50, blank=True)
+    name = models.CharField(max_length=50, blank=True, default='name')
     netID = models.CharField(max_length=8, primary_key=True)
-    interests = models.CharField(max_length=100, blank=True)
+    interests = models.CharField(max_length=100, blank=True, default='interests')
     gradYear = models.IntegerField(default=0)
-    courseWork = models.CharField(max_length=500, blank=True)
-    projects = models.CharField(max_length=500, blank=True)
-    experiences = models.CharField(max_length=500, blank=True)
+    courseWork = models.CharField(max_length=500, blank=True, default='course')
+    projects = models.CharField(max_length=500, blank=True, default='projects')
+    experiences = models.CharField(max_length=500, blank=True, default='experiences')
 
     def __str__(self):
         return "Student: " + str(self.netID)
@@ -16,7 +16,7 @@ class Student(models.Model):
 class Internship(models.Model):
     netID = models.ForeignKey(to='Student', on_delete=models.CASCADE)
     companyName = models.ForeignKey(to='Company', on_delete=models.CASCADE)
-    numberRating = models.IntegerField(null=True)
+    numberRating = models.FloatField(null=True)
     projectDescription = models.CharField(max_length=500)
     companyReview = models.CharField(max_length=500)
     startDate = models.DateTimeField(auto_now=True)
@@ -27,8 +27,8 @@ class Internship(models.Model):
 
 class Company(models.Model):
     companyName = models.CharField(max_length=20, primary_key=True)
-    description = models.CharField(max_length=500)
-    rating = models.IntegerField(null=True)
+    description = models.CharField(max_length=500, blank=True)
+    rating = models.FloatField(null=True)
     sponsorDate = models.DateTimeField(auto_now=True)
 
     def __str__(self):

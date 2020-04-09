@@ -2,10 +2,12 @@
 <table>
     {% for company in all_companies %}
     <tr>
-        <form action="{% url 'resume_book:removeCompany' company.name %}">
+        <form action="{% url 'resume_book:removeCompany' company.companyName %}">
             <td>
-                <h3 type="displayName">{{ company.name }}</h3>
+                <h3 type="displayName">{{ company.companyName }}</h3>
                 <p type="displayDescription">{{ company.description }}</p>
+                <p type="displayRating">{{ company.rating }}</p>
+                <p type="displaySponsorDate">{{ company.sponsorDate }}</p>
             </td>
             <td>
                 <input type="submit" value="Delete">
@@ -24,13 +26,21 @@
 
 <form action="{% url 'resume_book:addCompany' %}" method="post">
     {% csrf_token %}
-    <label for="name">Company name:</label>
+    <label for="companyName">Company name:</label>
     <br>
-    <input type="text" name="name" id="name" maxlength={{name_length}}>
+    <input type="text" name="companyName" id="companyName" maxlength={{name_length}}>
     <br>
     <label for="description">Description:</label>
     <br>
     <input type="text" name="description" id="description" maxlength={{desc_length}}>
+    <br>
+    <label for="rating">Rating:</label>
+    <br>
+    <input type="text" name="rating" id="rating" maxlength={{rating}}>
+    <br>
+    <label for="sponsorDate">Sponsor Date:</label>
+    <br>
+    <input type="text" name="sponsorDate" id="sponsorDate" maxlength={{sponsorDate}}>
     <br>
     <input type="submit" value="Submit">
 </form>

@@ -62,10 +62,10 @@ def companies(request):
     return render(request, 'resume_book/companies.html', context)
 
 def addCompany(request):
-    companyName = request.POST['companyName']
-    companyDescription = request.POST['description']
-    companyRating = request.POST['rating']
-    companySponsorDate = request.POST['sponsorDate']
+    companyName = request.POST.get('companyName')
+    companyDescription = request.POST.get('description', False)
+    companyRating = request.POST.get('rating', False)
+    companySponsorDate = request.POST.get('sponsorDate')
 
     try:
         # If exists, update it!
@@ -77,7 +77,7 @@ def addCompany(request):
 
     except Company.DoesNotExist:
         # If doesn't exists, create one!
-        newCompany = Company(name=companyName, description=companyDescription, rating=companyRating, sponsorDate=companySponsorDate)
+        newCompany = Company(companyName=companyName, description=companyDescription, rating=companyRating, sponsorDate=companySponsorDate)
         newCompany.save()
 
     return HttpResponseRedirect(reverse('resume_book:companies'))
@@ -195,7 +195,6 @@ def addStudent(request):
     studentName = request.POST.get('name')
     studentNetID = request.POST.get('netID')
     studentInterests = request.POST.get('interests', False)
-    print(request.POST.get('gradYear'))
     studentGradYear = request.POST.get('gradYear', 0) if request.POST.get('gradYear') else int(0)
     studentCourseWork = request.POST.get('courseWork')
     studentProjects = request.POST.get('projects', False)
