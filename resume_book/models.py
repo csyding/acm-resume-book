@@ -45,6 +45,8 @@ class StudentGroup(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
     description = models.CharField(max_length=1000)
 
+    members = models.ManyToManyField(Student)
+
     def __str__(self):
         return "Student Group: " + str(self.name)
 
