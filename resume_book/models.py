@@ -2,13 +2,13 @@ from django.db import models
 
 # Create your models here.
 class Student(models.Model):
-    name = models.CharField(max_length=50, default='name')
+    name = models.CharField(max_length=50, blank=True)
     netID = models.CharField(max_length=8, primary_key=True)
-    interests = models.CharField(max_length=100)
-    gradYear = models.IntegerField(null=True)
-    courseWork = models.CharField(max_length=500, default='courseWork')
-    projects = models.CharField(max_length=500, default='projects')
-    experiences = models.CharField(max_length=500, default='experiences')
+    interests = models.CharField(max_length=100, blank=True)
+    gradYear = models.IntegerField(default=0)
+    courseWork = models.CharField(max_length=500, blank=True)
+    projects = models.CharField(max_length=500, blank=True)
+    experiences = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
         return "Student: " + str(self.netID)

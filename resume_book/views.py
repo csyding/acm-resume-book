@@ -168,13 +168,13 @@ def addRecruiter(request):
         newRecruiter = Recruiter(recruiterName=recruiterName, companyName=recruiterCompanyName)
         newRecruiter.save()
 
-    return HttpResponseRedirect(reverse('resume_book:Recruiter'))
+    return HttpResponseRedirect(reverse('resume_book:recruiters'))
 
 def removeRecruiter(request, recruiter_name):
     recruiter = get_object_or_404(Recruiter, pk=recruiter_name)
     recruiter.delete()
 
-    return HttpResponseRedirect(reverse('resume_book:Recruiter'))
+    return HttpResponseRedirect(reverse('resume_book:recruiters'))
 
 def students(request):
     all_students = Student.objects.all()[:5]
@@ -195,7 +195,8 @@ def addStudent(request):
     studentName = request.POST['name']
     studentNetID = request.POST['netID']
     studentInterests = request.POST.get('interests', False)
-    studentGradYear = request.POST['gradYear']
+    print(request.POST.get('gradYear'))
+    studentGradYear = request.POST.get('gradYear', 0) if request.POST.get('gradYear') else int(0)
     studentCourseWork = request.POST.get('courseWork', 'fjsdkljs')
     studentProjects = request.POST.get('projects', False)
     studentExperiences = request.POST.get('experiences', False)
@@ -203,12 +204,12 @@ def addStudent(request):
     try:
         # If exists, update it!
         existingStudent = Student.objects.get(pk=studentNetID)
-        existingStudent.name = studentName
-        existingStudent.netID = studentNetID
-        existingStudent.interests = studentInterests
-        existingStudent.gradYear = studentGradYear 
-        existingStudent.courseWork = studentCourseWork
-        existingStudent.projects = studentProjects 
+        existingStudent.name = studentName if studentName else existingStudent.name
+        existingStudent.netID = studentNetID if studentNetID else existingStudent.netID
+        existingStudent.interests = studentInterests if studentInterests else existingStudent.interests
+        existingStudent.gradYear = int(studentGradYear) if studentGradYear else int(0)
+        existingStudent.courseWork = studentCourseWork if studentCourseWork else existingStudent.courseWork
+        existingStudent.projects = studentProjects if studentProjects else existingStudent.projects
         existingStudent.save()
 
     except Student.DoesNotExist:
@@ -219,10 +220,10 @@ def addStudent(request):
                     )
         newStudent.save()
 
-    return HttpResponseRedirect(reverse('resume_book:Student'))
+    return HttpResponseRedirect(reverse('resume_book:students'))
 
-def removeStudent(request, student_name):
-    student = get_object_or_404(Student, pk=student_name)
+def removeStudent(request, student_netID):
+    student = get_object_or_404(Student, pk=student_netID)
     student.delete()
 
-    return HttpResponseRedirect(reverse('resume_book:Student'))
+    return HttpResponseRedirect(reverse('resume_book:students'))

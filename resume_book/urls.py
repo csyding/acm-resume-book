@@ -15,5 +15,5 @@ urlpatterns = [
     path('companies/removecompany/<str:company_name>', views.removeCompany, name='removeCompany'),
     path('students/', views.students, name='students'),
     path('students/addStudent', views.addStudent, name='addStudent'),
-    path('students/removeStudent/<str:student_name>', views.removeStudent, name='removeStudent'),
+    path('students/removeStudent/<str:student_netID>', views.removeStudent, name='removeStudent'),
 ]

@@ -2,7 +2,7 @@
 <table>
     {% for student in all_students %}
     <tr>
-        <form action="{% url 'resume_book:removeStudent' student.name %}">
+        <form action="{% url 'resume_book:removeStudent' student.netID %}">
             <td>
                 <h3 type="displayName">{{ student.name }}</h3>
                 <p type="displayNetID">{{ student.netID }}</p>
