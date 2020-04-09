@@ -192,12 +192,12 @@ def students(request):
     return render(request, 'resume_book/students.html', context)
 
 def addStudent(request):
-    studentName = request.POST['name']
-    studentNetID = request.POST['netID']
+    studentName = request.POST.get('name')
+    studentNetID = request.POST.get('netID')
     studentInterests = request.POST.get('interests', False)
     print(request.POST.get('gradYear'))
     studentGradYear = request.POST.get('gradYear', 0) if request.POST.get('gradYear') else int(0)
-    studentCourseWork = request.POST.get('courseWork', 'fjsdkljs')
+    studentCourseWork = request.POST.get('courseWork')
     studentProjects = request.POST.get('projects', False)
     studentExperiences = request.POST.get('experiences', False)
 
@@ -207,16 +207,18 @@ def addStudent(request):
         existingStudent.name = studentName if studentName else existingStudent.name
         existingStudent.netID = studentNetID if studentNetID else existingStudent.netID
         existingStudent.interests = studentInterests if studentInterests else existingStudent.interests
-        existingStudent.gradYear = int(studentGradYear) if studentGradYear else int(0)
+        existingStudent.gradYear = int(studentGradYear) if studentGradYear else existingStudent.gradYear
         existingStudent.courseWork = studentCourseWork if studentCourseWork else existingStudent.courseWork
         existingStudent.projects = studentProjects if studentProjects else existingStudent.projects
+        existingStudent.experiences = studentExperiences if studentExperiences else existingStudent.experiences
         existingStudent.save()
 
     except Student.DoesNotExist:
         # If doesn't exists, create one!
         newStudent = Student(netID=studentNetID, name=studentName, 
                     interests=studentInterests, gradYear=studentGradYear,
-                    courseWork=studentCourseWork, projects=studentProjects
+                    courseWork=studentCourseWork, projects=studentProjects,
+                    experiences=studentExperiences
                     )
         newStudent.save()
 
