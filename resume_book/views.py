@@ -186,9 +186,17 @@ def removeInternship(request, internship_netID):
 
 def recruiters(request):
     all_recruiters = Recruiter.objects.all()[:5]
+    name_query = request.GET.get('recruiterName', 'Colleen')
+
+
+    combined_query = Q(recruiterName__icontains=name_query)
+    # the 'icontains' is case-insensitive, while 'contains' is sensitive
+
+    queried_recruiters = Recruiter.objects.filter(combined_query)
+        
 
     context = {
-            'all_recruiters': all_recruiters,
+            'queried_recruiters': queried_recruiters,
             'recruiter_name_length': Recruiter._meta.get_field('recruiterName').max_length,
             'company_name_length': Company._meta.get_field('companyName').max_length
             }
