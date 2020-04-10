@@ -66,11 +66,11 @@ def companies(request):
     if rating_query != '':
         rating = int(rating_query)
         if equalitySymbol == '>':
-            combined_query = Q(rating__gt=rating)
+            combined_query = combined_query & Q(rating__gt=rating)
         elif equalitySymbol == '<':
-            combined_query = Q(rating__lt=rating)
+            combined_query = combined_query & Q(rating__lt=rating)
         else:
-            combined_query = Q(rating=rating)
+            combined_query = combined_query & Q(rating=rating)
 
 
     queried_companies = Company.objects.filter(combined_query)
@@ -119,18 +119,17 @@ def internships(request):
     equality_symbol = request.GET.get('equality', '')
     numberRating_query = request.GET.get('numberRating', '')
 
-    # combined_query = Q(company__companyName__icontains=companyName_query)
     combined_query = Q()
 
     if numberRating_query != '':
         numberRating = int(numberRating_query)
 
         if equality_symbol == '>':
-            combined_query = Q(numberRating__gt=numberRating)
+            combined_query = combined_query & Q(numberRating__gt=numberRating)
         elif equality_symbol == '>':
-            combined_query = Q(numberRating__lt=numberRating)
+            combined_query = combined_query & Q(numberRating__lt=numberRating)
         else:
-            combined_query = Q(numberRating=numberRating)
+            combined_query = combined_query & Q(numberRating=numberRating)
 
     queried_internships = Internship.objects.filter(combined_query)
 
@@ -239,11 +238,11 @@ def students(request):
     if gradYear_query != '':
         gradYear = int(gradYear_query)
         if equalitySymbol == '>':
-            combined_query = Q(gradYear__gt=gradYear)
+            combined_query = combined_query & Q(gradYear__gt=gradYear)
         elif equalitySymbol == '<':
-            combined_query = Q(gradYear__lt=gradYear)
+            combined_query = combined_query & Q(gradYear__lt=gradYear)
         else:
-            combined_query = Q(gradYear=gradYear)
+            combined_query = combined_query & Q(gradYear=gradYear)
 
 
     queried_students = Student.objects.filter(combined_query)
