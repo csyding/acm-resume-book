@@ -38,7 +38,7 @@
 {% if queried_recruiters %}
 <div style="height:300px;overflow:auto;outline:2px dotted black;">
 <table>
-    {% for group in queried_recruiters %}
+    {% for recruiter in queried_recruiters %}
     <tr>
         <form action="{% url 'resume_book:removeRecruiter' recruiter.recruiterName %}">
             <tr>
