@@ -109,10 +109,26 @@ def removeCompany(request, company_name):
 
 
 def internships(request):
-    all_internships = Internship.objects.all()[:5]
+    companyname_query = request.GET.get('companyName', '')
+    equality_symbol = request.GET.get('equality', '')
+    numberRating_query = request.GET.get('numberRating', '')
+
+    combined_query = Q(companyName__icontains=companyname_query)
+
+    if numberRating_query != '':
+        numberRating = int(numberRating_query)
+
+        if equality_symbol == '>':
+            combined_query = Q(numberRating__gt=numberRating)
+        elif equality_symbol == '>':
+            combined_query = Q(numberRating__lt=numberRating)
+        else:
+            combined_query = Q(numberRating=numberRating)
+
+    queried_internships = Internship.objects.filter(combined_query)
 
     context = {
-            'all_internships': all_internships,
+            'queried_internships': queried_internships,
             'netID_length': Internship._meta.get_field('netID').max_length,
             'companyName_length': Internship._meta.get_field('companyName').max_length,
             'numberRating_length': Internship._meta.get_field('numberRating'),
