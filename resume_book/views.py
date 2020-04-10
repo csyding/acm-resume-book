@@ -123,6 +123,8 @@ def internships(request):
     if numberRating_query != '':
         numberRating = int(numberRating_query)
 
+        combined_query = None
+
         if equality_symbol == '>':
             combined_query = Q(numberRating__gt=numberRating)
         elif equality_symbol == '>':
