@@ -17,10 +17,16 @@ def index(request):
 
 
 def studentGroups(request):
-    all_student_groups = StudentGroup.objects.all()
+    name_query = request.GET.get('name', '')
+
+    combined_query = Q(name__icontains=name_query)
+    # the 'icontains' is case-insensitive, while 'contains' is sensitive
+
+    queried_studentGroups = StudentGroup.objects.filter(combined_query)
+        
 
     context = {
-            'all_student_groups': all_student_groups,
+            'queried_studentGroups': queried_studentGroups,
             'name_length': StudentGroup._meta.get_field('name').max_length,
             'desc_length': StudentGroup._meta.get_field('description').max_length
             }
@@ -109,20 +115,11 @@ def removeCompany(request, company_name):
 
 
 def internships(request):
-<<<<<<< HEAD
     companyName_query = request.GET.get('companyName', '')
     equality_symbol = request.GET.get('equality', '')
     numberRating_query = request.GET.get('numberRating', '')
 
     combined_query = Q(company__companyName__icontains=companyName_query)
-=======
-    # companyname_query = request.GET.get('companyName', '')
-    equality_symbol = request.GET.get('equality', '')
-    numberRating_query = request.GET.get('numberRating', '')
-
-    # combined_query = Q(companyName__icontains=companyname_query)
->>>>>>> b342220b0ea13640d6ebdb8117b1fee05d576ad6
-
     if numberRating_query != '':
         numberRating = int(numberRating_query)
 

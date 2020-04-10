@@ -20,11 +20,25 @@
     <input type="submit" value="Submit">
 </form>
 
+<!-- <h3>Search bocks</h3> -->
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% else %}
+<form action="{% url 'resume_book:studentGroups' %}" method="get">
+  {% csrf_token %}
+  <label for="search"><b>Search (case insensitive):</b></label>
+  <br>
+  <label for="name-query"> Name: </label>
+  <input type="text" id="name-query" name="name" maxlength={{name_length}}>
+  <br>
+  <input type="submit" value="Submit">
+</form>
+{% endif %}
 
-{% if all_student_groups %}
-<div style="height:200px;overflow:auto;outline:2px dotted black;">
-    <table>
-        {% for group in all_student_groups %}
+{% if queried_studentGroups %}
+<div style="height:300px;overflow:auto;outline:2px dotted black;">
+<table>
+    {% for group in queried_studentGroups %}
         <tr>
             <form action="{% url 'resume_book:removeGroup' group.name %}">
                 <td>
