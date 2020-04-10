@@ -119,11 +119,11 @@ def internships(request):
     equality_symbol = request.GET.get('equality', '')
     numberRating_query = request.GET.get('numberRating', '')
 
-    combined_query = Q(company__companyName__icontains=companyName_query)
+    # combined_query = Q(company__companyName__icontains=companyName_query)
+    combined_query = Q()
+
     if numberRating_query != '':
         numberRating = int(numberRating_query)
-
-        combined_query = None
 
         if equality_symbol == '>':
             combined_query = Q(numberRating__gt=numberRating)
