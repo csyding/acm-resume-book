@@ -11,11 +11,11 @@
     {% csrf_token %}
     <label for="netID">Internship NetID:</label>
     <br>
-    <input type="text" name="netID" id="netID" maxlength={{netID_length}}>
+    <input type="text" name="netID" id="netID" maxlength={{netID_length}} required>
     <br>
     <label for="companyName">Company Name:</label>
     <br>
-    <input type="text" name="companyName" id="companyName" maxlength={{companyName_length}}>
+    <input type="text" name="companyName" id="companyName" maxlength={{companyName_length}} required>
     <br>
     <label for="numberRating">Rating:</label>
     <br>

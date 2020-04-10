@@ -50,10 +50,28 @@ def removeGroup(request, group_name):
     return HttpResponseRedirect(reverse('resume_book:studentGroups'))
 
 def companies(request):
-    all_companies = Company.objects.all()[:5]
+    name_query = request.GET.get('companyName', '')
+    rating_query = request.GET.get('rating', '')
+
+
+    combined_query = Q(name__icontains=name_query)
+    # the 'icontains' is case-insensitive, while 'contains' is sensitive
+
+    if rating_query != '':
+        rating = int(rating_query)
+        if equalitySymbol == '>':
+            combined_query = Q(rating__gt=rating)
+        elif equalitySymbol == '<':
+            combined_query = Q(rating__lt=rating)
+        else:
+            combined_query = Q(rating=rating)
+
+
+    queried_companies = Company.objects.filter(combined_query)
+        
 
     context = {
-            'all_companies': all_companies,
+            'queried_companies': queried_companies,
             'name_length': Company._meta.get_field('companyName').max_length,
             'desc_length': Company._meta.get_field('description').max_length,
             'rating': Company._meta.get_field('rating'),

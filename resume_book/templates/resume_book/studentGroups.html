@@ -11,7 +11,7 @@
     {% csrf_token %}
     <label for="name">Group name:</label>
     <br>
-    <input type="text" name="name" id="name" maxlength={{name_length}}>
+    <input type="text" name="name" id="name" maxlength={{name_length}} required>
     <br>
     <label for="description">Description:</label>
     <br>

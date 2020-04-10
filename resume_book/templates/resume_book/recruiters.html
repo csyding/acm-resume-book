@@ -11,11 +11,11 @@
     {% csrf_token %}
     <label for="recruiterName">Recruiter Name:</label>
     <br>
-    <input type="text" name="recruiterName" id="recruiterName" maxlength={{recruiter_name_length}}>
+    <input type="text" name="recruiterName" id="recruiterName" maxlength={{recruiter_name_length}} reqruied>
     <br>
     <label for="companyName">Company Name:</label>
     <br>
-    <input type="text" name="companyName" id="companyName" maxlength={{company_name_length}}>
+    <input type="text" name="companyName" id="companyName" maxlength={{company_name_length}} required>
     <br>
     <input type="submit" value="Submit">
 </form>

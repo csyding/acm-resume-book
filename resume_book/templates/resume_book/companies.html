@@ -11,7 +11,7 @@
     {% csrf_token %}
     <label for="companyName">Company name:</label>
     <br>
-    <input type="text" name="companyName" id="companyName" maxlength={{name_length}}>
+    <input type="text" name="companyName" id="companyName" maxlength={{name_length}} required>
     <br>
     <label for="description">Description:</label>
     <br>
@@ -28,11 +28,33 @@
     <input type="submit" value="Submit">
 </form>
 
+<!-- <h3>Search bocks</h3> -->
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% else %}
+<form action="{% url 'resume_book:companies' %}" method="get">
+  {% csrf_token %}
+  <label for="search"><b>Search (case insensitive):</b></label>
+  <br>
+  <label for="name-query"> Name: </label>
+  <input type="text" id="name-query" name="companyName" maxlength={{name_length}}>
+  <br>
+  <label for="rating-query"> Rating: </label>
+  <select id="rating-equality" name="equality">
+      <option value=">">&gt;</option>
+        <option value="<">&lt;</option>
+        <option value="=">=</option>
+  </select>
+  <input type="number" id="rating-query" name="rating" maxlength="2">
+  <br>
+  <input type="submit" value="Submit">
+</form>
+{% endif %}
 
-{% if all_companies %}
+{% if queried_companies %}
 <div style="height:300px;overflow:auto;outline:2px dotted black;">
 <table>
-    {% for company in all_companies %}
+    {% for company in queried_companies %}
     <tr>
         <form action="{% url 'resume_book:removeCompany' company.companyName %}">
             <tr>
