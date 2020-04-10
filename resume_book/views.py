@@ -91,11 +91,11 @@ def removeCompany(request, company_name):
 
 
 def internships(request):
-    companyname_query = request.GET.get('companyName', '')
+    # companyname_query = request.GET.get('companyName', '')
     equality_symbol = request.GET.get('equality', '')
     numberRating_query = request.GET.get('numberRating', '')
 
-    combined_query = Q(companyName__icontains=companyname_query)
+    # combined_query = Q(companyName__icontains=companyname_query)
 
     if numberRating_query != '':
         numberRating = int(numberRating_query)
