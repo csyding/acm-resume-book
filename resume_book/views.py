@@ -232,5 +232,10 @@ def removeStudent(request, student_netID):
     return HttpResponseRedirect(reverse('resume_book:students'))
 
 # def searchNetID(request, query):
-#     student = get_object_or_404(Student, pk=student_netID)
-#     return HttpResponseRedirect(reverse('resume_book:students'))
+#     all_results = Student.objects.filter(netID=query)
+#     context = {
+#             'all_results': all_results,
+#             'name_length': Student._meta.get_field('name').max_length,
+#             'desc_length': Student._meta.get_field('netID').max_length
+#             }
+#     return render(request, 'resume_book/students.html', context)

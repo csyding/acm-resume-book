@@ -52,9 +52,9 @@
   <input type="submit" value="Submit">
 </form>
 
-{% if results %}
+{% if all_results %}
 <table>
-  {% for result in results %}
+  {% for result in all_results %}
     <form action="{% url 'resume_book:searchNetID' %}" method="post"></form>
     <tr> <p> {{ result }} </p> </tr>
   {% endfor %}
