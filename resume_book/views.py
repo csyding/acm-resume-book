@@ -111,7 +111,6 @@ def addInternship(request):
     internshipNumberRating = request.POST.get('numberRating')
     internshipProjectDescription = request.POST.get('projectDescription')
     internshipCompanyReview = request.POST.get('companyReview')
-    internshipExperiences = request.POST.get('experiences')
     internshipStartDate = request.POST.get('startDate')
     internshipEndDate = request.POST.get('endDate')
 
@@ -123,7 +122,6 @@ def addInternship(request):
         existingInternship.numberRating = internshipNumberRating if internshipNumberRating else existingInternship.numberRating
         existingInternship.projectDescription = internshipProjectDescription if internshipProjectDescription else existingInternship.projectDescription
         existingInternship.companyReview = internshipCompanyReview if internshipCompanyReview else existingInternship.companyReview
-        existingInternship.experiences = internshipExperiences if internshipExperiences else existingInternship.experiences
         existingInternship.startDate = internshipStartDate if internshipStartDate else existingInternship.startDate
         existingInternship.endDate = internshipEndDate if internshipEndDate else existingInternship.endDate
         existingInternship.save()
@@ -133,7 +131,7 @@ def addInternship(request):
         newInternship = Internship(netID=Student.objects.get(netID=internshipNetID), 
                         companyName=Company.objects.get(companyName=internshipCompanyName), 
                         numberRating=internshipNumberRating, projectDescription= internshipProjectDescription, 
-                        companyReview=internshipCompanyReview, experiences=internshipExperiences,
+                        companyReview=internshipCompanyReview,
                         startDate=internshipStartDate, endDate=internshipEndDate)
         newInternship.save()
 
