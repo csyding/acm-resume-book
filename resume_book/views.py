@@ -179,10 +179,31 @@ def removeRecruiter(request, recruiter_name):
     return HttpResponseRedirect(reverse('resume_book:recruiters'))
 
 def students(request):
-    all_students = Student.objects.all()
+    name_query = request.GET.get('name', '')
+    netID_query = request.GET.get('netID', '')
+
+    equalitySymbol = request.GET.get('equality', '')
+    gradYear_query = request.GET.get('gradYear', '')
+
+
+    combined_query = Q(name__icontains=name_query, netID__icontains=netID_query)
+    # the 'icontains' is case-insensitive, while 'contains' is sensitive
+
+    if gradYear_query != '':
+        gradYear = int(gradYear_query)
+        if equalitySymbol == '>':
+            combined_query = Q(gradYear__gt=gradYear)
+        elif equalitySymbol == '<':
+            combined_query = Q(gradYear__lt=gradYear)
+        else:
+            combined_query = Q(gradYear=gradYear)
+
+
+    queried_students = Student.objects.filter(combined_query)
+        
 
     context = {
-            'all_students': all_students,
+            'queried_students': queried_students,
             'name_length': Student._meta.get_field('name').max_length,
             'netID_length': Student._meta.get_field('netID').max_length,
             'interests_length': Student._meta.get_field('interests').max_length,
@@ -231,11 +252,3 @@ def removeStudent(request, student_netID):
 
     return HttpResponseRedirect(reverse('resume_book:students'))
 
-# def searchNetID(request, query):
-#     all_results = Student.objects.filter(netID=query)
-#     context = {
-#             'all_results': all_results,
-#             'name_length': Student._meta.get_field('name').max_length,
-#             'desc_length': Student._meta.get_field('netID').max_length
-#             }
-#     return render(request, 'resume_book/students.html', context)

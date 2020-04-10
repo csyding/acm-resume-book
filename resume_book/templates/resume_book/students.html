@@ -40,33 +40,36 @@
     <input type="submit" value="Submit">
 </form>
 
-<!-- <h3>Search by NetID</h3>
+<!-- <h3>Search bocks</h3> -->
 {% if error_message %}
-<p><strong>{{ error_message }}</strong></p>{% endif %}
-<form action="{% url 'resume_book:searchNetID' %}" method="post">
+<p><strong>{{ error_message }}</strong></p>
+{% else %}
+<form action="{% url 'resume_book:students' %}" method="get">
   {% csrf_token %}
-  <label for="search">Search:</label>
+  <label for="search"><b>Search (case insensitive):</b></label>
   <br>
-  <input type="text" name="search" id="search" maxlength={{experiences_length}}>
+  <label for="name-query"> Name: </label>
+  <input type="text" id="name-query" name="name" maxlength={{name_length}}>
+  <br>
+  <label for="netID-query"> NetID: </label>
+  <input type="text" id="netID-query" name="netID" maxlength={{netID_length}}>
+  <br>
+  <label for="gradYear-query"> Grad Year: </label>
+  <select id="gradYear-equality" name="equality">
+      <option value=">">&gt;</option>
+        <option value="<">&lt;</option>
+        <option value="=">=</option>
+  </select>
+  <input type="number" id="gradYear-query" name="gradYear" maxlength="4">
   <br>
   <input type="submit" value="Submit">
 </form>
+{% endif %}
 
-{% if all_results %}
-<table>
-  {% for result in all_results %}
-    <form action="{% url 'resume_book:searchNetID' %}" method="post"></form>
-    <tr> <p> {{ result }} </p> </tr>
-  {% endfor %}
-</table>
-{% else %}
-<p>No students are available.</p>
-{% endif %} -->
-
-{% if all_students %}
+{% if queried_students %}
 <div style="height:300px;overflow:auto;outline:2px dotted black;">
 <table>
-    {% for student in all_students %}
+    {% for student in queried_students %}
     <tr>
         <form action="{% url 'resume_book:removeStudent' student.netID %}">
             <tr>
