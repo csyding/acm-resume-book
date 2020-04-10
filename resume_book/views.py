@@ -13,7 +13,7 @@ from .models import Student;
 
 # Create your views here.
 def index(request):
-    return HttpResponse(reverse('resume_book:index'))
+    return render(request, 'resume_book/index.html') 
 
 
 def studentGroups(request):
@@ -57,6 +57,7 @@ def removeGroup(request, group_name):
 
 def companies(request):
     name_query = request.GET.get('companyName', '')
+    equalitySymbol = request.GET.get('equality', '')
     rating_query = request.GET.get('rating', '')
 
 
@@ -119,7 +120,7 @@ def internships(request):
     equality_symbol = request.GET.get('equality', '')
     numberRating_query = request.GET.get('numberRating', '')
 
-    combined_query = Q()
+    combined_query = Q(companyName__companyName__icontains=companyName_query)
 
     if numberRating_query != '':
         numberRating = int(numberRating_query)
