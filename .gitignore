@@ -2,4 +2,5 @@ venv
 *.pyc
 staticfiles
 .env
+*.swp
 *.sqlite3
