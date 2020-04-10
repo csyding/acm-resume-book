@@ -13,7 +13,7 @@ from .models import Student;
 
 # Create your views here.
 def index(request):
-    return HttpResponse('Hello, world. You\'re at the reusmebook index.')
+    return HttpResponse(reverse('resume_book:index'))
 
 
 def studentGroups(request):
