@@ -40,11 +40,34 @@
     <input type="submit" value="Submit">
 </form>
 
+<!-- <h3>Search bocks</h3> -->
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% else %}
+<form action="{% url 'resume_book:internships' %}" method="get">
+  {% csrf_token %}
+  <label for="search"><b>Search (case insensitive):</b></label>
+  <br>
+  <label for="companyname-query"> Name: </label>
+  <input type="text" id="companyname-query" name="companyName" maxlength={{name_length}}>
+  <br>
+  <label for="numberRating-query"> Grad Year: </label>
+  <select id="numberRating-equality" name="equality">
+      <option value=">">&gt;</option>
+        <option value="<">&lt;</option>
+        <option value="=">=</option>
+  </select>
+  <input type="number" id="numberRating-query" name="numberRating" maxlength="4">
+  <br>
+  <input type="submit" value="Submit">
+</form>
+{% endif %}
 
-{% if all_internships %}
+
+{% if queried_internships %}
 <div style="height:300px;overflow:auto;outline:2px dotted black;">
 <table>
-    {% for internship in all_internships %}
+    {% for internship in queried_internships %}
     <tr>
         <form action="{% url 'resume_book:removeInternship' internship.netID %}">
             <tr>
