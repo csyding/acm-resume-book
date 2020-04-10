@@ -109,22 +109,16 @@ def removeCompany(request, company_name):
 
 
 def internships(request):
-<<<<<<< HEAD
-    companyName_query = request.GET.get('companyName', '')
-    equality_symbol = request.GET.get('equality', '')
-    numberRating_query = request.GET.get('numberRating', '')
-
-    combined_query = Q(company__companyName__icontains=companyName_query)
-=======
     # companyname_query = request.GET.get('companyName', '')
     equality_symbol = request.GET.get('equality', '')
     numberRating_query = request.GET.get('numberRating', '')
 
     # combined_query = Q(companyName__icontains=companyname_query)
->>>>>>> b342220b0ea13640d6ebdb8117b1fee05d576ad6
 
     if numberRating_query != '':
         numberRating = int(numberRating_query)
+
+        combined_query = None
 
         if equality_symbol == '>':
             combined_query = Q(numberRating__gt=numberRating)
