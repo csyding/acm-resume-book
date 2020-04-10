@@ -16,4 +16,10 @@ urlpatterns = [
     path('students/', views.students, name='students'),
     path('students/addStudent', views.addStudent, name='addStudent'),
     path('students/removeStudent/<str:student_netID>', views.removeStudent, name='removeStudent'),
+    path('recruiters/', views.recruiters, name='recruiters'),
+    path('recruiters/addRecruiter', views.addRecruiter, name='addRecruiter'),
+    path('recruiters/removeRecruiter/<str:recruiter_name>', views.removeRecruiter, name='removeRecruiter'),
+    path('internships/', views.internships, name='internships'),
+    path('internships/addInternship', views.addInternship, name='addInternship'),
+    path('internships/removeInternship/<str:internship_netID>', views.removeInternship, name='removeInternship'),
 ]

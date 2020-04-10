@@ -1,25 +1,8 @@
-{% if all_companies %}
-<table>
-    {% for company in all_companies %}
-    <tr>
-        <form action="{% url 'resume_book:removeCompany' company.companyName %}">
-            <td>
-                <h3 type="displayName">{{ company.companyName }}</h3>
-                <p type="displayDescription">{{ company.description }}</p>
-                <p type="displayRating">{{ company.rating }}</p>
-                <p type="displaySponsorDate">{{ company.sponsorDate }}</p>
-            </td>
-            <td>
-                <input type="submit" value="Delete">
-            </td>
-        </form>
-        <tr/> {% endfor %}
-</table>
-{% else %}
-<p>No companies are available.</p>
-{% endif %}
+{% load static %}
 
-<h2>Create/update a company</h2>
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+<h3>Create/Update a company</h3>
 
 {% if error_message %}
 <p><strong>{{ error_message }}</strong></p>{% endif %}
@@ -36,11 +19,47 @@
     <br>
     <label for="rating">Rating:</label>
     <br>
-    <input type="text" name="rating" id="rating" maxlength={{rating}}>
+    <input type="number" name="rating" id="rating" maxlength={{rating}}>
     <br>
     <label for="sponsorDate">Sponsor Date:</label>
     <br>
-    <input type="text" name="sponsorDate" id="sponsorDate" maxlength={{sponsorDate}}>
+    <input type="date" name="sponsorDate" id="sponsorDate" maxlength={{sponsorDate}}>
     <br>
     <input type="submit" value="Submit">
 </form>
+
+
+{% if all_companies %}
+<div style="height:300px;overflow:auto;outline:2px dotted black;">
+<table>
+    {% for company in all_companies %}
+    <tr>
+        <form action="{% url 'resume_book:removeCompany' company.companyName %}">
+            <tr>
+                <th><h3 type="displayName">{{ company.companyName }}</h3></th>
+              </tr>
+            <tr>
+                <th><p>Description:</p></th>
+                <td><p type="displayDescription">{{ company.description }}</p></td>
+              </tr>
+              <tr>
+                <th><p>Rating:</p></th>
+                <td><p type="displayRating">{{ company.rating }}</p></td>
+              </tr>
+              <tr>
+                <th><p>Sponsor Date:</p></th>
+                <td><p type="displaySponsorDate">{{ company.sponsorDate }}</p></td>
+              </tr>
+              <br>
+            <td>
+                <input type="submit" value="Delete">
+                <br>
+                <br>
+            </td>
+        </form>
+    </tr> {% endfor %}
+</table>
+</div>
+{% else %}
+<p>No companies are available.</p>
+{% endif %}

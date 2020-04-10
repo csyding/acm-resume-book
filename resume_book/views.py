@@ -26,8 +26,8 @@ def studentGroups(request):
     return render(request, 'resume_book/studentGroups.html', context)
 
 def addGroup(request):
-    groupName = request.POST['name']
-    groupDescription = request.POST['description']
+    groupName = request.POST.get('name')
+    groupDescription = request.POST.get('description')
 
     try:
         # If exists, update it!
@@ -105,31 +105,32 @@ def internships(request):
     return render(request, 'resume_book/internships.html', context)
 
 def addInternship(request):
-    internshipNetID = request.POST['netID']
-    internshipCompanyName = request.POST['companyName']
-    internshipNumberRating = request.POST['numberRating']
-    internshipProjectDescription = request.POST['projectDescription']
-    internshipCompanyReview = request.POST['companyReview']
-    internshipExperiences = request.POST['experiences']
-    internshipStartDate = request.POST['startDate']
-    internshipEndDate = request.POST['endDate']
+    internshipNetID = request.POST.get('netID', 0)
+    internshipCompanyName = request.POST.get('companyName')
+    internshipNumberRating = request.POST.get('numberRating')
+    internshipProjectDescription = request.POST.get('projectDescription')
+    internshipCompanyReview = request.POST.get('companyReview')
+    internshipExperiences = request.POST.get('experiences')
+    internshipStartDate = request.POST.get('startDate')
+    internshipEndDate = request.POST.get('endDate')
 
     try:
         # If exists, update it!
-        existingInternship = Internship.objects.get(pk=internshipID)
-        existingInternship.netID = internshipNetID
-        existingInternship.companyName = internshipCompanyName
-        existingInternship.numberRating = internshipNumberRating
-        existingInternship.projectDescription = internshipProjectDescription
-        existingInternship.companyReview = internshipCompanyReview
-        existingInternship.experiences = internshipExperiences
-        existingInternship.startDate = internshipStartDate
-        existingInternship.endDate = internshipEndDate
+        existingInternship = Internship.objects.get(pk=internshipNetID)
+        existingInternship.netID = Student.objects.get(netID=internshipNetID)
+        existingInternship.companyName = Company.objects.get(companyName=internshipCompanyName)
+        existingInternship.numberRating = internshipNumberRating if internshipNumberRating else existingInternship.numberRating
+        existingInternship.projectDescription = internshipProjectDescription if internshipProjectDescription else existingInternship.projectDescription
+        existingInternship.companyReview = internshipCompanyReview if internshipCompanyReview else existingInternship.companyReview
+        existingInternship.experiences = internshipExperiences if internshipExperiences else existingInternship.experiences
+        existingInternship.startDate = internshipStartDate if internshipStartDate else existingInternship.startDate
+        existingInternship.endDate = internshipEndDate if internshipEndDate else existingInternship.endDate
         existingInternship.save()
 
     except Internship.DoesNotExist:
         # If doesn't exists, create one!
-        newInternship = Internship(netID=internshipNetID, companyName=internshipCompanyName, 
+        newInternship = Internship(netID=Student.objects.get(netID=internshipNetID), 
+                        companyName=Company.objects.get(companyName=internshipCompanyName), 
                         numberRating=internshipNumberRating, projectDescription= internshipProjectDescription, 
                         companyReview=internshipCompanyReview, experiences=internshipExperiences,
                         startDate=internshipStartDate, endDate=internshipEndDate)
@@ -149,23 +150,23 @@ def recruiters(request):
     context = {
             'all_recruiters': all_recruiters,
             'recruiter_name_length': Recruiter._meta.get_field('recruiterName').max_length,
-            'company_name_length': Recruiter._meta.get_field('companyName').max_length
+            'company_name_length': Company._meta.get_field('companyName').max_length
             }
     return render(request, 'resume_book/recruiters.html', context)
 
 def addRecruiter(request):
-    recruiterName = request.POST['name']
-    recruiterCompanyName = request.POST['companyName']
+    recruiterName = request.POST.get('recruiterName')
+    recruiterCompanyName = request.POST.get('companyName')
 
     try:
         # If exists, update it!
         existingRecruiter = Recruiter.objects.get(pk=recruiterName)
-        existingRecruiter.companyName = recruiterCompanyName
+        existingRecruiter.companyName = Company.objects.get(companyName=recruiterCompanyName)
         existingRecruiter.save()
 
     except Recruiter.DoesNotExist:
         # If doesn't exists, create one!
-        newRecruiter = Recruiter(recruiterName=recruiterName, companyName=recruiterCompanyName)
+        newRecruiter = Recruiter(recruiterName=recruiterName, companyName=Company.objects.get(companyName=recruiterCompanyName))
         newRecruiter.save()
 
     return HttpResponseRedirect(reverse('resume_book:recruiters'))
@@ -177,7 +178,7 @@ def removeRecruiter(request, recruiter_name):
     return HttpResponseRedirect(reverse('resume_book:recruiters'))
 
 def students(request):
-    all_students = Student.objects.all()[:5]
+    all_students = Student.objects.all()
 
     context = {
             'all_students': all_students,

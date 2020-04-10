@@ -42,11 +42,11 @@
 
 
 {% if all_students %}
+<div style="height:300px;overflow:auto;outline:2px dotted black;">
 <table>
     {% for student in all_students %}
     <tr>
         <form action="{% url 'resume_book:removeStudent' student.netID %}">
-            <br>
             <tr>
                 <th><h3 type="displayName">{{ student.name }}</h3></th>
               </tr>
@@ -82,6 +82,7 @@
         </form>
     </tr> {% endfor %}
 </table>
+</div>
 {% else %}
 <p>No students are available.</p>
 {% endif %}

@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 class Student(models.Model):
@@ -19,8 +20,8 @@ class Internship(models.Model):
     numberRating = models.FloatField(null=True)
     projectDescription = models.CharField(max_length=500)
     companyReview = models.CharField(max_length=500)
-    startDate = models.DateTimeField(auto_now=True)
-    endDate = models.DateTimeField(auto_now=True)
+    startDate = models.DateField(default=datetime.date.today)
+    endDate = models.DateField(default=datetime.date.today)
 
     def __str__(self):
         return "Internship: " + str(self.companyName)
@@ -29,7 +30,7 @@ class Company(models.Model):
     companyName = models.CharField(max_length=20, primary_key=True)
     description = models.CharField(max_length=500, blank=True)
     rating = models.FloatField(null=True)
-    sponsorDate = models.DateTimeField(auto_now=True)
+    sponsorDate = models.DateField(default=datetime.date.today)
 
     def __str__(self):
         return "Company: " + str(self.companyName)
