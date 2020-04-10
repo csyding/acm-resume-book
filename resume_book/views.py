@@ -16,7 +16,7 @@ def index(request):
 
 
 def studentGroups(request):
-    all_student_groups = StudentGroup.objects.all()[:5]
+    all_student_groups = StudentGroup.objects.all()
 
     context = {
             'all_student_groups': all_student_groups,

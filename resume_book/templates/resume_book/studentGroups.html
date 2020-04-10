@@ -1,19 +1,22 @@
 {% if all_student_groups %}
-<table>
-    {% for group in all_student_groups %}
-    <tr>
-        <form action="{% url 'resume_book:removeGroup' group.name %}">
-            <td>
-                <h3 type="displayName">{{ group.name }}</h3>
-                <p type="displayDescription">{{ group.description }}</p>
-            </td>
-            <td>
-                <input type="submit" value="Delete">
-            </td>
-        </form>
-    <tr/>
-    {% endfor %}
-</table>
+<div style="height:200px;overflow:auto;outline:2px dotted black;">
+    <table>
+        {% for group in all_student_groups %}
+        <tr>
+            <form action="{% url 'resume_book:removeGroup' group.name %}">
+                <td>
+                    <h3 type="displayName">{{ group.name }}</h3>
+                    <p type="displayDescription">{{ group.description }}</p>
+                    <p type="displayMembersCount">Has {{ group.members.all.count }} members</p>
+                </td>
+                <td>
+                    <input type="submit" value="Delete">
+                </td>
+            </form>
+        <tr/>
+        {% endfor %}
+    </table>
+</div>
 {% else %}
 <p>No polls are available.</p>
 {% endif %}
