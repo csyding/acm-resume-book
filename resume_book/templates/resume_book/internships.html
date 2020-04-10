@@ -48,16 +48,16 @@
   {% csrf_token %}
   <label for="search"><b>Search (case insensitive):</b></label>
   <br>
-  <label for="companyname-query"> Name: </label>
-  <input type="text" id="companyname-query" name="companyName" maxlength={{name_length}}>
+  <label for="companyname-query"> Company Name: </label>
+  <input type="text" id="companyname-query" name="companyName" maxlength={{companyName_length}}>
   <br>
-  <label for="numberRating-query"> Grad Year: </label>
+  <label for="numberRating-query"> Rating: </label>
   <select id="numberRating-equality" name="equality">
       <option value=">">&gt;</option>
         <option value="<">&lt;</option>
         <option value="=">=</option>
   </select>
-  <input type="number" id="numberRating-query" name="numberRating" maxlength="4">
+  <input type="number" id="numberRating-query" name="numberRating" maxlength="2">
   <br>
   <input type="submit" value="Submit">
 </form>
