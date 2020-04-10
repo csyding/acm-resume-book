@@ -16,6 +16,7 @@ urlpatterns = [
     path('students/', views.students, name='students'),
     path('students/addStudent', views.addStudent, name='addStudent'),
     path('students/removeStudent/<str:student_netID>', views.removeStudent, name='removeStudent'),
+    # path('students/searchNetID/<str:query>', views.searchNetID, name='searchNetID'),
     path('recruiters/', views.recruiters, name='recruiters'),
     path('recruiters/addRecruiter', views.addRecruiter, name='addRecruiter'),
     path('recruiters/removeRecruiter/<str:recruiter_name>', views.removeRecruiter, name='removeRecruiter'),

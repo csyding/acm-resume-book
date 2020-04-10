@@ -40,6 +40,28 @@
     <input type="submit" value="Submit">
 </form>
 
+<!-- <h3>Search by NetID</h3>
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>{% endif %}
+<form action="{% url 'resume_book:searchNetID' %}" method="post">
+  {% csrf_token %}
+  <label for="search">Search:</label>
+  <br>
+  <input type="text" name="search" id="search" maxlength={{experiences_length}}>
+  <br>
+  <input type="submit" value="Submit">
+</form>
+
+{% if results %}
+<table>
+  {% for result in results %}
+    <form action="{% url 'resume_book:searchNetID' %}" method="post"></form>
+    <tr> <p> {{ result }} </p> </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No students are available.</p>
+{% endif %} -->
 
 {% if all_students %}
 <div style="height:300px;overflow:auto;outline:2px dotted black;">

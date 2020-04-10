@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.db.models import Q
 
 
 from .models import StudentGroup;
@@ -229,3 +230,7 @@ def removeStudent(request, student_netID):
     student.delete()
 
     return HttpResponseRedirect(reverse('resume_book:students'))
+
+# def searchNetID(request, query):
+#     student = get_object_or_404(Student, pk=student_netID)
+#     return HttpResponseRedirect(reverse('resume_book:students'))
