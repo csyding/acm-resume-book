@@ -54,7 +54,7 @@ def companies(request):
     rating_query = request.GET.get('rating', '')
 
 
-    combined_query = Q(name__icontains=name_query)
+    combined_query = Q(companyName__icontains=name_query)
     # the 'icontains' is case-insensitive, while 'contains' is sensitive
 
     if rating_query != '':
@@ -109,11 +109,11 @@ def removeCompany(request, company_name):
 
 
 def internships(request):
-    companyname_query = request.GET.get('companyName', '')
+    companyName_query = request.GET.get('companyName', '')
     equality_symbol = request.GET.get('equality', '')
     numberRating_query = request.GET.get('numberRating', '')
 
-    combined_query = Q(companyName__icontains=companyname_query)
+    combined_query = Q(company__companyName__icontains=companyName_query)
 
     if numberRating_query != '':
         numberRating = int(numberRating_query)
