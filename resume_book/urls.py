@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -7,6 +7,8 @@ app_name = 'resume_book'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('login/', views.login, name='login'),
+    path('signup/', views.signup, name='signup'),
     path('studentgroups/', views.studentGroups, name='studentGroups'),
     path('studentgroups/addgroup', views.addGroup, name='addGroup'),
     path('studentgroups/removegroup/<str:group_name>', views.removeGroup, name='removeGroup'),

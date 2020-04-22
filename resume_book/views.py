@@ -15,7 +15,11 @@ from .models import Student;
 def index(request):
     return render(request, 'resume_book/index.html')
 
+def login(request):
+    return render(request, 'resume_book/login.html')
 
+def signup(request):
+    return render(request, 'resume_book/signup.html')
 
 def studentGroups(request):
     name_query = request.GET.get('name', '')
