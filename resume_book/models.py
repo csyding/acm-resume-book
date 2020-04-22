@@ -1,4 +1,5 @@
 from django.db import models
+from djongo import models as mongoModels
 import datetime
 
 # Create your models here.
@@ -51,3 +52,14 @@ class StudentGroup(models.Model):
     def __str__(self):
         return "Student Group: " + str(self.name)
 
+
+
+# Here begins the MongoDB Objects ==================================================================
+
+# class MongoStudent(mongoModels.Model):
+#     netID = mongoModels.CharField(max_length=8, primary_key=True)
+#     interests = mongoModels.ArrayModelField( model_container=Interest )
+#
+# class Interest(mongoModels.Model):
+#     tagName = mongoModels.CharField(max_length=20, primary_key=True)
+#

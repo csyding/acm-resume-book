@@ -88,13 +88,16 @@ DATABASES = {
         'PASSWORD': mysql_url.password,
         'HOST': mysql_url.hostname,
         },
-    'ourgraphdb': {
+    'tagstore': {
         'ENGINE': 'djongo',
         'NAME': 'heroku_l4jz1453',
         'CLIENT': {
-            'host': mongo_uri
-            }
+            'host': 'mongodb://heroku_l4jz1453:331760qvthn2n8lf8mbf7nfc64@ds161026.mlab.com/heroku_l4jz1453',
+            'port': 61026,
+            'username': 'heroku_l4jz1453',
+            'password': '331760qvthn2n8lf8mbf7nfc64',
         }
+    }
 }
 
 
