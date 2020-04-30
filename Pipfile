@@ -12,6 +12,7 @@ django-heroku = "*"
 psycopg2-binary = "*"
 djongo = "*"
 mysqlclient = "*"
+neo4j-driver = "*"
 
 [requires]
 python_version = "3.6"

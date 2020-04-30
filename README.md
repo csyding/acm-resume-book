@@ -8,6 +8,9 @@ pip install pipenv --user
 pipenv install --dev
 heroku config:get -s DATABASE_URL >> .env
 heroku config:get -s MONGODB_URI >> .env
+heroku config:get -s GRAPHENEDB_BOLT_URL >> .env
+heroku config:get -s GRAPHENEDB_BOLT_USER >> .env
+heroku config:get -s GRAPHENEDB_BOLT_PASSWORD >> .env
 ```
 
 ## FAQ
