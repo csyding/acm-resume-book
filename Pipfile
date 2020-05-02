@@ -13,6 +13,7 @@ psycopg2-binary = "*"
 djongo = "*"
 mysqlclient = "*"
 neo4j-driver = "*"
+django-allauth = "*"
 
 [requires]
 python_version = "3.6"

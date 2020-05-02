@@ -38,8 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'allauth',
+    'allauth.account',
 ]
 
 MIDDLEWARE = [
@@ -117,6 +120,15 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AUTHENTICATION_BACKENDS = (
+        # Needed to login by username in Django admin, regardless of `allauth`
+        'django.contrib.auth.backends.ModelBackend',
+
+        # `allauth` specific authentication methods, such as login by e-mail
+        'allauth.account.auth_backends.AuthenticationBackend',
+        )
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -141,3 +153,8 @@ django_heroku.settings(locals())
 
 # Fix for but discussed in https://github.com/jacobian/dj-database-url/issues/107
 del DATABASES['default']['OPTIONS']['sslmode']
+
+# Needed for all-auth. 
+# This is used so that application data can hook into specific sites and a single database can manage content for multiple sites.
+SITE_ID = 1
+
