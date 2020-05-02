@@ -7,9 +7,15 @@ app_name = 'resume_book'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('login/', views.login, name='login'),
+
+    path('loginPage/', views.loginPage, name='loginPage'),
+    path('logoutPage/', views.logoutPage, name='logoutPage'),
     path('signup/', views.signup, name='signup'),
     path('accounts/', include('allauth.urls')),
+
+    path('studentHome/', views.studentHome, name='studentHome'),
+    path('recruiterHome/', views.recruiterHome, name='recruiterHome'),
+
     path('studentgroups/', views.studentGroups, name='studentGroups'),
     path('studentgroups/addgroup', views.addGroup, name='addGroup'),
     path('studentgroups/removegroup/<str:group_name>', views.removeGroup, name='removeGroup'),

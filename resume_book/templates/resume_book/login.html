@@ -5,7 +5,7 @@
 <head></head>
 <body>
     <h3 class="center">Welcome to the ACM Resume Book Login!</h3>
-    <form class="login-form shrinkwrap" action="{% url 'resume_book:addStudent' %}" method="post">
+    <form class="login-form shrinkwrap" action="{% url 'resume_book:loginPage' %}" method="post">
         {% csrf_token %}
         <label for="username"><b>Username:</b></label>
         <br>
@@ -14,10 +14,6 @@
         <label for="password"><b>Password:</b></label>
         <br>
         <input type="password" name="password" id="password" required>
-        <br>
-        <label for="userType">Who are you?</label>
-        <input name="userType" type="radio" value="Student">Student</input>
-        <input name="userType" type="radio" value="Recruiter">Recruiter</input>
         <br>
         <input type="submit" value="Log in">
     </form>

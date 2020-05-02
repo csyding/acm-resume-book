@@ -5,7 +5,7 @@
 <head></head>
 <body>
     <h3 class="center">ACM Resume Book Signup!</h3>
-    <form class="login-form shrinkwrap" action="{% url 'resume_book:addStudent' %}" method="post">
+    <form class="login-form shrinkwrap" action="{% url 'resume_book:signup' %}" method="post">
         {% csrf_token %}
         <label for="username"><b>Username:</b></label>
         <br>
@@ -24,7 +24,7 @@
         <input type="password" name="confirmPassword" id="confirmPassword" required>
         <br>
         <label for="userType">Who are you?</label>
-        <input name="userType" type="radio" value="Student">Student</input>
+        <input name="userType" type="radio" value="Student" checked>Student</input>
         <input name="userType" type="radio" value="Recruiter">Recruiter</input>
         <br>
         <input type="submit" value="Sign up">
