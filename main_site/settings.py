@@ -79,7 +79,9 @@ WSGI_APPLICATION = 'main_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-mongo_uri = urlparse.urlparse(os.environ['MONGODB_URI'])
+neo_url = urlparse.urlparse(os.environ['GRAPHENEDB_BOLT_URL'])
+neo_username = os.environ['GRAPHENEDB_BOLT_USER']
+neo_pass = os.environ['GRAPHENEDB_BOLT_PASSWORD']
 urlparse.uses_netloc.append('mysql')
 mysql_url = urlparse.urlparse(os.environ['DATABASE_URL'])
 
@@ -92,11 +94,13 @@ DATABASES = {
         'HOST': mysql_url.hostname,
         },
     'ourgraphdb': {
-        'ENGINE': 'djongo',
-        'NAME': 'heroku_l4jz1453',
-        'CLIENT': {
-            'host': mongo_uri
-            }
+        'HOST': neo_url.hostname,
+        'PORT': neo_url.port,
+        'ENDPOINT': neo_url.path,
+        'OPTIONS': {
+            'username': neo_username,
+            'password': neo_pass
+        }
         }
 }
 
