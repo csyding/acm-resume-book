@@ -125,22 +125,21 @@ def companies(request):
     equalitySymbol = request.GET.get('equality', '')
     rating_query = request.GET.get('rating', '')
 
+    sql_query_string = 'SELECT * FROM resume_book_company'
 
-    combined_query = Q(companyName__icontains=name_query)
-    # the 'icontains' is case-insensitive, while 'contains' is sensitive
+    compounds = 0
+    if name_query:
+        query_string += ' WHERE companyName = \"' + name_query + '\"'
+        compounds += 1
 
-    if rating_query != '':
-        rating = int(rating_query)
-        if equalitySymbol == '>':
-            combined_query = combined_query & Q(rating__gt=rating)
-        elif equalitySymbol == '<':
-            combined_query = combined_query & Q(rating__lt=rating)
+    if rating_query:
+        if compounds > 0: 
+            query_string += ' AND '
         else:
-            combined_query = combined_query & Q(rating=rating)
+            query_string += ' WHERE '
+        query_string += 'numberRating ' + equalitySymbol + ' ' + rating_query
 
-
-    queried_companies = Company.objects.filter(combined_query)
-        
+    queried_companies = Company.objects.raw(query_string)        
 
     context = {
             'queried_companies': queried_companies,
@@ -209,20 +208,6 @@ def internships(request):
         query_string += 'numberRating ' + equality_symbol + ' ' + numberRating_query
 
     queried_internships = Internship.objects.raw(query_string)
-
-    # combined_query = Q(companyName__companyName__icontains=companyName_query)
-
-    # if numberRating_query != '':
-    #     numberRating = int(numberRating_query)
-
-    #     if equality_symbol == '>':
-    #         combined_query = combined_query & Q(numberRating__gt=numberRating)
-    #     elif equality_symbol == '>':
-    #         combined_query = combined_query & Q(numberRating__lt=numberRating)
-    #     else:
-    #         combined_query = combined_query & Q(numberRating=numberRating)
-
-    # queried_internships = Internship.objects.filter(combined_query)
 
     context = {
             'queried_internships': queried_internships,
