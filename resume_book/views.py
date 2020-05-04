@@ -249,15 +249,14 @@ def recruiters(request):
     if not resumeAuth.userInGroup(request.user, 'Recruiter'):
         return HttpResponse('You\'re not allowed to view this page!')
 
-    all_recruiters = Recruiter.objects.all()[:5]
-    name_query = request.GET.get('recruiterName', 'Colleen')
+    name_query = request.GET.get('recruiterName', '')
 
+    query_string = 'SELECT * FROM resume_book_recruiter'
 
-    combined_query = Q(recruiterName__icontains=name_query)
-    # the 'icontains' is case-insensitive, while 'contains' is sensitive
+    if name_query:
+        query_string += ' WHERE recruiterName=\"' + name_query + '\"'
 
-    queried_recruiters = Recruiter.objects.filter(combined_query)
-        
+    queried_recruiters = Recruiter.objects.raw(query_string)
 
     context = {
             'queried_recruiters': queried_recruiters,
