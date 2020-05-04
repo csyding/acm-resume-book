@@ -369,11 +369,15 @@ def addStudent(request):
                     )
         newStudent.save()
 
-        session = driver.session()
-        neo4j_result = session.run('CREATE (s:Student {netid:{netid}})', netid=studentNetID)
-        session.close()
-
     session = driver.session()
+
+    relation = session.run('MATCH (s:Student) WHERE s.netid={netid} RETURN s', netid=studentNetID)
+    count = 0
+    for node in relation:
+        count += 1
+    if count == 0:
+        session.run('CREATE (s:Student {netid:{netid}})', netid=studentNetID)
+
     for interest in interests:
         interest = interest.lower().strip()
         interest_node = session.run('MATCH (k:Interest) WHERE k.value={interest_name} RETURN k', interest_name=interest)
@@ -421,6 +425,10 @@ def removeStudent(request, student_netID):
 
     student = get_object_or_404(Student, pk=student_netID)
     student.delete()
+
+    session = driver.session()
+    session.run('MATCH (s:Student) WHERE s.netid={netid} DETACH DELETE s', netid=student_netID)
+    session.close()
 
     return HttpResponseRedirect(reverse('resume_book:students'))
 
