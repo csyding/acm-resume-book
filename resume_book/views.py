@@ -392,7 +392,7 @@ def addStudent(request):
         sql_query_string += 'netID = \"' + studentNetID + '\"'
         compounds += 1
 
-    if studentGradYear > 0:
+    if len(studentGradYear) > 0:
         if compounds > 0:
             sql_query_string += ', '
         sql_query_string += 'gradYear = \"' + str(studentGradYear) + '\"'
