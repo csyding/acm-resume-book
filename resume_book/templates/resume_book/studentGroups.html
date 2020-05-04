@@ -20,6 +20,24 @@
     <input type="submit" value="Submit">
 </form>
 
+<h3>Add a student</h3>
+
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'resume_book:addStudentToGroup' %}" method="post">
+    {% csrf_token %}
+    <label for="name">Group name:</label>
+    <br>
+    <input type="text" name="name" id="name" maxlength={{name_length}}>
+    <br>
+    <label for="netID">NetID:</label>
+    <br>
+    <input type="text" name="netID" id="netID" maxlength={{netID_length}} required>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+
 <!-- <h3>Search bocks</h3> -->
 {% if error_message %}
 <p><strong>{{ error_message }}</strong></p>

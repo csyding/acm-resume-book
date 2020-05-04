@@ -18,6 +18,7 @@ urlpatterns = [
 
     path('studentgroups/', views.studentGroups, name='studentGroups'),
     path('studentgroups/addgroup', views.addGroup, name='addGroup'),
+    path('studentgroups/addstudenttogroup', views.addStudentToGroup, name='addStudentToGroup'),
     path('studentgroups/removegroup/<str:group_name>', views.removeGroup, name='removeGroup'),
     path('companies/', views.companies, name='companies'),
     path('companies/addcompany', views.addCompany, name='addCompany'),

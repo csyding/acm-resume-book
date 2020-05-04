@@ -89,6 +89,25 @@ def addGroup(request):
 
     return HttpResponseRedirect(reverse('resume_book:studentGroups'))
 
+def addStudentToGroup(request):
+    if not request.user.is_authenticated:
+        return HttpResponse('You\'re not allowed to view this page!')
+
+    groupName = request.POST.get('name')
+    netID = request.POST.get('netID')
+
+    try:
+        existingGroup = StudentGroup.objects.get(pk=groupName)
+        existingStudent = Student.objects.get(pk=netID)
+        existingGroup.members.add(existingStudent)
+        print(existingGroup.members.all)
+
+    except StudentGroup.DoesNotExist:
+        print ('Student Group does not exist!')
+
+    return HttpResponseRedirect(reverse('resume_book:studentGroups'))
+
+
 def removeGroup(request, group_name):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
