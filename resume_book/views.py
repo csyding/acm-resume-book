@@ -179,8 +179,7 @@ def removeCompany(request, company_name):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
-    company = get_object_or_404(Company, pk=company_name)
-    company.delete()
+    StudentGroup.objects.raw('DELETE FROM resume_book_company WHERE name=\"%s\"', params=[company_name])
 
     return HttpResponseRedirect(reverse('resume_book:companies'))
 
