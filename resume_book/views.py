@@ -56,11 +56,12 @@ def studentGroups(request):
 
     name_query = request.GET.get('name', '')
 
-    combined_query = Q(name__icontains=name_query)
-    # the 'icontains' is case-insensitive, while 'contains' is sensitive
+    sql_query_string = 'SELECT * FROM resume_book_studentgroups'
 
-    queried_studentGroups = StudentGroup.objects.filter(combined_query)
-        
+    if name_query:
+        sql_query_string += ' WHERE name=' + name_query
+
+    StudentGroup.objects.raw(sql_query_string)
 
     context = {
             'queried_studentGroups': queried_studentGroups,
