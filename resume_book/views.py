@@ -196,17 +196,17 @@ def internships(request):
 
     compounds = 0
     if companyName_query:
-        query_string += ' WHERE companyName = \"' + companyName_query + '\"'
+        sql_query_string += ' WHERE companyName = \"' + companyName_query + '\"'
         compounds += 1
 
     if numberRating_query:
         if compounds > 0: 
-            query_string += ' AND '
+            sql_query_string += ' AND '
         else:
-            query_string += ' WHERE '
-        query_string += 'numberRating ' + equality_symbol + ' ' + numberRating_query
+            sql_query_string += ' WHERE '
+        sql_query_string += 'numberRating ' + equality_symbol + ' ' + numberRating_query
 
-    queried_internships = Internship.objects.raw(query_string)
+    queried_internships = Internship.objects.raw(sql_query_string)
 
     context = {
             'queried_internships': queried_internships,
@@ -259,8 +259,7 @@ def removeInternship(request, internship_netID):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
-    internship = get_object_or_404(Internship, pk=internship_netID)
-    internship.delete()
+    StudentGroup.objects.raw('DELETE FROM resume_book_company WHERE netID=\"%s\"', params=[internship_netID])
 
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
@@ -270,12 +269,12 @@ def recruiters(request):
 
     name_query = request.GET.get('recruiterName', '')
 
-    query_string = 'SELECT * FROM resume_book_recruiter'
+    sql_query_string = 'SELECT * FROM resume_book_recruiter'
 
     if name_query:
-        query_string += ' WHERE recruiterName=\"' + name_query + '\"'
+        sql_query_string += ' WHERE recruiterName=\"' + name_query + '\"'
 
-    queried_recruiters = Recruiter.objects.raw(query_string)
+    queried_recruiters = Recruiter.objects.raw(sql_query_string)
 
     context = {
             'queried_recruiters': queried_recruiters,
@@ -323,29 +322,29 @@ def students(request):
     equalitySymbol = request.GET.get('equality', '')
     gradYear_query = request.GET.get('gradYear', '')
 
-    query_string = 'SELECT * FROM resume_book_student'
+    sql_query_string = 'SELECT * FROM resume_book_student'
 
     compounds = 0
     if name_query:
-        query_string += ' WHERE name = \"' + name_query + '\"'
+        sql_query_string += ' WHERE name = \"' + name_query + '\"'
         compounds += 1
 
     if netID_query:
         if compounds > 0: 
-            query_string += ' AND '
+            sql_query_string += ' AND '
         else:
-            query_string += ' WHERE '
-        query_string += 'netid = \"' + netID_query + '\"'
+            sql_query_string += ' WHERE '
+        sql_query_string += 'netid = \"' + netID_query + '\"'
         compounds += 1
 
     if gradYear_query:
         if compounds > 0: 
-            query_string += ' AND '
+            sql_query_string += ' AND '
         else:
-            query_string += ' WHERE '
-        query_string += 'gradYear ' + equalitySymbol + ' ' + gradYear_query
+            sql_query_string += ' WHERE '
+        sql_query_string += 'gradYear ' + equalitySymbol + ' ' + gradYear_query
 
-    queried_students = Student.objects.raw(query_string)
+    queried_students = Student.objects.raw(sql_query_string)
 
     context = {
             'queried_students': queried_students,
