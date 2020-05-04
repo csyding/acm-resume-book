@@ -17,6 +17,14 @@
     <br>
     <input type="text" name="netID" id="netID" maxlength={{netID_length}} required>
     <br>
+    <label for="interests">Interests (comma separated):</label>
+    <br>
+    <input type="text" name="interests" id="interests" maxlength={{interests_length}}>
+    <br>
+    <label for="skills">Skills (comma separated):</label>
+    <br>
+    <input type="text" name="skills" id="skills" maxlength={{skills_length}}>
+    <br>
     <label for="gradYear">Graduation Year:</label>
     <br>
     <input type="text" name="gradYear" id="gradYear" maxlength={{gradYear_length}}>
@@ -42,7 +50,9 @@
 {% else %}
 <form action="{% url 'resume_book:students' %}" method="get">
   {% csrf_token %}
-  <label for="search"><b>Search (case insensitive):</b></label>
+  <label for="search"><b>Simple search (case insensitive):</b></label>
+  <br>
+  <label>Search by <a href="/interestSearch">interest</a> or <a href="/skillSearch">skill</a> to search for your next hire or project partner!</label>
   <br>
   <label for="name-query"> Name: </label>
   <input type="text" id="name-query" name="name" maxlength={{name_length}}>

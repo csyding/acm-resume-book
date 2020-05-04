@@ -337,12 +337,17 @@ def addStudent(request):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
+    # insert into sql
     studentName = request.POST.get('name')
     studentNetID = request.POST.get('netID')
     studentGradYear = request.POST.get('gradYear', 0) if request.POST.get('gradYear') else int(0)
     studentCourseWork = request.POST.get('courseWork')
     studentProjects = request.POST.get('projects', False)
     studentExperiences = request.POST.get('experiences', False)
+
+    # insert into neo4j
+    interests = request.POST.get('interests').split(',')
+    skills = request.POST.get('skills').split(',')
 
     try:
         # If exists, update it!
@@ -363,6 +368,50 @@ def addStudent(request):
                     experiences=studentExperiences
                     )
         newStudent.save()
+
+        session = driver.session()
+        neo4j_result = session.run('CREATE (s:Student {netid:{netid}})', netid=studentNetID)
+        session.close()
+
+    session = driver.session()
+    for interest in interests:
+        interest = interest.lower().strip()
+        interest_node = session.run('MATCH (k:Interest) WHERE k.value={interest_name} RETURN k', interest_name=interest)
+
+        count = 0
+        for node in interest_node:
+            count += 1
+        if count == 0:
+            session.run('CREATE (k:Interest {value:{interest_name}})', interest_name=interest)
+            
+            
+        count = 0 
+        relation = session.run('MATCH (s:Student)-[a:InterestedIn]->(k:Interest) WHERE s.netid={netid} AND k.value={interest_name} RETURN a', netid=studentNetID, interest_name=interest)
+        for node in relation:
+            count += 1
+
+        if count == 0:
+            session.run('MATCH (s:Student), (k:Interest) WHERE s.netid={netid} AND k.value={interest_name} CREATE (s)-[:InterestedIn]->(k)', netid=studentNetID, interest_name=interest)
+
+    for skill in skills:
+        skill = skill.lower().strip()
+        skill_node = session.run('MATCH (k:Skill) WHERE k.value={skill_name} RETURN k', skill_name=skill)
+
+        count = 0
+        for node in skill_node:
+            count += 1
+        if count == 0:
+            session.run('CREATE (k:Skill {value:{skill_name}})', skill_name=skill)
+
+        count = 0 
+        relation = session.run('MATCH (s:Student)-[a:SkilledIn]->(k:Skill) WHERE s.netid={netid} AND k.value={skill_name} RETURN a', netid=studentNetID, skill_name=skill)
+        for node in relation:
+            count += 1
+
+        if count == 0:
+            session.run('MATCH (s:Student), (k:Skill) WHERE s.netid={netid} AND k.value={skill_name} CREATE (s)-[:SkilledIn]->(k)', netid=studentNetID, skill_name=skill)
+
+    session.close()
 
     return HttpResponseRedirect(reverse('resume_book:students'))
 
