@@ -113,8 +113,7 @@ def removeGroup(request, group_name):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
-    group = get_object_or_404(StudentGroup, pk=group_name)
-    group.delete()
+    StudentGroup.objects.raw('DELETE FROM resume_book_studentgroup WHERE name=\"%s\"', params=[group_name])
 
     return HttpResponseRedirect(reverse('resume_book:studentGroups'))
 
