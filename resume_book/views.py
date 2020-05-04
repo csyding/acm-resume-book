@@ -194,19 +194,35 @@ def internships(request):
     equality_symbol = request.GET.get('equality', '')
     numberRating_query = request.GET.get('numberRating', '')
 
-    combined_query = Q(companyName__companyName__icontains=companyName_query)
+    sql_query_string = 'SELECT * FROM resume_book_internship'
 
-    if numberRating_query != '':
-        numberRating = int(numberRating_query)
+    compounds = 0
+    if companyName_query:
+        query_string += ' WHERE companyName = \"' + companyName_query + '\"'
+        compounds += 1
 
-        if equality_symbol == '>':
-            combined_query = combined_query & Q(numberRating__gt=numberRating)
-        elif equality_symbol == '>':
-            combined_query = combined_query & Q(numberRating__lt=numberRating)
+    if numberRating_query:
+        if compounds > 0: 
+            query_string += ' AND '
         else:
-            combined_query = combined_query & Q(numberRating=numberRating)
+            query_string += ' WHERE '
+        query_string += 'numberRating ' + equality_symbol + ' ' + numberRating_query
 
-    queried_internships = Internship.objects.filter(combined_query)
+    queried_internships = Internship.objects.raw(query_string)
+
+    # combined_query = Q(companyName__companyName__icontains=companyName_query)
+
+    # if numberRating_query != '':
+    #     numberRating = int(numberRating_query)
+
+    #     if equality_symbol == '>':
+    #         combined_query = combined_query & Q(numberRating__gt=numberRating)
+    #     elif equality_symbol == '>':
+    #         combined_query = combined_query & Q(numberRating__lt=numberRating)
+    #     else:
+    #         combined_query = combined_query & Q(numberRating=numberRating)
+
+    # queried_internships = Internship.objects.filter(combined_query)
 
     context = {
             'queried_internships': queried_internships,
