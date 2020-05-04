@@ -352,32 +352,59 @@ def addStudent(request):
     studentProjects = request.POST.get('projects', False)
     studentExperiences = request.POST.get('experiences', False)
 
+    sql_query_string = 'INSERT INTO resume_book_student VALUES ('
+
+    sql_query_string += 'name = \"' + studentName + '\",'
+    sql_query_string += 'netID = \"' + studentNetID + '\",'
+    sql_query_string += 'gradYear = \"' + str(studentGradYear) + '\",'
+    sql_query_string += 'courseWork = \"' + studentCourseWork + '\",'
+    sql_query_string += 'projects = \"' + studentProjects + '\",'
+    sql_query_string += 'experiences = \"' + studentExperiences + '\"'
+
+    sql_query_string += ') ON DUPLICATE KEY UPDATE '
+
+    compounds = 0
+    if len(studentName) > 0:
+        sql_query_string += 'name = \"' + studentName + '\"'
+        compounds += 1
+
+    if len(studentNetID) > 0:
+        if compounds > 0:
+            sql_query_string += ', '
+        sql_query_string += 'netID = \"' + studentNetID + '\"'
+        compounds += 1
+
+    if studentGradYear > 0:
+        if compounds > 0:
+            sql_query_string += ', '
+        sql_query_string += 'gradYear = \"' + str(studentGradYear) + '\"'
+        compounds += 1
+
+    if len(studentCourseWork) > 0:
+        if compounds > 0:
+            sql_query_string += ', '
+        sql_query_string += 'courseWork = \"' + studentCourseWork + '\"'
+        compounds += 1
+
+    if len(studentProjects) > 0:
+        if compounds > 0:
+            sql_query_string += ', '
+        sql_query_string += 'projects = \"' + studentProjects + '\"'
+        compounds += 1
+
+    if len(studentExperiences) > 0:
+        if compounds > 0:
+            sql_query_string += ', '
+        sql_query_string += 'experiences = \"' + studentExperiences + '\"'
+        compounds += 1
+
+    Student.objects.raw(sql_query_string)
+
     # insert into neo4j
     interests = request.POST.get('interests').split(',')
     skills = request.POST.get('skills').split(',')
 
-    try:
-        # If exists, update it!
-        existingStudent = Student.objects.get(pk=studentNetID)
-        existingStudent.name = studentName if studentName else existingStudent.name
-        existingStudent.netID = studentNetID if studentNetID else existingStudent.netID
-        existingStudent.gradYear = int(studentGradYear) if studentGradYear else existingStudent.gradYear
-        existingStudent.courseWork = studentCourseWork if studentCourseWork else existingStudent.courseWork
-        existingStudent.projects = studentProjects if studentProjects else existingStudent.projects
-        existingStudent.experiences = studentExperiences if studentExperiences else existingStudent.experiences
-        existingStudent.save()
-
-    except Student.DoesNotExist:
-        # If doesn't exists, create one!
-        newStudent = Student(netID=studentNetID, name=studentName, 
-                    gradYear=studentGradYear,
-                    courseWork=studentCourseWork, projects=studentProjects,
-                    experiences=studentExperiences
-                    )
-        newStudent.save()
-
     session = driver.session()
-
     relation = session.run('MATCH (s:Student) WHERE s.netid={netid} RETURN s', netid=studentNetID)
     count = 0
     for node in relation:
