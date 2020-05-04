@@ -457,8 +457,7 @@ def removeStudent(request, student_netID):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
-    student = get_object_or_404(Student, pk=student_netID)
-    student.delete()
+    Student.objects.raw('DELETE FROM resume_book_student WHERE netid=\"%s\"', params=[student_netID])
 
     session = driver.session()
     session.run('MATCH (s:Student) WHERE s.netid={netid} DETACH DELETE s', netid=student_netID)
