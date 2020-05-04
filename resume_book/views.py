@@ -157,42 +157,21 @@ def addCompany(request):
 
     companyName = request.POST.get('companyName')
     companyDescription = request.POST.get('description', False)
-    companyRating = request.POST.get('rating')
+    companyRating = request.POST.get('rating', False)
     companySponsorDate = request.POST.get('sponsorDate')
 
-    sql_query_string = 'INSERT INTO resume_book_company VALUES ('
+    try:
+        # If exists, update it!
+        existingCompany = Company.objects.get(pk=companyName)
+        existingCompany.description = companyDescription
+        existingCompany.rating = companyRating
+        existingCompany.sponsorDate = companySponsorDate
+        existingCompany.save()
 
-    sql_query_string += 'companyName =\"' + companyName + '\",'
-    sql_query_string += 'description =\"' + companyDescription + '\",'
-    sql_query_string += 'rating =\"' + companyRating + '\",'
-    sql_query_string += 'sponsorDate =\"' + companySponsorDate + '\"'
-
-    sql_query_string += ') ON DUPLICATE KEY UPDATE '
-    
-    compounds = 0
-    if len(companyName) > 0:
-        sql_query_string += 'companyName =\"' + companyName + '\"'
-        compounds += 1
-
-    if len(companyDescription) > 0:
-        if compounds > 0:
-            sql_query_string += ", "
-        sql_query_string += 'description =\"' + companyDescription + '\"'
-        compounds += 1
-
-    if len(companyRating) > 0:
-        if compounds > 0:
-            sql_query_string += ", "
-        sql_query_string += 'rating =\"' + companyRating + '\"'
-        compounds += 1
-
-    if len(companySponsorDate) > 0:
-        if compounds > 0:
-            sql_query_string += ", "
-        sql_query_string += 'sponsorDate =\"' + companySponsorDate + '\"'
-        compounds += 1
-
-    Company.objects.raw(sql_query_string)
+    except Company.DoesNotExist:
+        # If doesn't exists, create one!
+        newCompany = Company(companyName=companyName, description=companyDescription, rating=companyRating, sponsorDate=companySponsorDate)
+        newCompany.save()
 
     return HttpResponseRedirect(reverse('resume_book:companies'))
 
@@ -387,64 +366,37 @@ def addStudent(request):
     # insert into sql
     studentName = request.POST.get('name')
     studentNetID = request.POST.get('netID')
-    studentGradYear = request.POST.get('gradYear')
+    studentGradYear = request.POST.get('gradYear', 0) if request.POST.get('gradYear') else int(0)
     studentCourseWork = request.POST.get('courseWork')
     studentProjects = request.POST.get('projects', False)
     studentExperiences = request.POST.get('experiences', False)
-
-    sql_query_string = 'INSERT INTO resume_book_student VALUES ('
-
-    sql_query_string += 'name = \"' + studentName + '\",'
-    sql_query_string += 'netID = \"' + studentNetID + '\",'
-    sql_query_string += 'gradYear = \"' + studentGradYear + '\",'
-    sql_query_string += 'courseWork = \"' + studentCourseWork + '\",'
-    sql_query_string += 'projects = \"' + studentProjects + '\",'
-    sql_query_string += 'experiences = \"' + studentExperiences + '\"'
-
-    sql_query_string += ') ON DUPLICATE KEY UPDATE '
-
-    compounds = 0
-    if len(studentName) > 0:
-        sql_query_string += 'name = \"' + studentName + '\"'
-        compounds += 1
-
-    if len(studentNetID) > 0:
-        if compounds > 0:
-            sql_query_string += ', '
-        sql_query_string += 'netID = \"' + studentNetID + '\"'
-        compounds += 1
-
-    if len(studentGradYear) > 0:
-        if compounds > 0:
-            sql_query_string += ', '
-        sql_query_string += 'gradYear = \"' + studentGradYear + '\"'
-        compounds += 1
-
-    if len(studentCourseWork) > 0:
-        if compounds > 0:
-            sql_query_string += ', '
-        sql_query_string += 'courseWork = \"' + studentCourseWork + '\"'
-        compounds += 1
-
-    if len(studentProjects) > 0:
-        if compounds > 0:
-            sql_query_string += ', '
-        sql_query_string += 'projects = \"' + studentProjects + '\"'
-        compounds += 1
-
-    if len(studentExperiences) > 0:
-        if compounds > 0:
-            sql_query_string += ', '
-        sql_query_string += 'experiences = \"' + studentExperiences + '\"'
-        compounds += 1
-
-    Student.objects.raw(sql_query_string)
 
     # insert into neo4j
     interests = request.POST.get('interests').split(',')
     skills = request.POST.get('skills').split(',')
 
+    try:
+        # If exists, update it!
+        existingStudent = Student.objects.get(pk=studentNetID)
+        existingStudent.name = studentName if studentName else existingStudent.name
+        existingStudent.netID = studentNetID if studentNetID else existingStudent.netID
+        existingStudent.gradYear = int(studentGradYear) if studentGradYear else existingStudent.gradYear
+        existingStudent.courseWork = studentCourseWork if studentCourseWork else existingStudent.courseWork
+        existingStudent.projects = studentProjects if studentProjects else existingStudent.projects
+        existingStudent.experiences = studentExperiences if studentExperiences else existingStudent.experiences
+        existingStudent.save()
+
+    except Student.DoesNotExist:
+        # If doesn't exists, create one!
+        newStudent = Student(netID=studentNetID, name=studentName, 
+                    gradYear=studentGradYear,
+                    courseWork=studentCourseWork, projects=studentProjects,
+                    experiences=studentExperiences
+                    )
+        newStudent.save()
+
     session = driver.session()
+
     relation = session.run('MATCH (s:Student) WHERE s.netid={netid} RETURN s', netid=studentNetID)
     count = 0
     for node in relation:
