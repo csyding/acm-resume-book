@@ -409,3 +409,35 @@ def interestSearch(request):
         return render(request, 'resume_book/interestSearch.html', context)
 
     return render(request, 'resume_book/interestSearch.html')
+
+def skillSearch(request):
+    skill_string = request.GET.get('skills', '')
+
+    if (skill_string):
+        session = driver.session()
+        neo4j_result = session.run('MATCH (a:Student)-[i:SkilledIn]->(v:Skill) WHERE v.value={skill} RETURN a.netid', skill=skill_string)
+        
+        netid_list = []
+        for record in neo4j_result:
+            netid_list.append(record["a.netid"])
+        session.close()
+
+        if len(netid_list) == 0:
+            return render(request, 'resume_book/skillSearch.html')
+
+        sql_result = Student.objects.raw('SELECT * FROM resume_book_student WHERE netid IN %s', params=[tuple(netid_list)])
+
+        context = {
+            'queried_students': sql_result,
+            'name_length': Student._meta.get_field('name').max_length,
+            'netID_length': Student._meta.get_field('netID').max_length,
+            'interests_length': Student._meta.get_field('interests').max_length,
+            'gradYear': Student._meta.get_field('gradYear'),
+            'courseWork_length': Student._meta.get_field('courseWork').max_length,
+            'projects_length': Student._meta.get_field('projects').max_length,
+            'experiences': Student._meta.get_field('experiences').max_length
+        }
+
+        return render(request, 'resume_book/skillSearch.html', context)
+
+    return render(request, 'resume_book/skillSearch.html')    
