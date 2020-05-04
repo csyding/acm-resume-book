@@ -305,22 +305,29 @@ def students(request):
     equalitySymbol = request.GET.get('equality', '')
     gradYear_query = request.GET.get('gradYear', '')
 
+    query_string = 'SELECT * FROM resume_book_student'
 
-    combined_query = Q(name__icontains=name_query, netID__icontains=netID_query)
-    # the 'icontains' is case-insensitive, while 'contains' is sensitive
+    compounds = 0
+    if name_query:
+        query_string += ' WHERE name = \"' + name_query + '\"'
+        compounds += 1
 
-    if gradYear_query != '':
-        gradYear = int(gradYear_query)
-        if equalitySymbol == '>':
-            combined_query = combined_query & Q(gradYear__gt=gradYear)
-        elif equalitySymbol == '<':
-            combined_query = combined_query & Q(gradYear__lt=gradYear)
+    if netID_query:
+        if compounds > 0: 
+            query_string += ' AND '
         else:
-            combined_query = combined_query & Q(gradYear=gradYear)
+            query_string += ' WHERE '
+        query_string += 'netid = \"' + netID_query + '\"'
+        compounds += 1
 
+    if gradYear_query:
+        if compounds > 0: 
+            query_string += ' AND '
+        else:
+            query_string += ' WHERE '
+        query_string += 'gradYear ' + equalitySymbol + ' ' + gradYear_query
 
-    queried_students = Student.objects.filter(combined_query)
-        
+    queried_students = Student.objects.raw(query_string)
 
     context = {
             'queried_students': queried_students,
