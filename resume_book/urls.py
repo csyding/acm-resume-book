@@ -32,4 +32,6 @@ urlpatterns = [
     path('internships/', views.internships, name='internships'),
     path('internships/addInternship', views.addInternship, name='addInternship'),
     path('internships/removeInternship/<str:internship_netID>', views.removeInternship, name='removeInternship'),
+
+    path('interestSearch/', views.interestSearch, name='interestSearch')
 ]

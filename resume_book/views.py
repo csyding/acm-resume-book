@@ -15,6 +15,14 @@ from django.contrib.auth.models import AnonymousUser, User, Group
 from django.contrib.auth import authenticate, login, logout
 
 from . import resumeAuth
+import os 
+from neo4j.v1 import GraphDatabase, basic_auth
+
+graphenedb_url = os.environ.get("GRAPHENEDB_BOLT_URL")
+graphenedb_user = os.environ.get("GRAPHENEDB_BOLT_USER")
+graphenedb_pass = os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
+
+driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
 
 # Create your views here.
 def index(request):
@@ -370,3 +378,34 @@ def removeStudent(request, student_netID):
 
     return HttpResponseRedirect(reverse('resume_book:students'))
 
+def interestSearch(request):
+    interest_string = request.GET.get('interests', '')
+
+    if (interest_string):
+        session = driver.session()
+        neo4j_result = session.run('MATCH (a:Student)-[i:InterestedIn]->(v:Interest) WHERE v.value={interest} RETURN a.netid', interest=interest_string)
+        
+        netid_list = []
+        for record in neo4j_result:
+            netid_list.append(record["a.netid"])
+        session.close()
+
+        if len(netid_list) == 0:
+            return render(request, 'resume_book/interestSearch.html')
+
+        sql_result = Student.objects.raw('SELECT * FROM resume_book_student WHERE netid IN %s', params=[tuple(netid_list)])
+
+        context = {
+            'queried_students': sql_result,
+            'name_length': Student._meta.get_field('name').max_length,
+            'netID_length': Student._meta.get_field('netID').max_length,
+            'interests_length': Student._meta.get_field('interests').max_length,
+            'gradYear': Student._meta.get_field('gradYear'),
+            'courseWork_length': Student._meta.get_field('courseWork').max_length,
+            'projects_length': Student._meta.get_field('projects').max_length,
+            'experiences': Student._meta.get_field('experiences').max_length
+        }
+
+        return render(request, 'resume_book/interestSearch.html', context)
+
+    return render(request, 'resume_book/interestSearch.html')
