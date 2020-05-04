@@ -326,7 +326,6 @@ def students(request):
             'queried_students': queried_students,
             'name_length': Student._meta.get_field('name').max_length,
             'netID_length': Student._meta.get_field('netID').max_length,
-            'interests_length': Student._meta.get_field('interests').max_length,
             'gradYear': Student._meta.get_field('gradYear'),
             'courseWork_length': Student._meta.get_field('courseWork').max_length,
             'projects_length': Student._meta.get_field('projects').max_length,
@@ -340,7 +339,6 @@ def addStudent(request):
 
     studentName = request.POST.get('name')
     studentNetID = request.POST.get('netID')
-    studentInterests = request.POST.get('interests', False)
     studentGradYear = request.POST.get('gradYear', 0) if request.POST.get('gradYear') else int(0)
     studentCourseWork = request.POST.get('courseWork')
     studentProjects = request.POST.get('projects', False)
@@ -351,7 +349,6 @@ def addStudent(request):
         existingStudent = Student.objects.get(pk=studentNetID)
         existingStudent.name = studentName if studentName else existingStudent.name
         existingStudent.netID = studentNetID if studentNetID else existingStudent.netID
-        existingStudent.interests = studentInterests if studentInterests else existingStudent.interests
         existingStudent.gradYear = int(studentGradYear) if studentGradYear else existingStudent.gradYear
         existingStudent.courseWork = studentCourseWork if studentCourseWork else existingStudent.courseWork
         existingStudent.projects = studentProjects if studentProjects else existingStudent.projects
@@ -361,7 +358,7 @@ def addStudent(request):
     except Student.DoesNotExist:
         # If doesn't exists, create one!
         newStudent = Student(netID=studentNetID, name=studentName, 
-                    interests=studentInterests, gradYear=studentGradYear,
+                    gradYear=studentGradYear,
                     courseWork=studentCourseWork, projects=studentProjects,
                     experiences=studentExperiences
                     )
@@ -399,7 +396,6 @@ def interestSearch(request):
             'queried_students': sql_result,
             'name_length': Student._meta.get_field('name').max_length,
             'netID_length': Student._meta.get_field('netID').max_length,
-            'interests_length': Student._meta.get_field('interests').max_length,
             'gradYear': Student._meta.get_field('gradYear'),
             'courseWork_length': Student._meta.get_field('courseWork').max_length,
             'projects_length': Student._meta.get_field('projects').max_length,
@@ -431,7 +427,6 @@ def skillSearch(request):
             'queried_students': sql_result,
             'name_length': Student._meta.get_field('name').max_length,
             'netID_length': Student._meta.get_field('netID').max_length,
-            'interests_length': Student._meta.get_field('interests').max_length,
             'gradYear': Student._meta.get_field('gradYear'),
             'courseWork_length': Student._meta.get_field('courseWork').max_length,
             'projects_length': Student._meta.get_field('projects').max_length,

@@ -5,7 +5,6 @@ import datetime
 class Student(models.Model):
     name = models.CharField(max_length=50, blank=True, default='name')
     netID = models.CharField(max_length=8, primary_key=True)
-    interests = models.CharField(max_length=100, blank=True, default='interests')
     gradYear = models.IntegerField(default=0)
     courseWork = models.CharField(max_length=500, blank=True, default='course')
     projects = models.CharField(max_length=500, blank=True, default='projects')
