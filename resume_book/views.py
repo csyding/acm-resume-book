@@ -197,7 +197,7 @@ def internships(request):
 
     compounds = 0
     if companyName_query:
-        sql_query_string += ' WHERE companyName = \"' + companyName_query + '\"'
+        sql_query_string += ' WHERE companyName_id = (SELECT companyName FROM resume_book_company AS c WHERE c.companyName=\"' + companyName_query + '\")'
         compounds += 1
 
     if numberRating_query:
