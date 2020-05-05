@@ -296,9 +296,9 @@ def addInternship(request):
 def removeInternship(request, internship_netID):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
-
+    netID = internship_netID.split()
     cursor = connection.cursor()
-    cursor.execute('DELETE FROM resume_book_internship WHERE netID=\"{}\"'.format(internship_netID))
+    cursor.execute('DELETE FROM resume_book_internship WHERE netID_id=\"{}\"'.format(netID[1]))
 
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
