@@ -19,8 +19,7 @@ from . import resumeAuth
 import os 
 from neo4j.v1 import GraphDatabase, basic_auth
 
-from datetime import date
-from datetime import datetime
+import datetime
 
 graphenedb_url = os.environ.get("GRAPHENEDB_BOLT_URL")
 graphenedb_user = os.environ.get("GRAPHENEDB_BOLT_USER")
@@ -342,13 +341,22 @@ def addRecruiter(request):
     cursor.execute(q)
     rows = cursor.fetchall()
 
+    q = 'SELECT * FROM resume_book_company WHERE companyName = \"{}\"'.format(recruiterCompanyName)
+    cursor.execute(q)
+    rows_company = cursor.fetchall()
+
+    if not rows_company:
+        sql_query_string = """INSERT INTO resume_book_company (companyName, description, rating, sponsorDate) \n 
+                                VALUES (\"{}\", \"{}\", {}, \"{}\");
+                                """.format(recruiterCompanyName, "", 0.0, datetime.datetime(1, 1, 1))
+        cursor.execute(sql_query_string)
+
     if rows:
         existingRecruiter = rows[0]
         sql_query_string = 'UPDATE resume_book_recruiter \n SET '
         sql_query_string += 'companyName_id = \"{}\"'.format(recruiterCompanyName if recruiterCompanyName else existingRecruiter[1])
         sql_query_string += 'WHERE recruiterName = \"{}\";'.format(recruiterName)
         cursor.execute(sql_query_string)
-
     else:
         sql_query_string = """INSERT INTO resume_book_recruiter (recruiterName, companyName_id) \n 
                                 VALUES (\'{}\', \'{}\');
