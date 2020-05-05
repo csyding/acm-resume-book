@@ -1,13 +1,23 @@
 from django.shortcuts import render
 from django.contrib.auth.models import AnonymousUser, User, Group
 from django.contrib.auth import authenticate, login, logout
+from django.db import connection
 from django.urls import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+
+from . import views
+
+import logging
+logger = logging.getLogger(__name__)
 
 def userInGroup(user, group):
     return user.is_authenticated and user.groups.filter(name = group).exists()
 
 def getUserHomepage(user):
+    # Admin login shortcut :')
+    if user.username == 'admin':
+        return HttpResponseRedirect(reverse('resume_book:adminHome'))
+
     if userInGroup(user, 'Student'):
         return HttpResponseRedirect(reverse('resume_book:studentHome'))
     elif userInGroup(user, 'Recruiter'):
@@ -32,18 +42,20 @@ def loginPage(request):
         password = request.POST.get('password')
 
         user = authenticate(username=username, password=password)
+
         if user is None:
             return HttpResponse('login failed, matching user does not exist.')
         else:
             login(request, user)
-            return getUserHomepage(user)
+
+        return getUserHomepage(user)
 
 def validEmail(username, email, user_type):
     """ Makes sure that the email has an @ character, and that it matches the
         username/netId if the user is a student
     """
     if '@' in email:
-        split_email = email.split('@');
+        split_email = email.split('@')
         if user_type == 'Student' and username == split_email[0] and split_email[1] == 'illinois.edu':
             return True
         elif user_type == 'Recruiter':
@@ -52,6 +64,20 @@ def validEmail(username, email, user_type):
 
 def validPassword(password, confirm_password):
     return password == confirm_password and len(password) > 8
+
+def studentExists(netId):
+    """ Checks if the student entry exists in our SQL database """
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT * FROM resume_book_student WHERE netid=%s',
+            params=[netId]
+            )
+
+        row = cursor.fetchone()
+        if row is not None:
+            return True
+
+    return False
 
 
 def signup(request):
@@ -88,4 +114,11 @@ def signup(request):
         # Since they signed up, might as well log them in too
         authenticated_user = authenticate(username=username, password=password)
         login(request, authenticated_user)
+
+        if user_type == 'Student' and not studentExists(username):
+            newRequest = HttpRequest()
+            newRequest.POST['netID'] = username
+            newRequest.user = authenticated_user
+            views.addStudent(newRequest)
+                
         return getUserHomepage(authenticated_user)

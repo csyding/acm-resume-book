@@ -16,6 +16,7 @@ from django.contrib.auth.models import AnonymousUser, User, Group
 from django.contrib.auth import authenticate, login, logout
 
 from . import resumeAuth
+
 import os 
 from neo4j.v1 import GraphDatabase, basic_auth
 
@@ -40,6 +41,9 @@ def loginPage(request):
 
 def signup(request):
     return resumeAuth.signup(request)
+
+def adminHome(request):
+    return render(request, 'resume_book/adminHome.html')
 
 def studentHome(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
@@ -424,20 +428,20 @@ def addStudent(request):
         return HttpResponse('You\'re not allowed to view this page!')
 
     # insert into sql
-    studentName = request.POST.get('name')
-    studentNetID = request.POST.get('netID')
-    studentGradYear = request.POST.get('gradYear', 0) if request.POST.get('gradYear') else int(0)
-    studentCourseWork = request.POST.get('courseWork')
-    studentProjects = request.POST.get('projects', False)
-    studentExperiences = request.POST.get('experiences', False)
+    studentNetID = request.POST.get('netID', request.user.username) # If no netID provided, use the current user's
+    studentName = request.POST.get('name', request.user.username) # Also pretend netID is name if none is provided
+    studentGradYear = request.POST.get('gradYear', 0)
+    studentCourseWork = request.POST.get('courseWork', '')
+    studentProjects = request.POST.get('projects', '')
+    studentExperiences = request.POST.get('experiences', '')
 
     studentCourseWork.replace("'", "\\'")
     studentProjects.replace("'", "\\'")
     studentExperiences.replace("'", "\\'")
 
     # insert into neo4j
-    interests = request.POST.get('interests').split(',')
-    skills = request.POST.get('skills').split(',')
+    interests = request.POST.get('interests', '').split(',')
+    skills = request.POST.get('skills', '').split(',')
 
     cursor = connection.cursor()
     q = 'SELECT * FROM resume_book_student WHERE netID = \"{}\"'.format(studentNetID)
@@ -470,6 +474,8 @@ def addStudent(request):
         session.run('CREATE (s:Student {netid:{netid}})', netid=studentNetID)
 
     for interest in interests:
+        if interest == '':
+            continue
         interest = interest.lower().strip()
         interest_node = session.run('MATCH (k:Interest) WHERE k.value={interest_name} RETURN k', interest_name=interest)
 
@@ -489,6 +495,8 @@ def addStudent(request):
             session.run('MATCH (s:Student), (k:Interest) WHERE s.netid={netid} AND k.value={interest_name} CREATE (s)-[:InterestedIn]->(k)', netid=studentNetID, interest_name=interest)
 
     for skill in skills:
+        if skill == '':
+            continue
         skill = skill.lower().strip()
         skill_node = session.run('MATCH (k:Skill) WHERE k.value={skill_name} RETURN k', skill_name=skill)
 

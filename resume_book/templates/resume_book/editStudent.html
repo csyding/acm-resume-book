@@ -1,0 +1,48 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/center.css' %}">
+
+<body>
+    <div class="center-container">
+        <h3>Edit your profile!</h3>
+        <form class="left-align-box" action="{% url 'resume_book:editSelf' %}" method="post">
+            {% csrf_token %}
+            <label for="netID"><b>NetID: (read only)</b></label>
+            <br>
+            <input type="text" name="netID" id="netID" value={{student.netID}} readonly>
+            <br>
+            <label for="name"><b>Student name:</b></label>
+            <br>
+            <input type="text" name="name" id="name" maxlength={{name_length}} value={{student.name}}>
+            <br>
+            <label for="gradYear"><b>Graduation Year:</b></label>
+            <br>
+            <input name="gradYear" id="gradYear" maxlength=4 value={{student.gradYear}}>
+            <br>
+            <label for="courseWork"><b>Coursework:</b></label>
+            <br>
+            <textarea type="text" name="courseWork" id="courseWork" maxlength={{courseWork_length}}>{{student.courseWork}}</textarea>
+            <br>
+            <label for="projects"><b>Projects:</b></label>
+            <br>
+            <textarea type="text" name="projects" id="projects" maxlength={{projects_length}}>{{student.projects}}</textarea>
+            <br>
+            <label for="experiences"><b>Experiences:</b></label>
+            <br>
+            <textarea type="text" name="experiences" id="experiences" maxlength={{experiences_length}}>{{student.experiences}}</textarea>
+            <br>
+            <label for="interests"><b>Interests (comma separated):</b></label>
+            <br>
+            <textarea type="text" name="interests" id="interests" >{{interests}}</textarea>
+            <br>
+            <label for="skills"><b>Skills (comma separated):</b></label>
+            <br>
+            <textarea type="text" name="skills" id="skills">{{skills}}</textarea>
+            <br>
+            <input type="submit" value="Update">
+        </form>
+        <br>
+        <a href="{% url 'resume_book:studentHome' %}">Discard Changes</a>
+    </div>
+</body>
