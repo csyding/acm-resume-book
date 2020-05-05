@@ -20,8 +20,7 @@ from . import resumeAuth
 import os 
 from neo4j.v1 import GraphDatabase, basic_auth
 
-from datetime import date
-from datetime import datetime
+import datetime
 
 import logging
 logger = logging.getLogger(__name__)
@@ -300,9 +299,9 @@ def addInternship(request):
 def removeInternship(request, internship_netID):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
-
+    netID = internship_netID.split()
     cursor = connection.cursor()
-    cursor.execute('DELETE FROM resume_book_internship WHERE netID=\"{}\"'.format(internship_netID))
+    cursor.execute('DELETE FROM resume_book_internship WHERE netID_id=\"{}\"'.format(netID[1]))
 
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
@@ -349,13 +348,22 @@ def addRecruiter(request):
     cursor.execute(q)
     rows = cursor.fetchall()
 
+    q = 'SELECT * FROM resume_book_company WHERE companyName = \"{}\"'.format(recruiterCompanyName)
+    cursor.execute(q)
+    rows_company = cursor.fetchall()
+
+    if not rows_company:
+        sql_query_string = """INSERT INTO resume_book_company (companyName, description, rating, sponsorDate) \n 
+                                VALUES (\"{}\", \"{}\", {}, \"{}\");
+                                """.format(recruiterCompanyName, "", 0.0, datetime.datetime(1, 1, 1))
+        cursor.execute(sql_query_string)
+
     if rows:
         existingRecruiter = rows[0]
         sql_query_string = 'UPDATE resume_book_recruiter \n SET '
         sql_query_string += 'companyName_id = \"{}\"'.format(recruiterCompanyName if recruiterCompanyName else existingRecruiter[1])
         sql_query_string += 'WHERE recruiterName = \"{}\";'.format(recruiterName)
         cursor.execute(sql_query_string)
-
     else:
         sql_query_string = """INSERT INTO resume_book_recruiter (recruiterName, companyName_id) \n 
                                 VALUES (\'{}\', \'{}\');

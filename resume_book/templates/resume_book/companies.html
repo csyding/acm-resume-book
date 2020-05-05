@@ -70,7 +70,11 @@
             </tr>
             <tr>
                 <th><p>Sponsor Date:</p></th>
-                <td><p type="displaySponsorDate">{{ company.sponsorDate }}</p></td>
+                {% if company.sponsorDate.year != 1%}
+                    <td><p type="displaySponsorDate">{{ company.sponsorDate}}</p></td>
+                {% else %}
+                    <td><p type="displaySponsorDate"> Not a sponsor </p></td>
+                {% endif %}
             </tr>
             <td>
                 <input type="submit" value="Delete">
