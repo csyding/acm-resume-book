@@ -475,7 +475,8 @@ def removeStudent(request, student_netID):
         return HttpResponse('You\'re not allowed to view this page!')
 
     cursor = connection.cursor()
-    cursor.execute('DELETE FROM resume_book_student WHERE netID=\"\"'.format(student_netID))
+    cursor.execute('DELETE FROM resume_book_student WHERE netID=\"{}\"'.format(student_netID))
+
     session = driver.session()
     session.run('MATCH (s:Student) WHERE s.netid={netid} DETACH DELETE s', netid=student_netID)
     session.close()
