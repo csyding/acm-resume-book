@@ -7,7 +7,7 @@
     <h3 class="center">ACM Resume Book Signup!</h3>
     <form class="login-form shrinkwrap" action="{% url 'resume_book:signup' %}" method="post">
         {% csrf_token %}
-        <label for="username"><b>Username:</b></label>
+        <label for="username"><b>Username/NetID:</b></label>
         <br>
         <input type="text" name="username" id="username" required>
         <br>
