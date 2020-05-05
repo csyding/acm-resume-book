@@ -269,7 +269,7 @@ def removeInternship(request, internship_netID):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
-    StudentGroup.objects.raw('DELETE FROM resume_book_company WHERE netID=\"%s\"', params=[internship_netID])
+    Internship.objects.raw('DELETE FROM resume_book_internship WHERE netID=\"%s\"', params=[internship_netID])
 
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
@@ -464,8 +464,8 @@ def removeStudent(request, student_netID):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
-    Student.objects.raw('DELETE FROM resume_book_student WHERE netid=\"%s\"', params=[student_netID])
-
+    cursor = connection.cursor()
+    cursor.execute('DELETE FROM resume_book_student WHERE netid=\"\"'.format(student_netID))
     session = driver.session()
     session.run('MATCH (s:Student) WHERE s.netid={netid} DETACH DELETE s', netid=student_netID)
     session.close()
