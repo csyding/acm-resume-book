@@ -80,6 +80,7 @@ def addGroup(request):
 
     groupName = request.POST.get('name')
     groupDescription = request.POST.get('description')
+    groupDescription.replace("'", "\\'")
 
     try:
         # If exists, update it!
@@ -163,6 +164,7 @@ def addCompany(request):
     companyDescription = request.POST.get('description', False)
     companyRating = request.POST.get('rating', False)
     companySponsorDate = request.POST.get('sponsorDate')
+    companyDescription.replace("'", "\\'")
 
     cursor = connection.cursor()
     q = 'SELECT * FROM resume_book_company WHERE companyName = \"{}\"'.format(companyName)
@@ -310,6 +312,8 @@ def addRecruiter(request):
     recruiterName = request.POST.get('recruiterName')
     recruiterCompanyName = request.POST.get('companyName')
 
+    recruiterCompanyName.replace("'", "\\'")
+    
     cursor = connection.cursor()
     q = 'SELECT * FROM resume_book_recruiter WHERE recruiterName = \"{}\"'.format(recruiterName)
     cursor.execute(q)
@@ -394,6 +398,10 @@ def addStudent(request):
     studentCourseWork = request.POST.get('courseWork')
     studentProjects = request.POST.get('projects', False)
     studentExperiences = request.POST.get('experiences', False)
+
+    studentCourseWork.replace("'", "\\'")
+    studentProjects.replace("'", "\\'")
+    studentExperiences.replace("'", "\\'")
 
     # insert into neo4j
     interests = request.POST.get('interests').split(',')
