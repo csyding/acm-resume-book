@@ -206,7 +206,7 @@ def internships(request):
 
     compounds = 0
     if companyName_query:
-        sql_query_string += ' WHERE companyName = \"' + companyName_query + '\"'
+        sql_query_string += ' WHERE companyName_id = (SELECT companyName FROM resume_book_company AS c WHERE c.companyName=\"' + companyName_query + '\")'
         compounds += 1
 
     if numberRating_query:
@@ -278,11 +278,21 @@ def recruiters(request):
         return HttpResponse('You\'re not allowed to view this page!')
 
     name_query = request.GET.get('recruiterName', '')
+    company_query = request.GET.get('companyName', '')
 
     sql_query_string = 'SELECT * FROM resume_book_recruiter'
 
+    compounds = 0
     if name_query:
         sql_query_string += ' WHERE recruiterName=\"' + name_query + '\"'
+        compounds += 1
+
+    if company_query:
+        if compounds == 0:
+            sql_query_string += ' WHERE '
+        else:
+            sql_query_string += ' AND '
+        sql_query_string += 'companyName_id=(SELECT companyName FROM resume_book_company AS c WHERE c.companyName=\"' + company_query + '\")'
 
     queried_recruiters = Recruiter.objects.raw(sql_query_string)
 
