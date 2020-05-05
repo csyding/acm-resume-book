@@ -298,22 +298,20 @@ def addInternship(request):
         cursor.execute(sql_query_string)
 
     else:
-<<<<<<< HEAD
         if not internshipStartDate:
             internshipStartDate = datetime.datetime(1, 1, 1)
+
         if not internshipEndDate:
             internshipEndDate = datetime.datetime(1, 1, 1)
+
         if not internshipNumberRating:
             internshipNumberRating = 0
+            
         if not internshipCompanyReview:
             internshipCompanyName = 0
+
         sql_query_string = """INSERT INTO resume_book_internship (numberRating, projectDescription, companyReview, startDate, endDate, companyName_id, netID_id) \n 
                                 VALUES ({}, \"{}\", {}, \"{}\", \"{}\", \"{}\", \"{}\");
-=======
-        sql_query_string = """INSERT INTO resume_book_internship (numberRating, projectDescription, companyReview, 
-                                startDate, endDate, companyName_id, netID_id) \n 
-                                VALUES ({}, \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\");
->>>>>>> 2f2e1385595c2f00d49325d19257d6c73a891a99
                                 """.format(internshipNumberRating, internshipProjectDescription, internshipCompanyReview,
                                 internshipStartDate, internshipEndDate, internshipCompanyName, internshipNetID)
         cursor.execute(sql_query_string)
