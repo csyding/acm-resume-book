@@ -1,0 +1,111 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+<h3>Create/Update a internship</h3>
+
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'resume_book:addInternship' %}" method="post">
+    {% csrf_token %}
+    <label for="netID">Internship NetID:</label>
+    <br>
+    <input type="text" name="netID" id="netID" maxlength={{netID_length}} value="{{netid}}" readonly>
+    <br>
+    <label for="companyName">Company Name:</label>
+    <br>
+    <input type="text" name="companyName" id="companyName" maxlength={{companyName_length}} required>
+    <br>
+    <label for="numberRating">Rating:</label>
+    <br>
+    <input type="number" name="numberRating" id="numberRating" maxlength={{rating_length}}>
+    <br>
+    <label for="projectDescription">Project Description:</label>
+    <br>
+    <textarea name="projectDescription" cols="40" rows="5"></textarea>
+    <br>
+    <label for="companyReview">Company Review:</label>
+    <br>
+    <textarea name="companyReview" cols="40" rows="5"></textarea>
+    <br>
+    <label for="startDate">Start Date:</label>
+    <br>
+    <input type="date" name="startDate" id="startDate" maxlength={{startDate_length}}>
+    <br>
+    <label for="endDate">End Date:</label>
+    <br>
+    <input type="date" name="endDate" id="endDate" maxlength={{endDate_length}}>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+
+<!-- <h3>Search bocks</h3> -->
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% else %}
+<form action="{% url 'resume_book:internships' %}" method="get">
+  {% csrf_token %}
+  <label for="search"><b>Search (case insensitive):</b></label>
+  <br>
+  <label for="companyname-query"> Company Name: </label>
+  <input type="text" id="companyname-query" name="companyName" maxlength={{companyName_length}}>
+  <br>
+  <label for="numberRating-query"> Rating: </label>
+  <select id="numberRating-equality" name="equality">
+      <option value=">">&gt;</option>
+        <option value="<">&lt;</option>
+        <option value="=">=</option>
+  </select>
+  <input type="number" id="numberRating-query" name="numberRating" maxlength="2">
+  <br>
+  <input type="submit" value="Submit">
+</form>
+{% endif %}
+
+
+{% if queried_internships %}
+<div style="height:300px;overflow:auto;outline:2px dotted black;">
+<table>
+    {% for internship in queried_internships %}
+    <tr>
+        <form action="{% url 'resume_book:removeInternship' internship.netID %}">
+            <tr>
+                <th><h3 type="displayNetID">{{ internship.netID }}</h3></th>
+              </tr>
+              <tr>
+                <th><p>Company:</p></th>
+                <td><p type="displayCompanyName">{{ internship.companyName.companyName }}</p></td>
+              </tr>
+              <tr>
+                <th><p>NumberRating:</p></th>
+                <td><p type="displayNumberRating">{{ internship.numberRating }}</p></td>
+              </tr>
+              <tr>
+                <th><p>ProjectDescription:</p></th>
+                <td><p type="displayGradYear">{{ internship.projectDescription }}</p></td>
+              </tr>
+              <tr>
+                <th><p>CompanyReview:</p></th>
+                <td><p type="displayCompanyReview">{{ internship.companyReview }}</p></td>
+              </tr>
+              <tr>
+                <th><p>Start Date:</p></th>
+                <td><p type="displayExperiences">{{ internship.startDate }}</p></td>
+              </tr>
+              <tr>
+                <th><p>End Date:</p></th>
+                <td><p type="displayExperiences">{{ internship.endDate }}</p></td>
+              </tr>
+            <td>
+                <input type="submit" value="Delete">
+                <br>
+                <br>
+            </td>
+        </form>
+    </tr> {% endfor %}
+</table>
+</div>
+{% else %}
+<p>No internships are available.</p>
+{% endif %}

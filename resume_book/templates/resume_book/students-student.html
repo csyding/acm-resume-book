@@ -2,7 +2,49 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
-<!-- <h3>Search bocks</h3> -->
+<h3>Update your profile</h3>
+
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'resume_book:addStudent' %}" method="post">
+    {% csrf_token %}
+    <label for="name">Student name:</label>
+    <br>
+    <input type="text" name="name" id="name" maxlength={{name_length}}>
+    <br>
+    <label for="netID">NetID:</label>
+    <br>
+    <input type="text" name="netID" id="netID" maxlength={{netID_length}} value="{{netid}}" readonly>
+    <br>
+    <label for="interests">Interests (comma separated):</label>
+    <br>
+    <textarea name="interests" cols="40" rows="5"></textarea>
+    <br>
+    <label for="skills">Skills (comma separated):</label>
+    <br>
+    <textarea name="skills" cols="40" rows="5"></textarea>
+    <br>
+    <label for="gradYear">Graduation Year:</label>
+    <br>
+    <input type="text" name="gradYear" id="gradYear" maxlength={{gradYear_length}}>
+    <br>
+    <label for="courseWork">Coursework:</label>
+    <br>
+    <textarea name="courseWork" cols="40" rows="5"></textarea>    
+    <br>
+    <label for="projects">Projects:</label>
+    <br>
+    <textarea name="projects" cols="40" rows="5"></textarea>
+    <br>
+    <label for="experiences">Experiences:</label>
+    <br>
+    <textarea name="experiences" cols="40" rows="5"></textarea>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+
+<!-- <h3>Search blocks</h3> -->
 {% if error_message %}
 <p><strong>{{ error_message }}</strong></p>
 {% else %}

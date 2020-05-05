@@ -265,9 +265,13 @@ def internships(request):
             'companyReview_length': Internship._meta.get_field('companyReview').max_length,
             'startDate': Internship._meta.get_field('startDate').max_length,
             'endDate': Internship._meta.get_field('endDate').max_length,
+            'netid': request.user.username
             }
-
-    return render(request, 'resume_book/internships.html', context)
+    
+    if request.user.username == 'admin':
+        return render(request, 'resume_book/internships.html', context)
+    else:
+        return render(request, 'resume_book/internships-noauth.html', context)
 
 def addInternship(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
@@ -325,7 +329,7 @@ def addInternship(request):
 
 
         sql_query_string = """INSERT INTO resume_book_internship (numberRating, projectDescription, companyReview, startDate, endDate, companyName_id, netID_id) \n 
-                                VALUES ({}, \"{}\", {}, \"{}\", \"{}\", \"{}\", \"{}\");
+                                VALUES ({}, \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\");
                                 """.format(internshipNumberRating, internshipProjectDescription, internshipCompanyReview,
                                 internshipStartDate, internshipEndDate, internshipCompanyName, internshipNetID)
         cursor.execute(sql_query_string)
@@ -462,12 +466,15 @@ def students(request):
             'gradYear': Student._meta.get_field('gradYear'),
             'courseWork_length': Student._meta.get_field('courseWork').max_length,
             'projects_length': Student._meta.get_field('projects').max_length,
-            'experiences': Student._meta.get_field('experiences').max_length
+            'experiences': Student._meta.get_field('experiences').max_length,
+            'netid':request.user.username
             }
-    if resumeAuth.userInGroup(request.user, 'Student'):
+    if request.user.username == 'admin':
         return render(request, 'resume_book/students.html', context)
+    if resumeAuth.userInGroup(request.user, 'Student'):
+        return render(request, 'resume_book/students-student.html', context)
     else:
-        return render(request, 'resume_book/students-noauth.html', context)
+        return render(request, 'resume_book/students-recruiter.html', context)
 
 def addStudent(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
