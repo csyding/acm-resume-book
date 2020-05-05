@@ -46,6 +46,9 @@ def signup(request):
     return resumeAuth.signup(request)
 
 def adminHome(request):
+    if not request.user.username == 'admin':
+        return HttpResponse('You\'re not allowed to view this page!')
+
     return render(request, 'resume_book/adminHome.html')
 
 def studentHome(request):
@@ -78,10 +81,16 @@ def studentGroups(request):
             'name_length': StudentGroup._meta.get_field('name').max_length,
             'desc_length': StudentGroup._meta.get_field('description').max_length
             }
-    return render(request, 'resume_book/studentGroups.html', context)
+    
+    if request.user.username == 'admin':
+        return render(request, 'resume_book/studentGroups.html', context)
+    elif resumeAuth.userInGroup(request.user, 'Recruiter'):
+        return render(request, 'resume_book/studentGroups-recruiter.html', context)
+    else:
+        return render(request, 'resume_book/studentGroups-student.html', context)
 
 def addGroup(request):
-    if not request.user.is_authenticated:
+    if not request.user.username == 'admin':
         return HttpResponse('You\'re not allowed to view this page!')
 
     groupName = request.POST.get('name')
@@ -110,7 +119,7 @@ def addGroup(request):
     return HttpResponseRedirect(reverse('resume_book:studentGroups'))
 
 def addStudentToGroup(request):
-    if not request.user.is_authenticated:
+    if not resumeAuth.userInGroup(request.user, 'Student'):
         return HttpResponse('You\'re not allowed to view this page!')
 
     groupName = request.POST.get('name')
@@ -139,7 +148,7 @@ def addStudentToGroup(request):
 
 
 def removeGroup(request, group_name):
-    if not request.user.is_authenticated:
+    if not request.user.username == 'admin':
         return HttpResponse('You\'re not allowed to view this page!')
 
     cursor = connection.cursor()
@@ -178,10 +187,13 @@ def companies(request):
             'sponsorDate': Company._meta.get_field('sponsorDate').max_length,
 
             }
-    return render(request, 'resume_book/companies.html', context)
+    if request.user.username == 'admin':
+        return render(request, 'resume_book/companies.html', context)
+    else:
+        return render(request, 'resume_book/companies-noauth.html', context)
 
 def addCompany(request):
-    if not request.user.is_authenticated:
+    if not request.user.username == 'admin':
         return HttpResponse('You\'re not allowed to view this page!')
 
     companyName = request.POST.get('companyName')
@@ -212,7 +224,7 @@ def addCompany(request):
     return HttpResponseRedirect(reverse('resume_book:companies'))
 
 def removeCompany(request, company_name):
-    if not request.user.is_authenticated:
+    if not request.user.username == 'admin':
         return HttpResponse('You\'re not allowed to view this page!')
 
     cursor = connection.cursor()
@@ -254,10 +266,11 @@ def internships(request):
             'startDate': Internship._meta.get_field('startDate').max_length,
             'endDate': Internship._meta.get_field('endDate').max_length,
             }
+
     return render(request, 'resume_book/internships.html', context)
 
 def addInternship(request):
-    if not request.user.is_authenticated:
+    if not resumeAuth.userInGroup(request.user, 'Student'):
         return HttpResponse('You\'re not allowed to view this page!')
 
     internshipNetID = request.POST.get('netID', 0)
@@ -320,7 +333,7 @@ def addInternship(request):
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
 def removeInternship(request, internship_netID):
-    if not request.user.is_authenticated:
+    if not resumeAuth.userInGroup(request.user, 'Student'):
         return HttpResponse('You\'re not allowed to view this page!')
     netID = internship_netID.split()
     cursor = connection.cursor()
@@ -329,7 +342,7 @@ def removeInternship(request, internship_netID):
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
 def recruiters(request):
-    if not resumeAuth.userInGroup(request.user, 'Recruiter'):
+    if not resumeAuth.userInGroup(request.user, 'Student'):
         return HttpResponse('You\'re not allowed to view this page!')
 
     name_query = request.GET.get('recruiterName', '')
@@ -355,10 +368,14 @@ def recruiters(request):
             'recruiter_name_length': Recruiter._meta.get_field('recruiterName').max_length,
             'company_name_length': Company._meta.get_field('companyName').max_length
             }
-    return render(request, 'resume_book/recruiters.html', context)
+    
+    if request.user.username == 'admin':
+        return render(request, 'resume_book/recruiters.html', context)
+    else:
+        return render(request, 'resume_book/recruiters-noauth.html', context)
 
 def addRecruiter(request):
-    if not request.user.is_authenticated:
+    if not request.user.username == 'admin':
         return HttpResponse('You\'re not allowed to view this page!')
 
     recruiterName = request.POST.get('recruiterName')
@@ -396,7 +413,7 @@ def addRecruiter(request):
     return HttpResponseRedirect(reverse('resume_book:recruiters'))
 
 def removeRecruiter(request, recruiter_name):
-    if not request.user.is_authenticated:
+    if not request.user.username == 'admin':
         return HttpResponse('You\'re not allowed to view this page!')
 
     cursor = connection.cursor()
@@ -405,7 +422,7 @@ def removeRecruiter(request, recruiter_name):
     return HttpResponseRedirect(reverse('resume_book:recruiters'))
 
 def students(request):
-    if not resumeAuth.userInGroup(request.user, 'Recruiter'):
+    if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
     name_query = request.GET.get('name', '')
@@ -447,10 +464,13 @@ def students(request):
             'projects_length': Student._meta.get_field('projects').max_length,
             'experiences': Student._meta.get_field('experiences').max_length
             }
-    return render(request, 'resume_book/students.html', context)
+    if resumeAuth.userInGroup(request.user, 'Student'):
+        return render(request, 'resume_book/students.html', context)
+    else:
+        return render(request, 'resume_book/students-noauth.html', context)
 
 def addStudent(request):
-    if not request.user.is_authenticated:
+    if not resumeAuth.userInGroup(request.user, 'Student'):
         return HttpResponse('You\'re not allowed to view this page!')
 
     # insert into sql
@@ -545,7 +565,7 @@ def addStudent(request):
     return HttpResponseRedirect(reverse('resume_book:students'))
 
 def removeStudent(request, student_netID):
-    if not request.user.is_authenticated:
+    if not resumeAuth.userInGroup(request.user, 'Student'):
         return HttpResponse('You\'re not allowed to view this page!')
 
     cursor = connection.cursor()
@@ -558,6 +578,9 @@ def removeStudent(request, student_netID):
     return HttpResponseRedirect(reverse('resume_book:students'))
 
 def interestSearch(request):
+    if not request.user.is_authenticated:
+        return HttpResponse('You\'re not allowed to view this page!')
+        
     interest_string = request.GET.get('interests', '').split(',')
     conjunction = request.GET.get('conjunction')
     
@@ -625,6 +648,9 @@ def interestSearch(request):
     return render(request, 'resume_book/interestSearch.html', context)
 
 def skillSearch(request):
+    if not request.user.is_authenticated:
+        return HttpResponse('You\'re not allowed to view this page!')
+
     skill_string = request.GET.get('skills', '').split(',')
     conjunction = request.GET.get('conjunction')
     

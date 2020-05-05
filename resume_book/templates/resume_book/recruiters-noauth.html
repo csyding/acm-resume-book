@@ -1,0 +1,47 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+<!-- <h3>Search bocks</h3> -->
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% else %}
+<form action="{% url 'resume_book:recruiters' %}" method="get">
+  {% csrf_token %}
+  <label for="search"><b>Search (case insensitive):</b></label>
+  <br>
+  <label for="name-query"> Recruiter Name: </label>
+  <input type="text" id="name-query" name="recruiterName" maxlength={{recruiter_name_length}}>
+  <br>
+  <label for="company-query"> Company Name: </label>
+  <input type="text" id="company-query" name="companyName" maxlength={{company_name_length}}>
+  <br>
+  <input type="submit" value="Submit">
+</form>
+{% endif %}
+
+{% if queried_recruiters %}
+<div style="height:300px;overflow:auto;outline:2px dotted black;">
+<table>
+    {% for recruiter in queried_recruiters %}
+    <tr>
+        <form action="{% url 'resume_book:removeRecruiter' recruiter.recruiterName %}">
+            <tr>
+                <th><h3 type="displayName">{{ recruiter.recruiterName }}</h3></th>
+              </tr>
+            <tr>
+                <th><p>Company Name:</p></th>
+                <td><p type="displayDescription">{{ recruiter.companyName }}</p></td>
+            </tr>
+            <td>
+                <input type="submit" value="Delete">
+                <br>
+                <br>
+            </td>
+        </form>
+    </tr> {% endfor %}
+</table>
+</div>
+{% else %}
+<p>No recruiters are available.</p>
+{% endif %}

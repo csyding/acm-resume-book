@@ -1,0 +1,69 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+<h3>Create/Update a company</h3>
+
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<!-- <h3>Search bocks</h3> -->
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% else %}
+<form action="{% url 'resume_book:companies' %}" method="get">
+  {% csrf_token %}
+  <label for="search"><b>Search (case insensitive):</b></label>
+  <br>
+  <label for="name-query"> Name: </label>
+  <input type="text" id="name-query" name="companyName" maxlength={{name_length}}>
+  <br>
+  <label for="rating-query"> Rating: </label>
+  <select id="rating-equality" name="equality">
+      <option value=">">&gt;</option>
+        <option value="<">&lt;</option>
+        <option value="=">=</option>
+  </select>
+  <input type="number" id="rating-query" name="rating" maxlength="2">
+  <br>
+  <input type="submit" value="Submit">
+</form>
+{% endif %}
+
+{% if queried_companies %}
+<div style="height:300px;overflow:auto;outline:2px dotted black;">
+<table>
+    {% for company in queried_companies %}
+    <tr>
+        <form action="{% url 'resume_book:removeCompany' company.companyName %}">
+            <tr>
+                <th><h3 type="displayName">{{ company.companyName }}</h3></th>
+            </tr>
+            <tr>
+                <th><p>Description:</p></th>
+                <td><p type="displayDescription">{{ company.description }}</p></td>
+            </tr>
+            <tr>
+                <th><p>Rating:</p></th>
+                <td><p type="displayRating">{{ company.rating }}</p></td>
+            </tr>
+            <tr>
+                <th><p>Sponsor Date:</p></th>
+                {% if company.sponsorDate.year != 1%}
+                    <td><p type="displaySponsorDate">{{ company.sponsorDate}}</p></td>
+                {% else %}
+                    <td><p type="displaySponsorDate"> Not a sponsor </p></td>
+                {% endif %}
+            </tr>
+            <td>
+                <input type="submit" value="Delete">
+                <br>
+                <br>
+            </td>
+        </form>
+    </tr> {% endfor %}
+</table>
+</div>
+{% else %}
+<p>No companies are available.</p>
+{% endif %}
