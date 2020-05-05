@@ -14,9 +14,10 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('accounts/', include('allauth.urls')),
 
-    path('recruiterHome/', views.recruiterHome, name='recruiterHome'),
+    path('adminHome/', views.adminHome, name='adminHome'),
     
     path('studentHome/', privateViews.studentHome, name='studentHome'),
+    path('recruiterHome/', views.recruiterHome, name='recruiterHome'),
     path('edit/self/', privateViews.editSelf, name='editSelf'),
     path('edit/groups/', privateViews.editGroups, name='editGroups'),
 

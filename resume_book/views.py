@@ -43,6 +43,9 @@ def loginPage(request):
 def signup(request):
     return resumeAuth.signup(request)
 
+def adminHome(request):
+    return render(request, 'resume_book/adminHome.html')
+
 def studentHome(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
         return HttpResponse('You\'re not allowed to view this page!')
@@ -463,6 +466,8 @@ def addStudent(request):
         session.run('CREATE (s:Student {netid:{netid}})', netid=studentNetID)
 
     for interest in interests:
+        if interest == '':
+            continue
         interest = interest.lower().strip()
         interest_node = session.run('MATCH (k:Interest) WHERE k.value={interest_name} RETURN k', interest_name=interest)
 
@@ -482,6 +487,8 @@ def addStudent(request):
             session.run('MATCH (s:Student), (k:Interest) WHERE s.netid={netid} AND k.value={interest_name} CREATE (s)-[:InterestedIn]->(k)', netid=studentNetID, interest_name=interest)
 
     for skill in skills:
+        if skill == '':
+            continue
         skill = skill.lower().strip()
         skill_node = session.run('MATCH (k:Skill) WHERE k.value={skill_name} RETURN k', skill_name=skill)
 

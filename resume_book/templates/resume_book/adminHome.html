@@ -1,0 +1,24 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+<h3>This is the Admin Homepage!</h3>
+<h4>Here are just a bunch of links to make it easier to go from this to that</h4>
+
+
+<a href="{% url 'resume_book:studentHome' %}">Student homepage</a><br>
+<a href="{% url 'resume_book:editSelf' %}">Edit Self student profile</a><br>
+
+<a href="{% url 'resume_book:recruiterHome' %}">Recruiter homepage</a><br>
+
+<a href="{% url 'resume_book:studentGroups' %}">Student Groups</a><br>
+
+<a href="{% url 'resume_book:students' %}">Students</a><br>
+
+<a href="{% url 'resume_book:companies' %}">Companies</a><br>
+
+<a href="{% url 'resume_book:internships' %}">Internships</a><br>
+
+<a href="{% url 'resume_book:recruiters' %}">Recruiters</a><br>
+
+<a href="{% url 'resume_book:logoutPage' %}">Log Out</a><br>
