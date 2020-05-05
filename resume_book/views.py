@@ -289,7 +289,7 @@ def addInternship(request):
     else:
         sql_query_string = """INSERT INTO resume_book_internship (numberRating, projectDescription, companyReview, 
                                 startDate, endDate, companyName_id, netID_id) \n 
-                                VALUES ({}, \"{}\", {}, \"{}\", \"{}\", \"{}\", \"{}\");
+                                VALUES ({}, \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\");
                                 """.format(internshipNumberRating, internshipProjectDescription, internshipCompanyReview,
                                 internshipStartDate, internshipEndDate, internshipCompanyName, internshipNetID)
         cursor.execute(sql_query_string)
