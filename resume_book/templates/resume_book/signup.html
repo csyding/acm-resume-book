@@ -7,7 +7,11 @@
 <body>
     <div class="center-container">
         <h3 class="center">ACM Resume Book Signup!</h3>
-        <p>Please only sign up using this form if you are a student. If you are a sponsor, please reach out to your contact for login information.</p>
+
+        {% if not admin %}
+        <p>Please only use this form if you are a student. If you are a recruiter, please reach out to your contact for login details.</p>
+        {% endif %}
+
         <form class="login-form shrinkwrap" action="{% url 'resume_book:signup' %}" method="post">
             {% csrf_token %}
             <label for="username"><b>Username/NetID:</b></label>
@@ -25,10 +29,24 @@
             <label for="confirmPassword"><b>Confirm Password:</b></label>
             <br>
             <input type="password" name="confirmPassword" id="confirmPassword" required>
+
+            {% if admin %}
+            <br>
+            <label for="userType">What type of account is this?</label>
+            <br>
+            <input name="userType" type="radio" value="Student" checked>Student</input>
+            <input name="userType" type="radio" value="Recruiter">Recruiter</input>
+            {% endif %}
+
             <br>
             <input type="submit" value="Sign up">
         </form>
         <br>
+
+        {% if not admin %}
         <a href="{% url 'resume_book:loginPage' %}">Back to Login</a>
+        {% else %}
+        <a href="{% url 'resume_book:adminHome' %}">Back to admin home</a>
+        {% endif %}
     </div>
 </body>

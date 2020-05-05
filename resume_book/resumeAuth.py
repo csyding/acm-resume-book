@@ -82,13 +82,19 @@ def studentExists(netId):
 
 def signup(request):
     if request.method == 'GET':
-        return render(request, 'resume_book/signup.html')
+        if request.user.is_authenticated and not request.user.username == 'admin':
+            return HttpResponse('You already have an account!')
+
+        context = {
+            'admin' : request.user.is_authenticated
+        }
+        return render(request, 'resume_book/signup.html', context)
     elif request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirmPassword')
-        user_type = 'Student'
+        user_type = request.POST.get('userType')
 
         if not validEmail(username, email, user_type):
             return HttpResponse("""Invalid email! If you\'re a student, 
