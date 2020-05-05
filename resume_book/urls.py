@@ -1,6 +1,7 @@
 from django.urls import path, include
 
 from . import views
+from . import privateViews
 
 # This is a namespace, and is used in the 'url' tag template in .html files, and also in reverse()
 app_name = 'resume_book'
@@ -13,8 +14,11 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('accounts/', include('allauth.urls')),
 
-    path('studentHome/', views.studentHome, name='studentHome'),
     path('recruiterHome/', views.recruiterHome, name='recruiterHome'),
+    
+    path('studentHome/', privateViews.studentHome, name='studentHome'),
+    path('edit/self/', privateViews.editSelf, name='editSelf'),
+    path('edit/groups/', privateViews.editGroups, name='editGroups'),
 
     path('studentgroups/', views.studentGroups, name='studentGroups'),
     path('studentgroups/addgroup', views.addGroup, name='addGroup'),

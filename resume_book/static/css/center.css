@@ -1,7 +1,9 @@
-body {
+.center-container {
     text-align: center;
+    width: 100%;
 }
-.login-form {
+.left-align-box {
+    text-align: left;
     padding: 10px;
     border: 3px groove gray;
     display: inline-block;
