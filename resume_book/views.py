@@ -274,6 +274,17 @@ def addInternship(request):
     q = 'SELECT * FROM resume_book_internship WHERE netID_id = \"{}\"'.format(internshipNetID)
     cursor.execute(q)
     rows = cursor.fetchall()
+
+    q = 'SELECT * FROM resume_book_company WHERE companyName = \"{}\"'.format(internshipCompanyName)
+    cursor.execute(q)
+    rows_company = cursor.fetchall()
+
+    if not rows_company:
+        sql_query_string = """INSERT INTO resume_book_company (companyName, description, rating, sponsorDate) \n 
+                                VALUES (\"{}\", \"{}\", {}, \"{}\");
+                                """.format(internshipCompanyName, "", 0.0, datetime.datetime(1, 1, 1))
+        cursor.execute(sql_query_string)
+
     if rows:
         existingInternship = rows[0]
         sql_query_string = 'UPDATE resume_book_internship \n SET '
@@ -282,13 +293,20 @@ def addInternship(request):
         sql_query_string += 'companyReview = \'{}\', '.format(internshipCompanyReview if internshipCompanyReview else existingInternship[3])
         sql_query_string += 'startDate = \'{}\', '.format(internshipStartDate if internshipStartDate else existingInternship[4])
         sql_query_string += 'endDate = \'{}\', '.format(internshipEndDate if internshipEndDate else existingInternship[5])
-        sql_query_string += 'companyName_id = \'{}\' \n'.format(internshipCompanyName if internshipCompanyName else existingInternship[6])
+        sql_query_string += 'companyName_id = \'{}\' \n'.format(internshipCompanyName if internshipCompanyName else existingInternship[0])
         sql_query_string += 'WHERE netID_id = \"{}\"; '.format(internshipNetID)
         cursor.execute(sql_query_string)
 
     else:
-        sql_query_string = """INSERT INTO resume_book_internship (numberRating, projectDescription, companyReview, 
-                                startDate, endDate, companyName_id, netID_id) \n 
+        if not internshipStartDate:
+            internshipStartDate = datetime.datetime(1, 1, 1)
+        if not internshipEndDate:
+            internshipEndDate = datetime.datetime(1, 1, 1)
+        if not internshipNumberRating:
+            internshipNumberRating = 0
+        if not internshipCompanyReview:
+            internshipCompanyName = 0
+        sql_query_string = """INSERT INTO resume_book_internship (numberRating, projectDescription, companyReview, startDate, endDate, companyName_id, netID_id) \n 
                                 VALUES ({}, \"{}\", {}, \"{}\", \"{}\", \"{}\", \"{}\");
                                 """.format(internshipNumberRating, internshipProjectDescription, internshipCompanyReview,
                                 internshipStartDate, internshipEndDate, internshipCompanyName, internshipNetID)
