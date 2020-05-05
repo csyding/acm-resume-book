@@ -60,12 +60,12 @@ def studentGroups(request):
 
     name_query = request.GET.get('name', '')
 
-    sql_query_string = 'SELECT * FROM resume_book_studentgroups'
+    sql_query_string = 'SELECT * FROM resume_book_studentgroup'
 
     if name_query:
         sql_query_string += ' WHERE name=' + name_query
 
-    StudentGroup.objects.raw(sql_query_string)
+    queried_studentGroups = StudentGroup.objects.raw(sql_query_string)
 
     context = {
             'queried_studentGroups': queried_studentGroups,
@@ -82,16 +82,24 @@ def addGroup(request):
     groupDescription = request.POST.get('description')
     groupDescription.replace("'", "\\'")
 
-    try:
-        # If exists, update it!
-        existingGroup = StudentGroup.objects.get(pk=groupName)
-        existingGroup.description = groupDescription
-        existingGroup.save()
+    cursor = connection.cursor()
+    q = 'SELECT * FROM resume_book_studentgroup WHERE name = \"{}\"'.format(groupName)
+    cursor.execute(q)
+    rows = cursor.fetchall()
 
-    except StudentGroup.DoesNotExist:
-        # If doesn't exists, create one!
-        newGroup = StudentGroup(name=groupName, description=groupDescription)
-        newGroup.save()
+    if rows:
+        existingGroup = rows[0]
+        sql_query_string = 'UPDATE resume_book_studentgroup \n SET '
+        sql_query_string += 'description = \"{}\", '.format(groupDescription if groupDescription else existingGroup[1])
+        sql_query_string += 'WHERE name = \"{}\"; '.format(groupName)
+        cursor.execute(sql_query_string)
+
+    else:
+        sql_query_string = """INSERT INTO resume_book_studentgroup (name, description) \n 
+                                VALUES (\"{}\", \"{}\");
+                                """.format(groupName, groupDescription)
+        cursor.execute(sql_query_string)
+
 
     return HttpResponseRedirect(reverse('resume_book:studentGroups'))
 
@@ -102,14 +110,24 @@ def addStudentToGroup(request):
     groupName = request.POST.get('name')
     netID = request.POST.get('netID')
 
-    try:
-        existingGroup = StudentGroup.objects.get(pk=groupName)
-        existingStudent = Student.objects.get(pk=netID)
-        existingGroup.members.add(existingStudent)
-        print(existingGroup.members.all)
+    cursor = connection.cursor()
+    q1 = 'SELECT * FROM resume_book_studentgroup WHERE name = \"{}\"'.format(groupName)
+    cursor.execute(q1)
+    rows1 = cursor.fetchall()
 
-    except StudentGroup.DoesNotExist:
-        print ('Student Group does not exist!')
+    q2 = 'SELECT * FROM resume_book_student WHERE netID = \"{}\"'.format(netID)
+    cursor.execute(q2)
+    rows2 = cursor.fetchall()
+
+    if rows1 and rows2:
+        existingGroup = rows1[0]
+        existingStudent = rows2[0]
+        print(existingGroup)
+        print(existingStudent)
+        sql_query_string = """INSERT INTO resume_book_studentgroup_members (studentgroup_id, student_id) \n 
+                                VALUES (\"{}\", \"{}\");
+                                """.format(existingGroup[0], existingStudent[0])
+        cursor.execute(sql_query_string)
 
     return HttpResponseRedirect(reverse('resume_book:studentGroups'))
 
@@ -118,7 +136,8 @@ def removeGroup(request, group_name):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
-    StudentGroup.objects.raw('DELETE FROM resume_book_studentgroup WHERE name=\"%s\"', params=[group_name])
+    cursor = connection.cursor()
+    cursor.execute('DELETE FROM resume_book_studentgroup WHERE name=\"{}\"'.format(group_name))
 
     return HttpResponseRedirect(reverse('resume_book:studentGroups'))
 
@@ -129,7 +148,6 @@ def companies(request):
     name_query = request.GET.get('companyName', '')
     equalitySymbol = request.GET.get('equality', '')
     rating_query = request.GET.get('rating', '')
-
     sql_query_string = 'SELECT * FROM resume_book_company'
 
     compounds = 0
@@ -203,7 +221,7 @@ def internships(request):
     companyName_query = request.GET.get('companyName', '')
     equality_symbol = request.GET.get('equality', '')
     numberRating_query = request.GET.get('numberRating', '')
-
+    cursor = connection.cursor()
     sql_query_string = 'SELECT * FROM resume_book_internship'
 
     compounds = 0
@@ -244,26 +262,31 @@ def addInternship(request):
     internshipStartDate = request.POST.get('startDate')
     internshipEndDate = request.POST.get('endDate')
 
-    try:
-        # If exists, update it!
-        existingInternship = Internship.objects.get(pk=internshipNetID)
-        existingInternship.netID = Student.objects.get(netID=internshipNetID)
-        existingInternship.companyName = Company.objects.get(companyName=internshipCompanyName)
-        existingInternship.numberRating = internshipNumberRating if internshipNumberRating else existingInternship.numberRating
-        existingInternship.projectDescription = internshipProjectDescription if internshipProjectDescription else existingInternship.projectDescription
-        existingInternship.companyReview = internshipCompanyReview if internshipCompanyReview else existingInternship.companyReview
-        existingInternship.startDate = internshipStartDate if internshipStartDate else existingInternship.startDate
-        existingInternship.endDate = internshipEndDate if internshipEndDate else existingInternship.endDate
-        existingInternship.save()
+    internshipProjectDescription.replace("'", "\\'")
 
-    except Internship.DoesNotExist:
-        # If doesn't exists, create one!
-        newInternship = Internship(netID=Student.objects.get(netID=internshipNetID), 
-                        companyName=Company.objects.get(companyName=internshipCompanyName), 
-                        numberRating=internshipNumberRating, projectDescription= internshipProjectDescription, 
-                        companyReview=internshipCompanyReview,
-                        startDate=internshipStartDate, endDate=internshipEndDate)
-        newInternship.save()
+    cursor = connection.cursor()
+    q = 'SELECT * FROM resume_book_internship WHERE netID_id = \"{}\"'.format(internshipNetID)
+    cursor.execute(q)
+    rows = cursor.fetchall()
+    if rows:
+        existingInternship = rows[0]
+        sql_query_string = 'UPDATE resume_book_internship \n SET '
+        sql_query_string += 'numberRating = {}, '.format(internshipNumberRating if internshipNumberRating else existingInternship[1])
+        sql_query_string += 'projectDescription = \"{}\", '.format(internshipProjectDescription if internshipProjectDescription else existingInternship[2])
+        sql_query_string += 'companyReview = \'{}\', '.format(internshipCompanyReview if internshipCompanyReview else existingInternship[3])
+        sql_query_string += 'startDate = \'{}\', '.format(internshipStartDate if internshipStartDate else existingInternship[4])
+        sql_query_string += 'endDate = \'{}\', '.format(internshipEndDate if internshipEndDate else existingInternship[5])
+        sql_query_string += 'companyName_id = \'{}\' \n'.format(internshipCompanyName if internshipCompanyName else existingInternship[6])
+        sql_query_string += 'WHERE netID_id = \"{}\"; '.format(internshipNetID)
+        cursor.execute(sql_query_string)
+
+    else:
+        sql_query_string = """INSERT INTO resume_book_internship (numberRating, projectDescription, companyReview, 
+                                startDate, endDate, companyName_id, netID_id) \n 
+                                VALUES ({}, \"{}\", {}, \"{}\", \"{}\", \"{}\", \"{}\");
+                                """.format(internshipNumberRating, internshipProjectDescription, internshipCompanyReview,
+                                internshipStartDate, internshipEndDate, internshipCompanyName, internshipNetID)
+        cursor.execute(sql_query_string)
 
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
@@ -271,7 +294,8 @@ def removeInternship(request, internship_netID):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
-    Internship.objects.raw('DELETE FROM resume_book_internship WHERE netID=\"%s\"', params=[internship_netID])
+    cursor = connection.cursor()
+    cursor.execute('DELETE FROM resume_book_internship WHERE netID=\"{}\"'.format(internship_netID))
 
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
@@ -281,7 +305,6 @@ def recruiters(request):
 
     name_query = request.GET.get('recruiterName', '')
     company_query = request.GET.get('companyName', '')
-
     sql_query_string = 'SELECT * FROM resume_book_recruiter'
 
     compounds = 0
@@ -313,11 +336,12 @@ def addRecruiter(request):
     recruiterCompanyName = request.POST.get('companyName')
 
     recruiterCompanyName.replace("'", "\\'")
-    
+
     cursor = connection.cursor()
     q = 'SELECT * FROM resume_book_recruiter WHERE recruiterName = \"{}\"'.format(recruiterName)
     cursor.execute(q)
     rows = cursor.fetchall()
+
     if rows:
         existingRecruiter = rows[0]
         sql_query_string = 'UPDATE resume_book_recruiter \n SET '
@@ -493,7 +517,7 @@ def removeStudent(request, student_netID):
 
 def interestSearch(request):
     interest_string = request.GET.get('interests', '')
-
+    cursor = connection.cursor()
     if (interest_string):
         session = driver.session()
         neo4j_result = session.run('MATCH (a:Student)-[i:InterestedIn]->(v:Interest) WHERE v.value={interest} RETURN a.netid', interest=interest_string)
@@ -506,7 +530,7 @@ def interestSearch(request):
         if len(netid_list) == 0:
             return render(request, 'resume_book/interestSearch.html')
 
-        sql_result = Student.objects.raw('SELECT * FROM resume_book_student WHERE netid IN %s', params=[tuple(netid_list)])
+        sql_result = cursor.execute('SELECT * FROM resume_book_student WHERE netid IN %s', params=[tuple(netid_list)])
 
         context = {
             'queried_students': sql_result,
@@ -524,7 +548,7 @@ def interestSearch(request):
 
 def skillSearch(request):
     skill_string = request.GET.get('skills', '')
-
+    cursor = connection.cursor()
     if (skill_string):
         session = driver.session()
         neo4j_result = session.run('MATCH (a:Student)-[i:SkilledIn]->(v:Skill) WHERE v.value={skill} RETURN a.netid', skill=skill_string)
@@ -537,7 +561,7 @@ def skillSearch(request):
         if len(netid_list) == 0:
             return render(request, 'resume_book/skillSearch.html')
 
-        sql_result = Student.objects.raw('SELECT * FROM resume_book_student WHERE netid IN %s', params=[tuple(netid_list)])
+        sql_result = cursor.execute('SELECT * FROM resume_book_student WHERE netid IN %s', params=[tuple(netid_list)])
 
         context = {
             'queried_students': sql_result,
