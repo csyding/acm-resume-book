@@ -574,8 +574,6 @@ def interestSearch(request):
             result = session.run('MATCH (a:Student)-[i:InterestedIn]->(v:Interest) WHERE v.value=\"' + word + '\" RETURN a.netid')
 
             neo4j_result = neo4j_result.intersection(set(result))
-            
-            logger.error(neo4j_result)
 
     netid_list = []
     for record in neo4j_result:
@@ -604,32 +602,68 @@ def interestSearch(request):
     return render(request, 'resume_book/interestSearch.html', context)
 
 def skillSearch(request):
-    skill_string = request.GET.get('skills', '')
-    cursor = connection.cursor()
-    if (skill_string):
-        session = driver.session()
-        neo4j_result = session.run('MATCH (a:Student)-[i:SkilledIn]->(v:Skill) WHERE v.value={skill} RETURN a.netid', skill=skill_string)
+    skill_string = request.GET.get('skills', '').split(',')
+    conjunction = request.GET.get('conjunction')
+    
+    session = driver.session()
+
+    neo4j_result = []
+    if conjunction == 'OR':
+        neo4j_query_string = 'MATCH (a:Student)'
+
+        compounds=0
+        for word in skill_string:
+            if not word: pass
+
+            word = word.strip()
+            
+            if compounds == 0:
+                neo4j_query_string += '-[i:SkilledIn]->(v:Skill) WHERE '
+            else:
+                neo4j_query_string += ' ' + conjunction + ' '
+
+            compounds += 1
+
+            neo4j_query_string += 'v.value=\"' + word + '\"'
+
+        neo4j_query_string += ' RETURN a.netid'
+        neo4j_result = session.run(neo4j_query_string)
         
-        netid_list = []
-        for record in neo4j_result:
-            netid_list.append(record["a.netid"])
-        session.close()
+    elif conjunction == 'AND':
+        neo4j_result = session.run('MATCH (a:Student)-[i:SkilledIn]->(v:Skill) WHERE v.value=\"' + skill_string[0] + '\" RETURN a.netid')
+        neo4j_result = set(neo4j_result)
 
-        if len(netid_list) == 0:
-            return render(request, 'resume_book/skillSearch.html')
+        for word in skill_string[1:]:
+            if not word: pass
 
-        sql_result = cursor.execute('SELECT * FROM resume_book_student WHERE netid IN %s', params=[tuple(netid_list)])
+            word = word.strip()
 
-        context = {
-            'queried_students': sql_result,
-            'name_length': Student._meta.get_field('name').max_length,
-            'netID_length': Student._meta.get_field('netID').max_length,
-            'gradYear': Student._meta.get_field('gradYear'),
-            'courseWork_length': Student._meta.get_field('courseWork').max_length,
-            'projects_length': Student._meta.get_field('projects').max_length,
-            'experiences': Student._meta.get_field('experiences').max_length
-        }
+            result = session.run('MATCH (a:Student)-[i:SkilledIn]->(v:Skill) WHERE v.value=\"' + word + '\" RETURN a.netid')
 
-        return render(request, 'resume_book/skillSearch.html', context)
+            neo4j_result = neo4j_result.intersection(set(result))
 
-    return render(request, 'resume_book/skillSearch.html')    
+    netid_list = []
+    for record in neo4j_result:
+        netid_list.append(record['a.netid'])
+    session.close()
+
+    sql_query_string = 'SELECT * FROM resume_book_student'
+
+    if len(netid_list) > 0:
+        sql_query_string += ' WHERE netid IN %s'
+    else:
+        return render(request, 'resume_book/skillSearch.html')
+
+    sql_result = Student.objects.raw(sql_query_string, params=[netid_list])
+
+    context = {
+        'queried_students': sql_result,
+        'name_length': Student._meta.get_field('name').max_length,
+        'netID_length': Student._meta.get_field('netID').max_length,
+        'gradYear': Student._meta.get_field('gradYear'),
+        'courseWork_length': Student._meta.get_field('courseWork').max_length,
+        'projects_length': Student._meta.get_field('projects').max_length,
+        'experiences': Student._meta.get_field('experiences').max_length
+    }
+
+    return render(request, 'resume_book/skillSearch.html', context)

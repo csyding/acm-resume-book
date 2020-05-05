@@ -12,8 +12,12 @@
   {% csrf_token %}
   <label for="search"><b>Search (case insensitive):</b></label>
   <br>
-  <label for="skill-query"> skills: </label>
+  <label for="skill-query"> Skills (enter as comma separated values): </label>
   <input type="text" id="skill-query" name="skills" maxlength={{skills_length}}>
+  <select id="skill-conjunction" name="conjunction">
+      <option value="OR">OR</option>
+      <option value="AND">AND</option>
+  </select>
   <br>
   <input type="submit" value="Submit">
 </form>
