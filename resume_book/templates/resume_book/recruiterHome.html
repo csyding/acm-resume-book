@@ -3,18 +3,10 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
 <h3>Welcome to the ACM Resume Book!</h3>
-<h3>You're logged in as Recruiter: {{ request.user.username }}</h3>
 
-<p>If you looking to view or update student profiles, go to <a href="{% url 'resume_book:students' %}">the students page</a>.</p>
+<h2>Explore our resume book:</h2>
 
-<p>If you looking to view or update recruiter profiles, go to <a href="{% url 'resume_book:recruiters' %}">the recruiter page</a>.</p>
-
-<p>If you looking to view or update student group pages, go to <a href="{% url 'resume_book:studentGroups' %}">the student group page</a>.</p>
-
-<p>Now as a company, you shouldn't be able to look at this page about other companies! <a href="{% url 'resume_book:companies' %}">the company page</a>.</p>
-
-<p> You shouldn't be able to look at internships either! <a href="{% url 'resume_book:internships' %}">the internship page</a>.</p>
-
-<p> It doesn't really make sense why you can't but just a proof of concept that you're blocked from some views </p>
+<a href="{% url 'resume_book:students' %}">Students</a><br>
+<a href="{% url 'resume_book:studentGroups' %}">Student groups</a><br><br>
 
 <a href="{% url 'resume_book:logoutPage' %}">Log Out</a>
