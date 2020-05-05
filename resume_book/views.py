@@ -19,6 +19,9 @@ from . import resumeAuth
 import os 
 from neo4j.v1 import GraphDatabase, basic_auth
 
+from datetime import date
+from datetime import datetime
+
 graphenedb_url = os.environ.get("GRAPHENEDB_BOLT_URL")
 graphenedb_user = os.environ.get("GRAPHENEDB_BOLT_USER")
 graphenedb_pass = os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
@@ -161,18 +164,24 @@ def addCompany(request):
     companyRating = request.POST.get('rating', False)
     companySponsorDate = request.POST.get('sponsorDate')
 
-    try:
-        # If exists, update it!
-        existingCompany = Company.objects.get(pk=companyName)
-        existingCompany.description = companyDescription
-        existingCompany.rating = companyRating
-        existingCompany.sponsorDate = companySponsorDate
-        existingCompany.save()
+    cursor = connection.cursor()
+    q = 'SELECT * FROM resume_book_company WHERE companyName = \"{}\"'.format(companyName)
+    cursor.execute(q)
+    rows = cursor.fetchall()
+    if rows:
+        existingCompany = rows[0]
+        sql_query_string = 'UPDATE resume_book_company \n SET '
+        sql_query_string += 'description = \"{}\", '.format(companyDescription if companyDescription else existingCompany[1])
+        sql_query_string += 'rating = {}, '.format(companyRating if companyRating else existingCompany[2])
+        sql_query_string += 'sponsorDate = \'{}\' \n'.format(companySponsorDate if companySponsorDate else existingCompany[3])
+        sql_query_string += 'WHERE companyName = \"{}\"; '.format(companyName)
+        cursor.execute(sql_query_string)
 
-    except Company.DoesNotExist:
-        # If doesn't exists, create one!
-        newCompany = Company(companyName=companyName, description=companyDescription, rating=companyRating, sponsorDate=companySponsorDate)
-        newCompany.save()
+    else:
+        sql_query_string = """INSERT INTO resume_book_company (companyName, description, rating, sponsorDate) \n 
+                                VALUES (\"{}\", \"{}\", {}, \"{}\");
+                                """.format(companyName, companyDescription, companyRating, companySponsorDate)
+        cursor.execute(sql_query_string)
 
     return HttpResponseRedirect(reverse('resume_book:companies'))
 
@@ -180,8 +189,8 @@ def removeCompany(request, company_name):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
-    StudentGroup.objects.raw('DELETE FROM resume_book_company WHERE name=\"%s\"', params=[company_name])
-
+    cursor = connection.cursor()
+    cursor.execute('DELETE FROM resume_book_company WHERE companyName=\"{}\"'.format(company_name))
     return HttpResponseRedirect(reverse('resume_book:companies'))
 
 
@@ -291,16 +300,22 @@ def addRecruiter(request):
     recruiterName = request.POST.get('recruiterName')
     recruiterCompanyName = request.POST.get('companyName')
 
-    try:
-        # If exists, update it!
-        existingRecruiter = Recruiter.objects.get(pk=recruiterName)
-        existingRecruiter.companyName = Company.objects.get(companyName=recruiterCompanyName)
-        existingRecruiter.save()
+    cursor = connection.cursor()
+    q = 'SELECT * FROM resume_book_recruiter WHERE recruiterName = \"{}\"'.format(recruiterName)
+    cursor.execute(q)
+    rows = cursor.fetchall()
+    if rows:
+        existingRecruiter = rows[0]
+        sql_query_string = 'UPDATE resume_book_recruiter \n SET '
+        sql_query_string += 'companyName_id = \"{}\"'.format(recruiterCompanyName if recruiterCompanyName else existingRecruiter[1])
+        sql_query_string += 'WHERE recruiterName = \"{}\";'.format(recruiterName)
+        cursor.execute(sql_query_string)
 
-    except Recruiter.DoesNotExist:
-        # If doesn't exists, create one!
-        newRecruiter = Recruiter(recruiterName=recruiterName, companyName=Company.objects.get(companyName=recruiterCompanyName))
-        newRecruiter.save()
+    else:
+        sql_query_string = """INSERT INTO resume_book_recruiter (recruiterName, companyName_id) \n 
+                                VALUES (\'{}\', \'{}\');
+                                """.format(recruiterName, recruiterCompanyName)
+        cursor.execute(sql_query_string)
 
     return HttpResponseRedirect(reverse('resume_book:recruiters'))
 
@@ -308,8 +323,8 @@ def removeRecruiter(request, recruiter_name):
     if not request.user.is_authenticated:
         return HttpResponse('You\'re not allowed to view this page!')
 
-    recruiter = get_object_or_404(Recruiter, pk=recruiter_name)
-    recruiter.delete()
+    cursor = connection.cursor()
+    cursor.execute('DELETE FROM resume_book_recruiter WHERE recruiterName=\"{}\"'.format(recruiter_name))
 
     return HttpResponseRedirect(reverse('resume_book:recruiters'))
 
