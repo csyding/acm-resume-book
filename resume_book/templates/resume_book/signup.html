@@ -2,31 +2,36 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/center.css' %}">
 <head></head>
 <body>
-    <h3 class="center">ACM Resume Book Signup!</h3>
-    <form class="login-form shrinkwrap" action="{% url 'resume_book:signup' %}" method="post">
-        {% csrf_token %}
-        <label for="username"><b>Username/NetID:</b></label>
+    <div class="center-container">
+        <h3 class="center">ACM Resume Book Signup!</h3>
+        <form class="login-form shrinkwrap" action="{% url 'resume_book:signup' %}" method="post">
+            {% csrf_token %}
+            <label for="username"><b>Username/NetID:</b></label>
+            <br>
+            <input type="text" name="username" id="username" required>
+            <br>
+            <label for="email"><b>Email:</b></label>
+            <br>
+            <input type="text" name="email" id="email" required>
+            <br>
+            <label for="password"><b>Password:</b></label>
+            <br>
+            <input type="password" name="password" id="password" required>
+            <br>
+            <label for="confirmPassword"><b>Confirm Password:</b></label>
+            <br>
+            <input type="password" name="confirmPassword" id="confirmPassword" required>
+            <br>
+            <label for="userType">Who are you?</label>
+            <input name="userType" type="radio" value="Student" checked>Student</input>
+            <input name="userType" type="radio" value="Recruiter">Recruiter</input>
+            <br>
+            <input type="submit" value="Sign up">
+        </form>
         <br>
-        <input type="text" name="username" id="username" required>
-        <br>
-        <label for="email"><b>Email:</b></label>
-        <br>
-        <input type="text" name="email" id="email" required>
-        <br>
-        <label for="password"><b>Password:</b></label>
-        <br>
-        <input type="password" name="password" id="password" required>
-        <br>
-        <label for="confirmPassword"><b>Confirm Password:</b></label>
-        <br>
-        <input type="password" name="confirmPassword" id="confirmPassword" required>
-        <br>
-        <label for="userType">Who are you?</label>
-        <input name="userType" type="radio" value="Student" checked>Student</input>
-        <input name="userType" type="radio" value="Recruiter">Recruiter</input>
-        <br>
-        <input type="submit" value="Sign up">
-    </form>
+        <a href="{% url 'resume_book:loginPage' %}">Back to Login</a>
+    </div>
 </body>

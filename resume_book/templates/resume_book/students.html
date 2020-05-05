@@ -80,27 +80,27 @@
         <form action="{% url 'resume_book:removeStudent' student.netID %}">
             <tr>
                 <th><h3 type="displayName">{{ student.name }}</h3></th>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <th><p>NetID:</p></th>
                 <td><p type="displayNetID">{{ student.netID }}</p></td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <th><p>Graduation Year:</p></th>
                 <td><p type="displayGradYear">{{ student.gradYear }}</p></td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <th><p>Coursework:</p></th>
                 <td><p type="displayCourseWork">{{ student.courseWork }}</p></td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <th><p>Projects:</p></th>
                 <td><p type="displayProjects">{{ student.projects }}</p></td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <th><p>Experiences:</p></th>
                 <td><p type="displayExperiences">{{ student.experiences }}</p></td>
-              </tr>
+            </tr>
             <td>
                 <input type="submit" value="Delete">
                 <br>
