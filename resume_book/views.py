@@ -89,7 +89,7 @@ def addGroup(request):
     groupDescription.replace("'", "\\'")
 
     cursor = connection.cursor()
-    q = 'SELECT * FROM resume_book_studentgroup WHEREs name = \"{}\"'.format(groupName)
+    q = 'SELECT * FROM resume_book_studentgroup WHERE name = \"{}\"'.format(groupName)
     cursor.execute(q)
     rows = cursor.fetchall()
 
