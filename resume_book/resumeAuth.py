@@ -88,11 +88,11 @@ def signup(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirmPassword')
-        user_type = request.POST.get('userType')
+        user_type = 'Student'
 
         if not validEmail(username, email, user_type):
             return HttpResponse("""Invalid email! If you\'re a student, 
-                                your email has to be your .illinois.edu email and
+                                your email has to be your @illinois.edu email and
                                 your username has to match your netID!""")
 
         if not validPassword(password, confirm_password):
