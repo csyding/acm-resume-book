@@ -89,14 +89,14 @@ def addGroup(request):
     groupDescription.replace("'", "\\'")
 
     cursor = connection.cursor()
-    q = 'SELECT * FROM resume_book_studentgroup WHERE name = \"{}\"'.format(groupName)
+    q = 'SELECT * FROM resume_book_studentgroup WHEREs name = \"{}\"'.format(groupName)
     cursor.execute(q)
     rows = cursor.fetchall()
 
     if rows:
         existingGroup = rows[0]
         sql_query_string = 'UPDATE resume_book_studentgroup \n SET '
-        sql_query_string += 'description = \"{}\", '.format(groupDescription if groupDescription else existingGroup[1])
+        sql_query_string += 'description = \"{}\" \n'.format(groupDescription if groupDescription else existingGroup[1])
         sql_query_string += 'WHERE name = \"{}\"; '.format(groupName)
         cursor.execute(sql_query_string)
 
@@ -309,6 +309,7 @@ def addInternship(request):
             
         if not internshipCompanyReview:
             internshipCompanyName = 0
+
 
         sql_query_string = """INSERT INTO resume_book_internship (numberRating, projectDescription, companyReview, startDate, endDate, companyName_id, netID_id) \n 
                                 VALUES ({}, \"{}\", {}, \"{}\", \"{}\", \"{}\", \"{}\");
