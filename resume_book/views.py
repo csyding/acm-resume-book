@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.db.models import Q
+from django.db import connection
 
 from .models import StudentGroup;
 from .models import Company;
@@ -373,25 +374,26 @@ def addStudent(request):
     interests = request.POST.get('interests').split(',')
     skills = request.POST.get('skills').split(',')
 
-    try:
-        # If exists, update it!
-        existingStudent = Student.objects.get(pk=studentNetID)
-        existingStudent.name = studentName if studentName else existingStudent.name
-        existingStudent.netID = studentNetID if studentNetID else existingStudent.netID
-        existingStudent.gradYear = int(studentGradYear) if studentGradYear else existingStudent.gradYear
-        existingStudent.courseWork = studentCourseWork if studentCourseWork else existingStudent.courseWork
-        existingStudent.projects = studentProjects if studentProjects else existingStudent.projects
-        existingStudent.experiences = studentExperiences if studentExperiences else existingStudent.experiences
-        existingStudent.save()
+    cursor = connection.cursor()
+    q = 'SELECT * FROM resume_book_student WHERE netID = \"{}\"'.format(studentNetID)
+    cursor.execute(q)
+    rows = cursor.fetchall()
+    if rows:
+        existingStudent = rows[0]
+        sql_query_string = 'UPDATE resume_book_student \n SET '
+        sql_query_string += 'name = \"{}\", '.format(studentName if studentName else existingStudent[1])
+        sql_query_string += 'gradYear = {}, '.format(studentGradYear if studentGradYear else existingStudent[4])
+        sql_query_string += 'courseWork = \"{}\", '.format(studentCourseWork if studentCourseWork else existingStudent[2])
+        sql_query_string += 'projects = \"{}\", '.format(studentProjects if studentProjects else existingStudent[5])
+        sql_query_string += 'experiences = \"{}\" \n'.format(studentExperiences if studentExperiences else existingStudent[3])
+        sql_query_string += 'WHERE netID = \"{}\"; '.format(studentNetID)
+        cursor.execute(sql_query_string)
 
-    except Student.DoesNotExist:
-        # If doesn't exists, create one!
-        newStudent = Student(netID=studentNetID, name=studentName, 
-                    gradYear=studentGradYear,
-                    courseWork=studentCourseWork, projects=studentProjects,
-                    experiences=studentExperiences
-                    )
-        newStudent.save()
+    else:
+        sql_query_string = """INSERT INTO resume_book_student (name, netID, gradYear, courseWork, projects, experiences) \n 
+                                VALUES (\'{}\', \'{}\', {}, \'{}\', \'{}\', \'{}\');
+                                """.format(studentName, studentNetID, studentGradYear, studentCourseWork, studentProjects, studentExperiences)
+        cursor.execute(sql_query_string)
 
     session = driver.session()
 
