@@ -12,6 +12,8 @@
   {% csrf_token %}
   <label for="search"><b>Search (case insensitive):</b></label>
   <br>
+  <label>Return to <a href="/students">simple search</a> or search by <a href="/skillSearch">skill</a>.</label>
+  <br>
   <label for="interest-query"> Interests (enter as comma separated values): </label>
   <input type="text" id="interest-query" name="interests" maxlength={{interests_length}}>
   <select id="interest-conjunction" name="conjunction">
