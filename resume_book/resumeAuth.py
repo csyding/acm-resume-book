@@ -94,7 +94,7 @@ def signup(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirmPassword')
-        user_type = request.POST.get('userType')
+        user_type = request.POST.get('userType', 'Student')
 
         if not validEmail(username, email, user_type):
             return HttpResponse("""Invalid email! If you\'re a student, 
@@ -118,13 +118,18 @@ def signup(request):
             new_user.groups.add(Group.objects.get(name='Recruiter'))
 
         # Since they signed up, might as well log them in too
-        authenticated_user = authenticate(username=username, password=password)
-        login(request, authenticated_user)
+        if not request.user.username == 'admin':
+            authenticated_user = authenticate(username=username, password=password)
+            login(request, authenticated_user)
 
-        if user_type == 'Student' and not studentExists(username):
-            newRequest = HttpRequest()
-            newRequest.POST['netID'] = username
-            newRequest.user = authenticated_user
-            views.addStudent(newRequest)
-                
-        return getUserHomepage(authenticated_user)
+            if user_type == 'Student' and not studentExists(username):
+                newRequest = HttpRequest()
+                newRequest.POST['netID'] = username
+                newRequest.user = authenticated_user
+                views.addStudent(newRequest)
+                    
+            return getUserHomepage(authenticated_user)
+
+        # But if you are just making an account on someone's behalf, don't log in to the new account
+        else:
+            return HttpResponse('Account successfully created. <a href=\"/adminHome\">Click here to return to the homepage.</a>')
