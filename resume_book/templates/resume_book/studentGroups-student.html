@@ -51,7 +51,11 @@
                     <p type="displayMembersCount">Has {{ group.members.all.count }} members</p>
                 </td>
                 <td>
+                    {% if admin %}
                     <input type="submit" value="Delete">
+                    {% else %}
+                    <input type="submit" value="Delete" hidden>
+                    {% endif %}
                 </td>
             </form>
         </tr>

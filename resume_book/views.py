@@ -79,6 +79,7 @@ def studentGroups(request):
     queried_studentGroups = StudentGroup.objects.raw(sql_query_string)
 
     context = {
+            'admin' : request.user.username == 'admin',
             'queried_studentGroups': queried_studentGroups,
             'name_length': StudentGroup._meta.get_field('name').max_length,
             'desc_length': StudentGroup._meta.get_field('description').max_length
@@ -182,6 +183,7 @@ def companies(request):
     queried_companies = Company.objects.raw(sql_query_string)        
 
     context = {
+            'admin' : request.user.username == 'admin',
             'queried_companies': queried_companies,
             'name_length': Company._meta.get_field('companyName').max_length,
             'desc_length': Company._meta.get_field('description').max_length,
@@ -259,6 +261,7 @@ def internships(request):
     queried_internships = Internship.objects.raw(sql_query_string)
 
     context = {
+            'admin' : request.user.username == 'admin',
             'queried_internships': queried_internships,
             'netID_length': Internship._meta.get_field('netID').max_length,
             'companyName_length': Internship._meta.get_field('companyName').max_length,
@@ -370,6 +373,7 @@ def recruiters(request):
     queried_recruiters = Recruiter.objects.raw(sql_query_string)
 
     context = {
+            'admin' : request.user.username == 'admin',
             'queried_recruiters': queried_recruiters,
             'recruiter_name_length': Recruiter._meta.get_field('recruiterName').max_length,
             'company_name_length': Company._meta.get_field('companyName').max_length
@@ -462,6 +466,7 @@ def students(request):
     queried_students = Student.objects.raw(sql_query_string)
 
     context = {
+            'admin' : request.user.username == 'admin',
             'queried_students': queried_students,
             'name_length': Student._meta.get_field('name').max_length,
             'netID_length': Student._meta.get_field('netID').max_length,
@@ -645,6 +650,7 @@ def interestSearch(request):
     sql_result = Student.objects.raw(sql_query_string, params=[netid_list])
 
     context = {
+        'admin' : request.user.username == 'admin',
         'queried_students': sql_result,
         'name_length': Student._meta.get_field('name').max_length,
         'netID_length': Student._meta.get_field('netID').max_length,
@@ -715,6 +721,7 @@ def skillSearch(request):
     sql_result = Student.objects.raw(sql_query_string, params=[netid_list])
 
     context = {
+        'admin' : request.user.username == 'admin',
         'queried_students': sql_result,
         'name_length': Student._meta.get_field('name').max_length,
         'netID_length': Student._meta.get_field('netID').max_length,
