@@ -1,67 +1,149 @@
+{% load bootstrap4 %}
+{% bootstrap_javascript %}
+{% bootstrap_jquery %}
+{% bootstrap_css %}
 {% load static %}
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/center.css' %}">
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}" size="36x36">
-    <title>Student Groups</title>
+    <title>Student</title>
 </head>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <img src="{% static 'favicon.ico' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+      ACM Resume Book
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'resume_book:editSelf' %}">Edit Profile</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            View Pages
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'resume_book:students' %}">Students</a>
+            <a class="dropdown-item" href="{% url 'resume_book:studentGroups' %}">Student Groups</a>
+            <a class="dropdown-item" href="{% url 'resume_book:internships' %}">Internships</a>
+            <a class="dropdown-item" href="{% url 'resume_book:companies' %}">Companies</a>
+            <a class="dropdown-item" href="{% url 'resume_book:recruiters' %}">Recruiters</a>
+          </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:signup' %}">Create a New Account</a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:logoutPage' %}">Log Out</a>
+          </li>
+      </ul>
+    </div>
+  </nav>
 
-<h3>Add a student</h3>
+{% block contents %}
+<body>
+    <div class="center-container">
+        <h3>Add/Update Student Group</h3>
+        <form class="left-align-box" name="add_group" action="{% url 'resume_book:addGroup' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" class="form-control" maxlength={{name_length}} value={{student.name}}>
+              </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea class="form-control" name="description" id="description" maxlength={{description_length}} rows="3"></textarea>            
+            </div>
+                <button type="submit" class="btn btn-dark">Save Changes</button>
+            </div>
+          </form>
+          <br>
+    </div>
 
-{% if error_message %}
-<p><strong>{{ error_message }}</strong></p>{% endif %}
+    <div class="center-container">
+        <h3>Add Student to Group</h3>
+        <form class="left-align-box" name="add_student_to_group" action="{% url 'resume_book:addStudentToGroup' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" class="form-control" maxlength={{name_length}} value={{student.name}}>
+              </div>
+            <div class="form-group">
+                <label for="netID">NetID:</label>
+                <input type="text" class="form-control" name="netID" id="netID" maxlength={{netID_length}} required>            
+            </div>
+                <button type="submit" class="btn btn-dark">Save Changes</button>
+            </div>
+          </form>
+          <br>
+        <div class="center-text">
+            
+        </div>
+    </div>
+</body> 
 
-<form action="{% url 'resume_book:addStudentToGroup' %}" method="post">
-    {% csrf_token %}
-    <label for="name">Group name:</label>
-    <br>
-    <input type="text" name="name" id="name" maxlength={{name_length}}>
-    <br>
-    <label for="netID">NetID:</label>
-    <br>
-    <input type="text" name="netID" id="netID" maxlength={{netID_length}} required>
-    <br>
-    <input type="submit" value="Submit">
-</form>
-
-<!-- <h3>Search bocks</h3> -->
+<h3>Search student groups</h3> 
 {% if error_message %}
 <p><strong>{{ error_message }}</strong></p>
 {% else %}
 <form action="{% url 'resume_book:studentGroups' %}" method="get">
   {% csrf_token %}
-  <label for="search"><b>Search (case insensitive):</b></label>
+  <label for="search"><b>Simple search (case insensitive):</b></label>
   <br>
-  <label for="name-query"> Name: </label>
-  <input type="text" id="name-query" name="name" maxlength={{name_length}}>
-  <br>
-  <input type="submit" value="Submit">
+  <div class="form-group">
+    <label for="name-query"> Group Name: </label>
+    <input type="text" id="name-query" class="name" name="name" maxlength={{name_length}}>
+  </div>
+  <button type="submit" class="btn btn-dark">Search</button>
 </form>
 {% endif %}
 
 {% if queried_studentGroups %}
-<div style="height:300px;overflow:auto;outline:2px dotted black;">
+<div style="height:600px;overflow:auto;outline:2px dotted black;">
 <table>
     {% for group in queried_studentGroups %}
-        <tr>
-            <form action="{% url 'resume_book:removeGroup' group.name %}">
-                <td>
-                    <h3 type="displayName">{{ group.name }}</h3>
-                    <p type="displayDescription">{{ group.description }}</p>
-                    <p type="displayMembersCount">Has {{ group.members.all.count }} members</p>
-                </td>
-                <td>
-                    {% if admin %}
-                    <input type="submit" value="Delete">
-                    {% else %}
-                    <input type="submit" value="Delete" hidden>
-                    {% endif %}
-                </td>
-            </form>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-4">
+            <div class="custom-column">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h5 class="card-title">{{group.name}}</h5>
+                        </div>
+                    </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Description: {{group.description}}</li>
+                            <li class="list-group-item">Number of members: {{group.members.all.count}}</li>
+                        </ul>
+                    <div class="card-body text-center">
+                        {% if admin %}
+                            <a href="{% url 'resume_book:removeGroup' group.name %}" class="card-link">Remove Group</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    {% endfor %}
+</table>
 </div>
 {% else %}
-<p>No groups match this search.</p>
-{% endif %}
+<p>No students are available.</p>
+{% endif %} 
+{% endblock %}

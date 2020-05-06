@@ -9,3 +9,10 @@
     display: inline-block;
 }
 
+.right-align-box {
+    text-align: left;
+    padding: 10px;
+    border: 3px groove gray;
+    display: inline-block;
+}
+

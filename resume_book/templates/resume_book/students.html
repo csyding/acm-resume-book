@@ -1,4 +1,185 @@
+{% load bootstrap4 %}
+{% bootstrap_javascript %}
+{% bootstrap_jquery %}
+{% bootstrap_css %}
 {% load static %}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/center.css' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" size="36x36">
+    <title>Student</title>
+</head>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <img src="{% static 'favicon.ico' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+      ACM Resume Book
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'resume_book:editSelf' %}">Edit Profile</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            View Pages
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'resume_book:studentHome' %}">Student Homepage</a>
+            <a class="dropdown-item" href="{% url 'resume_book:recruiterHome' %}">Recruiter Homepage</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'resume_book:students' %}">Students</a>
+            <a class="dropdown-item" href="{% url 'resume_book:studentGroups' %}">Student Groups</a>
+            <a class="dropdown-item" href="{% url 'resume_book:internships' %}">Internships</a>
+            <a class="dropdown-item" href="{% url 'resume_book:companies' %}">Companies</a>
+            <a class="dropdown-item" href="{% url 'resume_book:recruiters' %}">Recruiters</a>
+          </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:signup' %}">Create a New Account</a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:logoutPage' %}">Log Out</a>
+          </li>
+      </ul>
+    </div>
+  </nav>
+
+{% block contents %}
+<body>
+    <div class="center-container">
+        <h3>Add/Update Student</h3>
+        <form class="left-align-box" name="edit_self" action="{% url 'resume_book:addStudent' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="netID">NetID</label>
+                <input type="text" name="netID" id="netID" class="form-control" value={{student.netID}}>
+            </div>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" name="name" id="name" class="form-control" maxlength={{name_length}} value={{student.name}}>
+              </div>
+            <div class="form-group">
+                <label for="gradYear">Graduation Year:</label>
+                <input name="gradYear" id="gradYear" class="form-control" maxlength=4 value={{student.gradYear}}>
+            </div>
+            <div class="form-group">
+                <label for="courseWork">Coursework:</label>
+                <textarea class="form-control" name="courseWork" id="courseWork" maxlength={{courseWork_length}} rows="3">{{student.courseWork}}</textarea>            </div>
+            <div class="form-group">
+                <label for="projects">Projects:</label>
+                <textarea class="form-control" name="projects" id="projects" maxlength={{projects_length}} rows="3">{{student.projects}}</textarea>            
+            </div>
+            <div class="form-group">
+                <label for="experiences">Experiences:</label>
+                <textarea class="form-control" name="experiences" id="experiences" maxlength={{experiences_length}} rows="3">{{student.experiences}}</textarea>            
+            </div>
+            <div class="form-group">
+                <label for="interests">Interests (comma separated):</label>
+                <textarea class="form-control" name="interests" id="interests" maxlength={{interests_length}} rows="3">{{interests}}</textarea>            
+            </div>
+            <div class="form-group">
+                <label for="skills">Skills (comma separated):</label>
+                <textarea class="form-control" name="skills" id="skills" maxlength={{skills_length}} rows="3">{{skills}}</textarea>            
+            </div>
+            <div class="col text-center">
+                <button type="submit" class="btn btn-dark">Save Changes</button>
+            </div>
+          </form>
+          <br>
+        <a href="{% url 'resume_book:studentHome' %}">Discard Changes</a>
+    </div>
+</body> 
+
+<h3>Search students</h3> 
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% else %}
+<form action="{% url 'resume_book:students' %}" method="get">
+  {% csrf_token %}
+  <label for="search"><b>Simple search (case insensitive):</b></label>
+  <br>
+  <label>Search by <a href="/interestSearch">interest</a> or <a href="/skillSearch">skill</a> to search for your next hire or project partner!</label>
+  <br>
+  <div class="form-group">
+    <label for="name-query"> Name: </label>
+    <input type="text" id="name-query" name="name" id="name" maxlength={{name_length}}>
+  </div>
+  <div class="form-group">
+    <label for="netID-query"> NetID: </label>
+    <input type="text" id="netID-query" name="netID" maxlength={{netID_length}}>
+  </div>
+  <div class="form-group">
+    <label for="gradYear-query"> Grad Year: </label>
+    <select class="btn btn-mini" id="gradYear-equality" name="equality">
+        <option value=">">&gt;</option>
+        <option value="<">&lt;</option>
+        <option value="=">=</option>
+    </select>
+    <input type="number" id="gradYear-query" name="gradYear" maxlength="4">
+  </div>
+  <button type="submit" class="btn btn-dark">Search</button>
+</form>
+{% endif %}
+
+{% if queried_students %}
+<div style="height:600px;overflow:auto;outline:2px dotted black;">
+<table>
+    {% for student in queried_students %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-4">
+            <div class="custom-column">
+                <div class="card">
+                    <div class="card-header text-center">
+                        Your Profile
+                    </div>            
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h5 class="card-title">{{student.name}}</h5>
+                        </div>
+                    </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">NetID: {{student.netID}}</li>
+                            <li class="list-group-item">Graduation Year: {{student.gradYear}}</li>
+                            <li class="list-group-item">Coursework: {{student.courseWork}}</li>
+                            <li class="list-group-item">Projects: {{student.projects}}</li>
+                            <li class="list-group-item">Experiences: {{student.experiences}}</li>
+                            <li class="list-group-item">Interests: {{interests}}</li>
+                            <li class="list-group-item">Skills: {{skills}}</li>
+                        </ul>
+                    <div class="card-body text-center">
+                        <a href="{% url 'resume_book:removeStudent' student.netID %}" class="card-link">Remove Student</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    {% endfor %}
+</table>
+</div>
+{% else %}
+<p>No students are available.</p>
+{% endif %} 
+{% endblock %}
+
+
+
+
+<!-- {% load static %}
 
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -48,7 +229,7 @@
     <input type="submit" value="Submit">
 </form>
 
-<!-- <h3>Search bocks</h3> -->
+<h3>Search bocks</h3> 
 {% if error_message %}
 <p><strong>{{ error_message }}</strong></p>
 {% else %}
@@ -120,4 +301,4 @@
 </div>
 {% else %}
 <p>No students are available.</p>
-{% endif %}
+{% endif %} -->
