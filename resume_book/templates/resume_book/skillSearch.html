@@ -109,7 +109,9 @@
                             <li class="list-group-item">Skills: {{student.skills}}</li>
                         </ul>
                     <div class="card-body text-center">
+                      {% if admin %}
                         <a href="{% url 'resume_book:removeStudent' student.netID %}" class="card-link">Remove Student</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
