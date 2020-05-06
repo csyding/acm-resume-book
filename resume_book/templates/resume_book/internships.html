@@ -146,8 +146,10 @@
                           <li class="list-group-item">End Date: {{internship.endDate}}</li>
                         </ul>
                     <div class="card-body text-center">
+                      {% if admin %}
                         <a href="{% url 'resume_book:removeInternship' internship.netID internship.companyName.companyName internship.startDate %}" class="card-link">Remove Internship</a>
-                    </div>
+                      {% endif %}
+                      </div>
                 </div>
             </div>
         </div>
