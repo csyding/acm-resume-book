@@ -79,7 +79,11 @@
                 {% endif %}
             </tr>
             <td>
+                {% if admin %}
                 <input type="submit" value="Delete">
+                {% else %}
+                <input type="submit" value="Delete" hidden>
+                {% endif %}
                 <br>
                 <br>
             </td>

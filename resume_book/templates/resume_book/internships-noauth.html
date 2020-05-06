@@ -103,7 +103,11 @@
                 <td><p type="displayExperiences">{{ internship.endDate }}</p></td>
               </tr>
             <td>
-                <input type="submit" value="Delete">
+              {% if admin %}
+              <input type="submit" value="Delete">
+              {% else %}
+              <input type="submit" value="Delete" hidden>
+              {% endif %}
                 <br>
                 <br>
             </td>
