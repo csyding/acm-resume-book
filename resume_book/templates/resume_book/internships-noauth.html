@@ -59,6 +59,47 @@
   </nav>
 
 {% block contents %}
+
+<body>
+  <div class="center-container">
+      <h3>Add/Update Internship</h3>
+      <form class="left-align-box" name="edit_self" action="{% url 'resume_book:addInternship' %}" method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="netID">Internship NetID:</label>
+            <input class="form-control" type="text" name="netID" id="netID" maxlength={{netID_length}} value="{{netid}}" readonly required>
+          </div>
+          <div class="form-group">
+            <label for="companyName">Company Name:</label>
+            <input class="form-control" type="text" name="companyName" id="companyName" maxlength={{companyName_length}} required>
+            </div>
+          <div class="form-group">
+            <label for="numberRating">Rating:</label>
+            <input class="form-control" type="number" name="numberRating" id="numberRating" maxlength={{rating_length}} max=5.0>
+          </div>
+          <div class="form-group">
+            <label for="projectDescription">Project Description:</label>
+            <textarea class="form-control" name="projectDescription" cols="40" rows="5"></textarea>            </div>
+          <div class="form-group">
+            <label for="companyReview">Company Review:</label>
+            <textarea class="form-control" name="companyReview" cols="40" rows="5"></textarea>            
+          </div>
+          <div class="form-group">
+            <label for="startDate">Start Date:</label>
+            <input class="form-control" type="date" name="startDate" id="startDate" maxlength={{startDate_length}} required>            
+          </div>
+          <div class="form-group">
+            <label for="endDate">End Date:</label>
+            <input class="form-control" type="date" name="endDate" id="endDate" maxlength={{endDate_length}}>            
+          </div>
+          <div class="col text-center">
+              <button type="submit" class="btn btn-dark">Save Changes</button>
+          </div>
+        </form>
+        <br>
+  </div>
+</body> 
+
 <h3>Search internships</h3> 
 {% if error_message %}
 <p><strong>{{ error_message }}</strong></p>
@@ -92,10 +133,7 @@
         <div class="row">
           <div class="col-sm-12 col-md-4">
             <div class="custom-column">
-                <div class="card">
-                    <div class="card-header text-center">
-                        Your Profile
-                    </div>            
+                <div class="card">    
                     <div class="card-body">
                         <div class="text-center">
                             <h5 class="card-title">{{internship.name}}</h5>
@@ -103,12 +141,12 @@
                     </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">NetID: {{internship.netID}}</li>
-                            <li class="list-group-item">Graduation Year: {{internship.companyName.companyName}}</li>
-                            <li class="list-group-item">Coursework: {{internship.numberRating}}</li>
-                            <li class="list-group-item">Projects: {{internship.projectDescription}}</li>
-                            <li class="list-group-item">Experiences: {{internship.companyReview}}</li>
-                            <li class="list-group-item">Interests: {{internship.startDate}}</li>
-                            <li class="list-group-item">Skills: {{internship.endDate}}</li>
+                            <li class="list-group-item">Company Name: {{internship.companyName.companyName}}</li>
+                            <li class="list-group-item">Rating: {{internship.numberRating}}</li>
+                            <li class="list-group-item">Project: {{internship.projectDescription}}</li>
+                            <li class="list-group-item">Company Review: {{internship.companyReview}}</li>
+                            <li class="list-group-item">Start Date: {{internship.startDate}}</li>
+                            <li class="list-group-item">End Date: {{internship.endDate}}</li>
                         </ul>
                     <div class="card-body text-center">
                         <a href="{% url 'resume_book:removeInternship' internship.netID internship.companyName.companyName internship.startDate %}" class="card-link">Remove Internship</a>

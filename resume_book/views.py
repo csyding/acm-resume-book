@@ -74,7 +74,7 @@ def studentGroups(request):
     sql_query_string = 'SELECT * FROM resume_book_studentgroup'
 
     if name_query:
-        sql_query_string += ' WHERE name=' + name_query
+        sql_query_string += ' WHERE name= \"' + name_query + '\"'
 
     queried_studentGroups = StudentGroup.objects.raw(sql_query_string)
 
