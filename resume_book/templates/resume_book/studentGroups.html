@@ -130,8 +130,8 @@
                     </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">Description: {{group.description}}</li>
-                            <li class="list-group-item">Number of members: {{group.members.all.count}}</li>
-                            <li class="list-group-item">Members: {{query_studentgroups.members}} </li>
+                            <li class="list-group-item">Number of members: {{group.members.count}}</li>
+                            <li class="list-group-item">Members: {{group.members}} </li>
                         </ul>
                     <div class="card-body text-center">
                         {% if admin %}

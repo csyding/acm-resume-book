@@ -65,18 +65,34 @@ def recruiterHome(request):
 
     return render(request, 'resume_book/recruiterHome.html')
 
+
+class copyStudentGroup():
+    name = ''
+    description = ''
+    numMembers = ''
+    members = []
+
+    def __init__(self, name, description, numMembers, members):
+        self.name = name
+        self.description = description
+        self.numMembers = numMembers
+        self.members = members
+
+
 def studentGroups(request):
     if not request.user.is_authenticated:
         return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     name_query = request.GET.get('name', '')
 
-    sql_query_string = 'SELECT * FROM resume_book_studentgroup'
+    sql_query_string = 'SELECT * FROM resume_book_studentgroup INNER JOIN resume_book_studentgroup_members ON resume_book_studentgroup.name = resume_book_studentgroup_members.studentgroup_id'
 
     if name_query:
         sql_query_string += ' WHERE name= \"' + name_query + '\"'
 
     queried_studentGroups = StudentGroup.objects.raw(sql_query_string)
+
+    new_studentGroups = [copyStudentGroup(a.name, a.description, a.members.all().count, a.members]
 
     context = {
             'admin' : request.user.username == 'admin',
