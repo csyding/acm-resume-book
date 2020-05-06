@@ -31,6 +31,8 @@ graphenedb_pass = os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
 
 driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
 
+NOT_AUTHENTICATED_RESPONSE = 'You are not authorized to view this page! <a href=\"/logoutPage\">Click here to switch users.</a>'
+
 # Create your views here.
 def index(request):
     return render(request, 'resume_book/index.html')
@@ -47,25 +49,25 @@ def signup(request):
 
 def adminHome(request):
     if not request.user.username == 'admin':
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     return render(request, 'resume_book/adminHome.html')
 
 def studentHome(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     return render(request, 'resume_book/studentHome.html')
 
 def recruiterHome(request):
     if not resumeAuth.userInGroup(request.user, 'Recruiter'):
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     return render(request, 'resume_book/recruiterHome.html')
 
 def studentGroups(request):
     if not request.user.is_authenticated:
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     name_query = request.GET.get('name', '')
 
@@ -91,7 +93,7 @@ def studentGroups(request):
 
 def addGroup(request):
     if not request.user.username == 'admin':
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     groupName = request.POST.get('name')
     groupDescription = request.POST.get('description')
@@ -120,7 +122,7 @@ def addGroup(request):
 
 def addStudentToGroup(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     groupName = request.POST.get('name')
     netID = request.POST.get('netID')
@@ -149,7 +151,7 @@ def addStudentToGroup(request):
 
 def removeGroup(request, group_name):
     if not request.user.username == 'admin':
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     cursor = connection.cursor()
     cursor.execute('DELETE FROM resume_book_studentgroup WHERE name=\"{}\"'.format(group_name))
@@ -158,7 +160,7 @@ def removeGroup(request, group_name):
 
 def companies(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     name_query = request.GET.get('companyName', '')
     equalitySymbol = request.GET.get('equality', '')
@@ -194,7 +196,7 @@ def companies(request):
 
 def addCompany(request):
     if not request.user.username == 'admin':
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     companyName = request.POST.get('companyName')
     companyDescription = request.POST.get('description', False)
@@ -225,7 +227,7 @@ def addCompany(request):
 
 def removeCompany(request, company_name):
     if not request.user.username == 'admin':
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     cursor = connection.cursor()
     cursor.execute('DELETE FROM resume_book_company WHERE companyName=\"{}\"'.format(company_name))
@@ -234,7 +236,7 @@ def removeCompany(request, company_name):
 
 def internships(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     companyName_query = request.GET.get('companyName', '')
     equality_symbol = request.GET.get('equality', '')
@@ -275,7 +277,7 @@ def internships(request):
 
 def addInternship(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     internshipNetID = request.POST.get('netID', 0)
     internshipCompanyName = request.POST.get('companyName')
@@ -338,7 +340,7 @@ def addInternship(request):
 
 def removeInternship(request, internship_netID):
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
     netID = internship_netID.split()
     cursor = connection.cursor()
     cursor.execute('DELETE FROM resume_book_internship WHERE netID_id=\"{}\"'.format(netID[1]))
@@ -347,7 +349,7 @@ def removeInternship(request, internship_netID):
 
 def recruiters(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     name_query = request.GET.get('recruiterName', '')
     company_query = request.GET.get('companyName', '')
@@ -380,7 +382,7 @@ def recruiters(request):
 
 def addRecruiter(request):
     if not request.user.username == 'admin':
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     recruiterName = request.POST.get('recruiterName')
     recruiterCompanyName = request.POST.get('companyName')
@@ -418,7 +420,7 @@ def addRecruiter(request):
 
 def removeRecruiter(request, recruiter_name):
     if not request.user.username == 'admin':
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     cursor = connection.cursor()
     cursor.execute('DELETE FROM resume_book_recruiter WHERE recruiterName=\"{}\"'.format(recruiter_name))
@@ -427,7 +429,7 @@ def removeRecruiter(request, recruiter_name):
 
 def students(request):
     if not request.user.is_authenticated:
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     name_query = request.GET.get('name', '')
     netID_query = request.GET.get('netID', '')
@@ -478,7 +480,7 @@ def students(request):
 
 def addStudent(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     # insert into sql
     studentNetID = request.POST.get('netID', request.user.username) # If no netID provided, use the current user's
@@ -573,7 +575,7 @@ def addStudent(request):
 
 def removeStudent(request, student_netID):
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     cursor = connection.cursor()
     cursor.execute('DELETE FROM resume_book_student WHERE netID=\"{}\"'.format(student_netID))
@@ -586,7 +588,7 @@ def removeStudent(request, student_netID):
 
 def interestSearch(request):
     if not request.user.is_authenticated:
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
         
     interest_string = request.GET.get('interests', '').split(',')
     conjunction = request.GET.get('conjunction')
@@ -656,7 +658,7 @@ def interestSearch(request):
 
 def skillSearch(request):
     if not request.user.is_authenticated:
-        return HttpResponse('You\'re not allowed to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     skill_string = request.GET.get('skills', '').split(',')
     conjunction = request.GET.get('conjunction')

@@ -22,6 +22,9 @@ graphenedb_user = os.environ.get("GRAPHENEDB_BOLT_USER")
 graphenedb_pass = os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
 driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
 
+NOT_STUDENT_RESPONSE = 'You are not authorized to view this page! <a href=\"/logoutPage\">Click here to log out.</a>'
+NOT_AUTHENTICATED_RESPONSE = 'You are not logged in! <a href=\"/loginPage\">Click here to log in.</a>'
+
 class UserCountError(Exception):
     """Raised when there are none or multiple users with the primary key found when we expect 1"""
     pass
@@ -70,7 +73,7 @@ def getStudentContext(netId):
 
 def studentHome(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You have to be a student to view this page!')
+        return HttpResponse(NOT_STUDENT_RESPONSE)
 
     try:
         context = getStudentContext(request.user.username)
@@ -100,9 +103,9 @@ def updateStudentProfile(request):
 
 def editSelf(request):
     if not request.user.is_authenticated:
-        return HttpResponse('You need to log in to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You have to be a student to view this page!')
+        return HttpResponse(NOT_STUDENT_RESPONSE)
 
     if request.method == 'GET':
         return getStudentProfile(request)
@@ -112,8 +115,8 @@ def editSelf(request):
 
 def editGroups(request):
     if not request.user.is_authenticated:
-        return HttpResponse('You need to log in to view this page!')
+        return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
     if not resumeAuth.userInGroup(request.user, 'Student'):
-        return HttpResponse('You have to be a student to view this page!')
+        return HttpResponse(NOT_STUDENT_RESPONSE)
 

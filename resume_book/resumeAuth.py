@@ -83,7 +83,7 @@ def studentExists(netId):
 def signup(request):
     if request.method == 'GET':
         if request.user.is_authenticated and not request.user.username == 'admin':
-            return HttpResponse('You already have an account!')
+            return HttpResponse('You already have an account! <a href=\"/loginPage\">Click here to return to the homepage.</a>')
 
         context = {
             'admin' : request.user.is_authenticated
