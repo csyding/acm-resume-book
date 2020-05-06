@@ -36,9 +36,11 @@
             View Pages
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% if admin %}
             <a class="dropdown-item" href="{% url 'resume_book:studentHome' %}">Student Homepage</a>
             <a class="dropdown-item" href="{% url 'resume_book:recruiterHome' %}">Recruiter Homepage</a>
             <div class="dropdown-divider"></div>
+            {% endif %}
             <a class="dropdown-item" href="{% url 'resume_book:students' %}">Students</a>
             <a class="dropdown-item" href="{% url 'resume_book:studentGroups' %}">Student Groups</a>
             <a class="dropdown-item" href="{% url 'resume_book:internships' %}">Internships</a>

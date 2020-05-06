@@ -1,96 +1,154 @@
+{% load bootstrap4 %}
+{% bootstrap_javascript %}
+{% bootstrap_jquery %}
+{% bootstrap_css %}
 {% load static %}
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/center.css' %}">
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}" size="36x36">
-    <title>Companies</title>
+    <title>Student</title>
 </head>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <img src="{% static 'favicon.ico' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+      ACM Resume Book
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'resume_book:editSelf' %}">Edit Profile</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            View Pages
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'resume_book:studentHome' %}">Student Homepage</a>
+            <a class="dropdown-item" href="{% url 'resume_book:recruiterHome' %}">Recruiter Homepage</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'resume_book:students' %}">Students</a>
+            <a class="dropdown-item" href="{% url 'resume_book:recruiters' %}">Student Groups</a>
+            <a class="dropdown-item" href="{% url 'resume_book:internships' %}">Internships</a>
+            <a class="dropdown-item" href="{% url 'resume_book:companies' %}">Companies</a>
+            <a class="dropdown-item" href="{% url 'resume_book:recruiters' %}">Recruiters</a>
+          </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:signup' %}">Create a New Account</a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:logoutPage' %}">Log Out</a>
+          </li>
+      </ul>
+    </div>
+  </nav>
 
-{% if error_message %}
-<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% block contents %}
+<body>
+    <div class="center-container">
+        <h3>Add/Update Company</h3>
+        <form class="left-align-box" name="add_company" action="{% url 'resume_book:addCompany' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="companyName">Company name:</label>
+                <input type="text" name="companyName" id="companyName" maxlength={{name_length}} required>
+              </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea class="form-control" name="description" cols="40" rows="5"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <input type="number" name="rating" id="rating" maxlength={{rating}}>
+            </div>
+            <div class="form-group">
+                <label for="sponsorDate">Sponsor Date:</label>
+                <input type="date" name="sponsorDate" id="sponsorDate" maxlength={{sponsorDate}}>
+            </div>
+                <button type="submit" class="btn btn-dark">Save Changes</button>
+            </div>
+          </form>
+          <br>
+    </div>
+</body> 
 
-<form action="{% url 'resume_book:addCompany' %}" method="post">
-    {% csrf_token %}
-    <label for="companyName">Company name:</label>
-    <br>
-    <input type="text" name="companyName" id="companyName" maxlength={{name_length}} required>
-    <br>
-    <label for="description">Description:</label>
-    <br>
-    <textarea name="description" cols="40" rows="5"></textarea>
-    <br>
-    <label for="rating">Rating:</label>
-    <br>
-    <input type="number" name="rating" id="rating" maxlength={{rating}}>
-    <br>
-    <label for="sponsorDate">Sponsor Date:</label>
-    <br>
-    <input type="date" name="sponsorDate" id="sponsorDate" maxlength={{sponsorDate}}>
-    <br>
-    <input type="submit" value="Submit">
-</form>
-
-<!-- <h3>Search bocks</h3> -->
+<h3>Search companies</h3> 
 {% if error_message %}
 <p><strong>{{ error_message }}</strong></p>
 {% else %}
 <form action="{% url 'resume_book:companies' %}" method="get">
   {% csrf_token %}
-  <label for="search"><b>Search (case insensitive):</b></label>
+  <label for="search"><b>Simple search (case insensitive):</b></label>
   <br>
-  <label for="name-query"> Name: </label>
-  <input type="text" id="name-query" name="companyName" maxlength={{name_length}}>
-  <br>
-  <label for="rating-query"> Rating: </label>
-  <select id="rating-equality" name="equality">
+  <div class="form-group">
+    <label for="name-query"> Name: </label>
+    <input type="text" id="name-query" name="companyName" maxlength={{name_length}}>
+  </div>
+  <div class="form-group">
+    <label for="rating-query"> Rating: </label>
+  <select class="form-group" id="rating-equality" name="equality">
       <option value=">">&gt;</option>
         <option value="<">&lt;</option>
         <option value="=">=</option>
   </select>
   <input type="number" id="rating-query" name="rating" maxlength="2">
-  <br>
-  <input type="submit" value="Submit">
+  </div>
+  <button type="submit" class="btn btn-dark">Search</button>
 </form>
 {% endif %}
 
 {% if queried_companies %}
-<div style="height:300px;overflow:auto;outline:2px dotted black;">
+<div style="height:600px;overflow:auto;outline:2px dotted black;">
 <table>
     {% for company in queried_companies %}
-    <tr>
-        <form action="{% url 'resume_book:removeCompany' company.companyName %}">
-            <tr>
-                <th><h3 type="displayName">{{ company.companyName }}</h3></th>
-            </tr>
-            <tr>
-                <th><p>Description:</p></th>
-                <td><p type="displayDescription">{{ company.description }}</p></td>
-            </tr>
-            <tr>
-                <th><p>Rating:</p></th>
-                <td><p type="displayRating">{{ company.rating }}</p></td>
-            </tr>
-            <tr>
-                <th><p>Sponsor Date:</p></th>
-                {% if company.sponsorDate.year != 1%}
-                    <td><p type="displaySponsorDate">{{ company.sponsorDate}}</p></td>
-                {% else %}
-                    <td><p type="displaySponsorDate"> Not a sponsor </p></td>
-                {% endif %}
-            </tr>
-            <td>
-                {% if admin %}
-                <input type="submit" value="Delete">
-                {% else %}
-                <input type="submit" value="Delete" hidden>
-                {% endif %}
-                <br>
-                <br>
-            </td>
-        </form>
-    </tr> {% endfor %}
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-4">
+            <div class="custom-column">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h5 class="card-title">{{company.companyName}}</h5>
+                        </div>
+                    </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Company Name: {{company.companyName}}</li>
+                            <li class="list-group-item">Description: {{company.description}}</li>
+                            <li class="list-group-item">Rating: {{company.rating}}</li>
+                            <li class="list-group-item">Sponsor Date: {% if company.sponsorDate.year != 1%}
+                                {{ company.sponsorDate}}
+                            {% else %}
+                                Not a sponsor
+                            {% endif %}</li>
+                        </ul>
+                    <div class="card-body text-center">
+                        {% if admin %}
+                            <a href="{% url 'resume_book:removeCompany' company.companyName %}" class="card-link">Remove Group</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    {% endfor %}
 </table>
 </div>
 {% else %}
 <p>No companies are available.</p>
-{% endif %}
+{% endif %} 
+{% endblock %}
