@@ -279,16 +279,6 @@ def addInternship(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
         return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
-    internshipNetID = request.POST.get('netID', 0)
-    internshipCompanyName = request.POST.get('companyName')
-    internshipNumberRating = request.POST.get('numberRating')
-    internshipProjectDescription = request.POST.get('projectDescription')
-    internshipCompanyReview = request.POST.get('companyReview')
-    internshipStartDate = request.POST.get('startDate')
-    internshipEndDate = request.POST.get('endDate')
-
-    internshipProjectDescription.replace("'", "\\'")
-
     cursor = connection.cursor()
     q = 'SELECT * FROM resume_book_internship WHERE netID_id = \"{}\"'.format(internshipNetID)
     cursor.execute(q)
@@ -304,7 +294,17 @@ def addInternship(request):
                                 """.format(internshipCompanyName, "", 0.0, datetime.datetime(1, 1, 1))
         cursor.execute(sql_query_string)
 
-    if rows:
+    if 'update_internship' in request.POST and rows:
+        internshipNetID = request.POST.get('netID', 0)
+        internshipCompanyName = request.POST.get('companyName')
+        internshipNumberRating = request.POST.get('numberRating')
+        internshipProjectDescription = request.POST.get('projectDescription')
+        internshipCompanyReview = request.POST.get('companyReview')
+        internshipStartDate = request.POST.get('startDate')
+        internshipEndDate = request.POST.get('endDate')
+
+        internshipProjectDescription.replace("'", "\\'")
+
         existingInternship = rows[0]
         sql_query_string = 'UPDATE resume_book_internship \n SET '
         sql_query_string += 'numberRating = {}, '.format(internshipNumberRating if internshipNumberRating else existingInternship[1])
@@ -316,20 +316,7 @@ def addInternship(request):
         sql_query_string += 'WHERE netID_id = \"{}\"; '.format(internshipNetID)
         cursor.execute(sql_query_string)
 
-    else:
-        if not internshipStartDate:
-            internshipStartDate = datetime.datetime(1, 1, 1)
-
-        if not internshipEndDate:
-            internshipEndDate = datetime.datetime(1, 1, 1)
-
-        if not internshipNumberRating:
-            internshipNumberRating = 0
-            
-        if not internshipCompanyReview:
-            internshipCompanyName = 0
-
-
+    elif 'insert_internship' in request.POST:
         sql_query_string = """INSERT INTO resume_book_internship (numberRating, projectDescription, companyReview, startDate, endDate, companyName_id, netID_id) \n 
                                 VALUES ({}, \"{}\", \"{}\", \"{}\", \"{}\", \"{}\", \"{}\");
                                 """.format(internshipNumberRating, internshipProjectDescription, internshipCompanyReview,
