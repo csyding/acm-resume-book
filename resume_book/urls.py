@@ -37,7 +37,7 @@ urlpatterns = [
     path('recruiters/removeRecruiter/<str:recruiter_name>', views.removeRecruiter, name='removeRecruiter'),
     path('internships/', views.internships, name='internships'),
     path('internships/addInternship', views.addInternship, name='addInternship'),
-    path('internships/removeInternship/<str:internship_netID>', views.removeInternship, name='removeInternship'),
+    path('internships/removeInternship/<str:internship_netID>+<str:internship_companyName>+<str:internship_startDate>', views.removeInternship, name='removeInternship'),
     path('interestSearch/', views.interestSearch, name='interestSearch'),
     path('skillSearch/', views.skillSearch, name='skillSearch')
 ]

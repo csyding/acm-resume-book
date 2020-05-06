@@ -74,7 +74,7 @@
 <table>
     {% for internship in queried_internships %}
     <tr>
-        <form action="{% url 'resume_book:removeInternship' internship.netID %}">
+        <form action="{% url 'resume_book:removeInternship' internship.netID internship.companyName.companyName internship.startDate %}">
             <tr>
                 <th><h3 type="displayNetID">{{ internship.netID }}</h3></th>
               </tr>

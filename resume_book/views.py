@@ -282,8 +282,19 @@ def addInternship(request):
     if not resumeAuth.userInGroup(request.user, 'Student'):
         return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
 
+    internshipNetID = request.POST.get('netID', 0)
+    internshipCompanyName = request.POST.get('companyName')
+    internshipNumberRating = request.POST.get('numberRating')
+    internshipProjectDescription = request.POST.get('projectDescription')
+    internshipCompanyReview = request.POST.get('companyReview')
+    internshipStartDate = request.POST.get('startDate')
+    internshipEndDate = request.POST.get('endDate')
+
+    internshipProjectDescription.replace("'", "\\'")
+
     cursor = connection.cursor()
-    q = 'SELECT * FROM resume_book_internship WHERE netID_id = \"{}\"'.format(internshipNetID)
+    q = """SELECT * FROM resume_book_internship 
+    WHERE netID_id=\"{}\" AND companyName_id=\"{}\" AND startDate=\"{}\";""".format(internshipNetID, internshipCompanyName, internshipStartDate)
     cursor.execute(q)
     rows = cursor.fetchall()
 
@@ -298,16 +309,6 @@ def addInternship(request):
         cursor.execute(sql_query_string)
 
     if 'update_internship' in request.POST and rows:
-        internshipNetID = request.POST.get('netID', 0)
-        internshipCompanyName = request.POST.get('companyName')
-        internshipNumberRating = request.POST.get('numberRating')
-        internshipProjectDescription = request.POST.get('projectDescription')
-        internshipCompanyReview = request.POST.get('companyReview')
-        internshipStartDate = request.POST.get('startDate')
-        internshipEndDate = request.POST.get('endDate')
-
-        internshipProjectDescription.replace("'", "\\'")
-
         existingInternship = rows[0]
         sql_query_string = 'UPDATE resume_book_internship \n SET '
         sql_query_string += 'numberRating = {}, '.format(internshipNumberRating if internshipNumberRating else existingInternship[1])
@@ -316,7 +317,7 @@ def addInternship(request):
         sql_query_string += 'startDate = \'{}\', '.format(internshipStartDate if internshipStartDate else existingInternship[4])
         sql_query_string += 'endDate = \'{}\', '.format(internshipEndDate if internshipEndDate else existingInternship[5])
         sql_query_string += 'companyName_id = \'{}\' \n'.format(internshipCompanyName if internshipCompanyName else existingInternship[0])
-        sql_query_string += 'WHERE netID_id = \"{}\"; '.format(internshipNetID)
+        sql_query_string += 'WHERE netID_id = \"{}\" AND companyName_id=\"{}\" AND startDate=\"{}\";'.format(internshipNetID, internshipCompanyName, internshipStartDate)
         cursor.execute(sql_query_string)
 
     elif 'insert_internship' in request.POST:
@@ -328,12 +329,14 @@ def addInternship(request):
 
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
-def removeInternship(request, internship_netID):
+def removeInternship(request, internship_netID, internship_companyName, internship_startDate):
     if not resumeAuth.userInGroup(request.user, 'Student'):
         return HttpResponse(NOT_AUTHENTICATED_RESPONSE)
     netID = internship_netID.split()
     cursor = connection.cursor()
-    cursor.execute('DELETE FROM resume_book_internship WHERE netID_id=\"{}\"'.format(netID[1]))
+    query = """DELETE FROM resume_book_internship 
+    WHERE netID_id=\"{}\" AND companyName_id=\"{}\" AND startDate=\"{}\"""".format(netID[1], internship_companyName, internship_startDate)
+    cursor.execute(query)
 
     return HttpResponseRedirect(reverse('resume_book:internships'))
 
