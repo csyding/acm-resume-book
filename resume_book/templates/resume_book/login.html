@@ -1,4 +1,7 @@
+{% load bootstrap4 %}
 {% load static %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
 
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -9,21 +12,24 @@
 
 <body>
     <div class="center-container">
-        <h3 >Welcome to the ACM Resume Book Login!</h3>
-        <form class="left-align-box" action="{% url 'resume_book:loginPage' %}" method="post">
-            {% csrf_token %}
-            <label for="username"><b>Username/NetID:</b></label>
-            <br>
-            <input type="text" name="username" id="username" required>
-            <br>
-            <label for="password"><b>Password:</b></label>
-            <br>
-            <input type="password" name="password" id="password" required>
-            <br>
-            <input type="submit" value="Log in">
-        </form>
         <br>
-        <a href="{% url 'resume_book:signup' %}">Sign up here!</a>
+        <h3 >Welcome to the ACM Resume Book Login!</h3>
+        <br>
+        <form class="left-align-box" name="login" action="{% url 'resume_book:loginPage' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="username">Username/NetID</label>
+              <input type="text" name="username" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Username/NetID">
+              <small id="emailHelp" class="form-text text-muted">Can't remember? Try your NetID.</small>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-dark">Log In</button>
+          </form>
+        <br>
+        <a href="{% url 'resume_book:signup' %}">No account? Sign up here!</a>
     </div>
 </body>
 

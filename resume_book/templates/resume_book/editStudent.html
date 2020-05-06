@@ -1,4 +1,7 @@
+{% load bootstrap4 %}
 {% load static %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
 
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -9,44 +12,45 @@
 
 <body>
     <div class="center-container">
-        <h3>Edit your profile!</h3>
-        <form class="left-align-box" action="{% url 'resume_book:editSelf' %}" method="post">
+        <h3>Edit your profile</h3>
+        <form class="left-align-box" name="edit_self" action="{% url 'resume_book:editSelf' %}" method="post">
             {% csrf_token %}
-            <label for="netID"><b>NetID: (read only)</b></label>
-            <br>
-            <input type="text" name="netID" id="netID" value={{student.netID}} readonly>
-            <br>
-            <label for="name"><b>Student name:</b></label>
-            <br>
-            <input type="text" name="name" id="name" maxlength={{name_length}} value={{student.name}}>
-            <br>
-            <label for="gradYear"><b>Graduation Year:</b></label>
-            <br>
-            <input name="gradYear" id="gradYear" maxlength=4 value={{student.gradYear}}>
-            <br>
-            <label for="courseWork"><b>Coursework:</b></label>
-            <br>
-            <textarea type="text" name="courseWork" id="courseWork" maxlength={{courseWork_length}}>{{student.courseWork}}</textarea>
-            <br>
-            <label for="projects"><b>Projects:</b></label>
-            <br>
-            <textarea type="text" name="projects" id="projects" maxlength={{projects_length}}>{{student.projects}}</textarea>
-            <br>
-            <label for="experiences"><b>Experiences:</b></label>
-            <br>
-            <textarea type="text" name="experiences" id="experiences" maxlength={{experiences_length}}>{{student.experiences}}</textarea>
-            <br>
-            <label for="interests"><b>Interests (comma separated):</b></label>
-            <br>
-            <textarea type="text" name="interests" id="interests" >{{interests}}</textarea>
-            <br>
-            <label for="skills"><b>Skills (comma separated):</b></label>
-            <br>
-            <textarea type="text" name="skills" id="skills">{{skills}}</textarea>
-            <br>
-            <input type="submit" value="Update">
-        </form>
-        <br>
+            <div class="form-group">
+                <label for="netID">NetID</label>
+                <input type="text" name="netID" id="netID" class="form-control" value={{student.netID}} readonly>
+            </div>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" name="name" id="name" class="form-control" maxlength={{name_length}} value={{student.name}}>
+              </div>
+            <div class="form-group">
+                <label for="gradYear">Graduation Year:</label>
+                <input name="gradYear" id="gradYear" class="form-control" maxlength=4 value={{student.gradYear}}>
+            </div>
+            <div class="form-group">
+                <label for="courseWork">Coursework:</label>
+                <textarea class="form-control" name="courseWork" id="courseWork" maxlength={{courseWork_length}} rows="3">{{student.courseWork}}</textarea>            </div>
+            <div class="form-group">
+                <label for="projects">Projects:</label>
+                <textarea class="form-control" name="projects" id="projects" maxlength={{projects_length}} rows="3">{{student.projects}}</textarea>            
+            </div>
+            <div class="form-group">
+                <label for="experiences">Experiences:</label>
+                <textarea class="form-control" name="experiences" id="experiences" maxlength={{experiences_length}} rows="3">{{student.experiences}}</textarea>            
+            </div>
+            <div class="form-group">
+                <label for="interests">Interests (comma separated):</label>
+                <textarea class="form-control" name="interests" id="interests" maxlength={{interests_length}} rows="3">{{interests}}</textarea>            
+            </div>
+            <div class="form-group">
+                <label for="skills">Skills (comma separated):</label>
+                <textarea class="form-control" name="skills" id="skills" maxlength={{skills_length}} rows="3">{{skills}}</textarea>            
+            </div>
+            <div class="col text-center">
+                <button type="submit" class="btn btn-dark">Save Changes</button>
+            </div>
+          </form>
+          <br>
         <a href="{% url 'resume_book:studentHome' %}">Discard Changes</a>
     </div>
 </body>

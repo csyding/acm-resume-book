@@ -1,4 +1,87 @@
+{% load bootstrap4 %}
+{% bootstrap_javascript %}
+{% bootstrap_jquery %}
+{% bootstrap_css %}
 {% load static %}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+
+<head><title>Student Homepage</title></head>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <img src="{% static 'favicon.ico' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+      ACM Resume Book
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'resume_book:editSelf' %}">Edit Profile</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            View Pages
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'resume_book:students' %}">Students</a>
+            <a class="dropdown-item" href="{% url 'resume_book:studentGroups' %}">Student Groups</a>
+            <a class="dropdown-item" href="{% url 'resume_book:internships' %}">Internships</a>
+            <a class="dropdown-item" href="{% url 'resume_book:companies' %}">Companies</a>
+            <a class="dropdown-item" href="{% url 'resume_book:recruiters' %}">Recruiters</a>
+          </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:signup' %}">Create a New Account</a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:logoutPage' %}">Log Out</a>
+          </li>
+      </ul>
+    </div>
+  </nav>
+
+{% block contents %}
+  <br>
+    <div class="col text-left">
+        <div class="card text-left" style="width: 18rem;">
+            <div class="card-header text-center">
+                Your Profile
+              </div>            
+              <div class="card-body">
+                  <div class="text-center">
+                      <h5 class="card-title">{{student.name}}</h5>
+                </div>
+            </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">NetID: {{student.netID}}</li>
+                    <li class="list-group-item">Graduation Year: {{student.gradYear}}</li>
+                    <li class="list-group-item">Coursework: {{student.courseWork}}</li>
+                    <li class="list-group-item">Projects: {{student.projects}}</li>
+                    <li class="list-group-item">Experiences: {{student.experiences}}</li>
+                    <li class="list-group-item">Interests: {{interests}}</li>
+                    <li class="list-group-item">Skills: {{skills}}</li>
+                </ul>
+            <div class="card-body text-center">
+              <a href="{% url 'resume_book:editSelf' %}" class="card-link">Edit Profile</a>
+            </div>
+          </div>
+    </div>
+{% endblock %}
+
+
+
+
+
+<!-- {% load static %}
 
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -30,4 +113,4 @@
 <a href="{% url 'resume_book:internships' %}">Internship experiences</a><br>
 <a href="{% url 'resume_book:recruiters' %}">Recruiters</a>.</p>
 
-<a href="{% url 'resume_book:logoutPage' %}">Log Out</a>
+<a href="{% url 'resume_book:logoutPage' %}">Log Out</a> -->

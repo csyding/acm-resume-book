@@ -1,4 +1,7 @@
+{% load bootstrap4 %}
 {% load static %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
 
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -10,42 +13,53 @@
 
 <body>
     <div class="center-container">
-        <h3 class="center">ACM Resume Book Signup!</h3>
+        <h3 class="center">Create an Account</h3>
 
         {% if not admin %}
         <p>Please only use this form if you are a student. If you are a recruiter, please reach out to your contact for login details.</p>
         {% endif %}
 
-        <form class="login-form shrinkwrap" action="{% url 'resume_book:signup' %}" method="post">
+        <form class="login-form shrinkwrap" name="signup" action="{% url 'resume_book:signup' %}" method="post" 
+            oninput='confirmPassword.setCustomValidity(confirmPassword.value != password.value ? "Passwords do not match." : "")'>
             {% csrf_token %}
-            <label for="username"><b>Username/NetID:</b></label>
-            <br>
-            <input type="text" name="username" id="username" required>
-            <br>
-            <label for="email"><b>Email:</b></label>
-            <br>
-            <input type="text" name="email" id="email" required>
-            <br>
-            <label for="password"><b>Password:</b></label>
-            <br>
-            <input type="password" name="password" id="password" required>
-            <br>
-            <label for="confirmPassword"><b>Confirm Password:</b></label>
-            <br>
-            <input type="password" name="confirmPassword" id="confirmPassword" required>
-
+            <div class="form-group">
+              <label for="username">Username/NetID</label>
+              <input type="text" name="username" class="form-control" id="username" placeholder="Username/NetID">
+            </div>
+            <div class="form-group">
+                <label for="username">Email</label>
+                <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Email">
+                <small id="emailHelp" class="form-text text-muted">We will never share your email with anyone.</small>
+              </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" placeholder="Retype password" required>
+            </div>
             {% if admin %}
             <br>
             <label for="userType">What type of account is this?</label>
             <br>
-            <input name="userType" type="radio" value="Student" checked>Student</input>
-            <input name="userType" type="radio" value="Recruiter">Recruiter</input>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="userType" id="inlineRadio1" value="Student" checked>
+                <label class="form-check-label" for="inlineRadio1">Student</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="userType" id="inlineRadio2" value="Recruiter">
+                <label class="form-check-label" for="inlineRadio2">Recruiter</label>
+              </div>
             {% endif %}
 
             <br>
-            <input type="submit" value="Sign up">
-        </form>
+            <div class="col text-center">
+                <button type="submit" class="btn btn-dark">Sign Up</button>
+            </div>
+          </form>
         <br>
+
 
         {% if not admin %}
         <a href="{% url 'resume_book:loginPage' %}">Back to Login</a>

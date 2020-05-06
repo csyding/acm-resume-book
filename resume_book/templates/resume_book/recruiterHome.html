@@ -1,4 +1,63 @@
+{% load bootstrap4 %}
+{% bootstrap_javascript %}
+{% bootstrap_jquery %}
+{% bootstrap_css %}
 {% load static %}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+
+<head><title>Student Homepage</title></head>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <img src="{% static 'favicon.ico' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+      ACM Resume Book
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            View Pages
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'resume_book:students' %}">Students Resumes</a>
+            <a class="dropdown-item" href="{% url 'resume_book:studentGroups' %}">Student Groups</a>
+          </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:logoutPage' %}">Log Out</a>
+          </li>
+      </ul>
+    </div>
+  </nav>
+
+  {% block contents %}
+
+    <h3> Recruiters </h3>
+    <p> Want access to hundreds of resumes from some of the top students in the country? 
+        If you would like access to the ACM@UIUC Resume Book please email 
+        corporate@acm.illinois.edu. </p>
+
+    <h3>Get involved</h3>
+    <p>The best way for companies to get involved with ACM@UIUC 
+        is to become a part of our corporate sponsorship program. 
+        If you have any questions please e-mail us at 
+        corporate@acm.illinois.edu. The Corporate Committee is ACM's 
+        central point of contact for all corporate relations activities.</p>
+
+  {% endblock %}
+
+
+<!-- {% load static %}
 
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -13,4 +72,4 @@
 <a href="{% url 'resume_book:students' %}">Students</a><br>
 <a href="{% url 'resume_book:studentGroups' %}">Student groups</a><br><br>
 
-<a href="{% url 'resume_book:logoutPage' %}">Log Out</a>
+<a href="{% url 'resume_book:logoutPage' %}">Log Out</a> -->

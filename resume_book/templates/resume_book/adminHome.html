@@ -1,30 +1,58 @@
+{% load bootstrap4 %}
+{% bootstrap_javascript %}
+{% bootstrap_jquery %}
+{% bootstrap_css %}
 {% load static %}
 
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" size="36x36">
-    <title>Admin Home</title>
-</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+<head><title>Admin Homepage</title></head>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <img src="{% static 'favicon.ico' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+      ACM Resume Book
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'resume_book:editSelf' %}">Edit Profile</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            View Pages
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'resume_book:studentHome' %}">Student Homepage</a>
+            <a class="dropdown-item" href="{% url 'resume_book:recruiterHome' %}">Recruiter Homepage</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'resume_book:students' %}">Students</a>
+            <a class="dropdown-item" href="{% url 'resume_book:studentGroups' %}">Student Groups</a>
+            <a class="dropdown-item" href="{% url 'resume_book:internships' %}">Internships</a>
+            <a class="dropdown-item" href="{% url 'resume_book:companies' %}">Companies</a>
+            <a class="dropdown-item" href="{% url 'resume_book:recruiters' %}">Recruiters</a>
+          </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:signup' %}">Create a New Account</a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'resume_book:logoutPage' %}">Log Out</a>
+          </li>
+      </ul>
+    </div>
+  </nav>
 
-<h3>This is the Admin Homepage!</h3>
-<h4>Here are just a bunch of links to make it easier to go from this to that</h4>
+{% block contents %}
+    <h4>This is the Admin Homepage!</h4>
+    <h4>Here are just a bunch of links to make it easier to go from this to that</h4>
+{% endblock %}
 
-
-<a href="{% url 'resume_book:studentHome' %}">Student homepage</a><br>
-<a href="{% url 'resume_book:editSelf' %}">Edit Self student profile</a><br>
-
-<a href="{% url 'resume_book:recruiterHome' %}">Recruiter homepage</a><br>
-
-<a href="{% url 'resume_book:studentGroups' %}">Student Groups</a><br>
-
-<a href="{% url 'resume_book:students' %}">Students</a><br>
-
-<a href="{% url 'resume_book:companies' %}">Companies</a><br>
-
-<a href="{% url 'resume_book:internships' %}">Internships</a><br>
-
-<a href="{% url 'resume_book:recruiters' %}">Recruiters</a><br>
-
-<a href="{% url 'resume_book:signup' %}">Create new accounts</a><br><br>
-
-<a href="{% url 'resume_book:logoutPage' %}">Log Out</a><br>
