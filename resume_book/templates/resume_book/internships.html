@@ -64,33 +64,34 @@
             {% csrf_token %}
             <div class="form-group">
               <label for="netID">Internship NetID:</label>
-              <input type="text" name="netID" id="netID" maxlength={{netID_length}} required>
+              <input type="text" name="netID" class="netID" id="netID" maxlength={{netID_length}} required>
             </div>
             <div class="form-group">
               <label for="companyName">Company Name:</label>
-              <input type="text" name="companyName" id="companyName" maxlength={{companyName_length}} required>
+              <input type="text" name="companyName" class="companyName" id="companyName" maxlength={{companyName_length}} required>
               </div>
             <div class="form-group">
               <label for="numberRating">Rating:</label>
-              <input type="number" name="numberRating" id="numberRating" maxlength={{rating_length}} max=5.0>
+              <input type="number" name="numberRating" class="numberRating" id="numberRating" maxlength={{rating_length}} max=5.0>
             </div>
             <div class="form-group">
               <label for="projectDescription">Project Description:</label>
-              <textarea name="projectDescription" cols="40" rows="5"></textarea>            </div>
+              <textarea name="projectDescription" class="projectDescription" cols="40" rows="5"></textarea>            </div>
             <div class="form-group">
               <label for="companyReview">Company Review:</label>
-              <textarea name="companyReview" cols="40" rows="5"></textarea>            
+              <textarea name="companyReview" class="projectDescription" cols="40" rows="5"></textarea>            
             </div>
             <div class="form-group">
               <label for="startDate">Start Date:</label>
-              <input type="date" name="startDate" id="startDate" maxlength={{startDate_length}} required>            
+              <input type="date" name="startDate" class="startDate" id="startDate" maxlength={{startDate_length}} required>            
             </div>
             <div class="form-group">
               <label for="endDate">End Date:</label>
-              <input type="date" name="endDate" id="endDate" maxlength={{endDate_length}}>            
+              <input type="date" name="endDate" class="endDate" id="endDate" maxlength={{endDate_length}}>            
             </div>
             <div class="col text-center">
-                <button type="submit" class="btn btn-dark">Save Changes</button>
+                <button type="submit" name="insert_internship" class="btn btn-dark">Insert Internship</button>
+                <button type="submit" name="update_internship" class="btn btn-dark">Update Internship</button>
             </div>
           </form>
           <br>
