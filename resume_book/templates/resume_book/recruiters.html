@@ -64,11 +64,11 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="recruiterName">Recruiter Name:</label>
-                <input type="text" name="recruiterName" id="recruiterName" maxlength={{recruiter_name_length}} required>
+                <input class="form-control" type="text" name="recruiterName" id="recruiterName" maxlength={{recruiter_name_length}} required>
               </div>
             <div class="form-group">
                 <label for="company-query"> Company Name: </label>
-                <input type="text" id="company-query" name="companyName" maxlength={{company_name_length}}>
+                <input class="form-control" type="text" id="company-query" name="companyName" maxlength={{company_name_length}}>
             </div>
                 <button type="submit" class="btn btn-dark">Save Changes</button>
             </div>
@@ -117,7 +117,7 @@
                         </ul>
                     <div class="card-body text-center">
                         {% if admin %}
-                            <a href="{% url 'resume_book:removeRecruiter' recruiter.recruiterName %}" class="card-link">Remove Group</a>
+                            <a href="{% url 'resume_book:removeRecruiter' recruiter.recruiterName %}" class="card-link">Remove Recruiter</a>
                         {% endif %}
                     </div>
                 </div>

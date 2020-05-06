@@ -64,19 +64,19 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="companyName">Company name:</label>
-                <input type="text" name="companyName" id="companyName" maxlength={{name_length}} required>
+                <input class="form-control" type="text" name="companyName" id="companyName" maxlength={{name_length}} required>
               </div>
             <div class="form-group">
                 <label for="description">Description:</label>
-                <textarea class="form-control" name="description" cols="40" rows="5"></textarea>
+                <textarea class="form-control" class="form-control" name="description" cols="40" rows="5"></textarea>
             </div>
             <div class="form-group">
                 <label for="rating">Rating:</label>
-                <input type="number" name="rating" id="rating" maxlength={{rating}}>
+                <input class="form-control" type="number" name="rating" id="rating" maxlength={{rating}}>
             </div>
             <div class="form-group">
                 <label for="sponsorDate">Sponsor Date:</label>
-                <input type="date" name="sponsorDate" id="sponsorDate" maxlength={{sponsorDate}}>
+                <input class="form-control" type="date" name="sponsorDate" id="sponsorDate" maxlength={{sponsorDate}}>
             </div>
                 <button type="submit" class="btn btn-dark">Save Changes</button>
             </div>
@@ -136,7 +136,7 @@
                         </ul>
                     <div class="card-body text-center">
                         {% if admin %}
-                            <a href="{% url 'resume_book:removeCompany' company.companyName %}" class="card-link">Remove Group</a>
+                            <a href="{% url 'resume_book:removeCompany' company.companyName %}" class="card-link">Remove Company</a>
                         {% endif %}
                     </div>
                 </div>
