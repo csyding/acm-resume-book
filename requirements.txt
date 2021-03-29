@@ -71,7 +71,7 @@ psycopg2==2.7.5
 psycopg2-binary==2.8.5
 ptyprocess==0.6.0
 pydotplus==2.0.2
-Pygments==2.5.2
+Pygments==2.7.4
 pymongo==3.10.1
 pyparsing==2.4.6
 pyrsistent==0.15.7
